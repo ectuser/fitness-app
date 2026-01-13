@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import type { Workout, Exercise, ExerciseStats, WorkoutHistory } from '@/types';
+import type { Workout, ExerciseStats, WorkoutHistory } from '@/types';
 
 /**
  * Hook to calculate exercise statistics from completed workouts
@@ -40,7 +40,7 @@ export function useExerciseStats(
     // Find max weight (considering only kg for now, or convert if needed)
     let maxWeight = 0;
     let maxWeightReps = 0;
-    let maxWeightUnit = 'kg' as const;
+    let maxWeightUnit: 'kg' | 'lb' = 'kg';
 
     exerciseSets.forEach((set) => {
       if (set.weight > maxWeight) {

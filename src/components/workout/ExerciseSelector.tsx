@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/dialog';
 import { Search, Plus, Check } from 'lucide-react';
 import { useData } from '@/context/DataContext';
-import type { Exercise, MuscleGroup } from '@/types';
+import type { Exercise } from '@/types';
 import { ExerciseForm } from '@/components/exercise/ExerciseForm';
 
 interface ExerciseSelectorProps {
@@ -28,7 +28,7 @@ export function ExerciseSelector({
   onSelect,
   selectedExerciseIds = [],
 }: ExerciseSelectorProps) {
-  const { exercises } = useData();
+  const { exercises, addExercise } = useData();
   const [searchQuery, setSearchQuery] = useState('');
   const [showCreateForm, setShowCreateForm] = useState(false);
 
@@ -39,7 +39,8 @@ export function ExerciseSelector({
     return matchesSearch;
   });
 
-  const handleExerciseCreated = (newExercise: Exercise) => {
+  const handleExerciseSave = (exerciseData: Omit<Exercise, 'id' | 'createdAt'>) => {
+    const newExercise = addExercise(exerciseData);
     setShowCreateForm(false);
     setSearchQuery('');
     // Auto-select the newly created exercise
@@ -61,7 +62,7 @@ export function ExerciseSelector({
             </DialogDescription>
           </DialogHeader>
           <ExerciseForm
-            onSuccess={handleExerciseCreated}
+            onSave={handleExerciseSave}
             onCancel={() => setShowCreateForm(false)}
           />
         </DialogContent>

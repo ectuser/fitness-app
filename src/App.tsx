@@ -8,7 +8,6 @@ import { WorkoutSessionPage } from './pages/WorkoutSessionPage';
 import { ExercisesPage } from './pages/ExercisesPage';
 import { ExerciseFormPage } from './pages/ExerciseFormPage';
 import { ExerciseDetailPage } from './pages/ExerciseDetailPage';
-import { PlaceholderPage } from './pages/PlaceholderPage';
 
 function App() {
   return (

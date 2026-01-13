@@ -1,4 +1,4 @@
-import type { Exercise, MuscleGroup } from '@/types';
+import type { Exercise } from '@/types';
 
 // Preconfigured exercises that will be loaded on first app launch
 export const SEED_EXERCISES: Omit<Exercise, 'id' | 'createdAt'>[] = [

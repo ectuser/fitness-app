@@ -1,8 +1,7 @@
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
-import type { Set as SetType, WeightUnit } from '@/types';
-import { useData } from '@/context/DataContext';
+import type { Set as SetType } from '@/types';
 
 interface SetInputProps {
   set: SetType;
@@ -12,7 +11,6 @@ interface SetInputProps {
 }
 
 export function SetInput({ set, setNumber, onChange, onRemove }: SetInputProps) {
-  const { settings } = useData();
 
   return (
     <div className="flex items-center gap-2 p-3 bg-slate-50 rounded-lg">

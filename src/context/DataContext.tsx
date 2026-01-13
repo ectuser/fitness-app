@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
-import type { Exercise, Workout, Settings, MuscleGroup } from '@/types';
+import type { Exercise, Workout, Settings } from '@/types';
 import { STORAGE_KEYS, getFromStorage, saveToStorage } from '@/lib/storage';
 import { initializeSeedExercises } from '@/lib/seed-data';
 
