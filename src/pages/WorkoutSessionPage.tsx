@@ -60,9 +60,6 @@ export function WorkoutSessionPage() {
   }
 
   const totalSets = workoutExercises.reduce((sum, we) => sum + we.sets.length, 0);
-  const completedSets = workoutExercises.reduce((sum, we) => {
-    return sum + we.sets.filter((s) => s.weight > 0 && s.reps > 0).length;
-  }, 0);
 
   const handleAddExercise = (exercise: Exercise) => {
     const exists = workoutExercises.some((we) => we.exerciseId === exercise.id);
@@ -152,25 +149,14 @@ export function WorkoutSessionPage() {
       <div className="container mx-auto px-4 py-6 space-y-6 pb-32">
         {/* Progress Indicator */}
         <div className="bg-white rounded-lg p-4 shadow-sm sticky top-16 z-10">
-          <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center justify-between">
             <div>
               <h3 className="font-semibold text-lg">Workout in Progress</h3>
               <p className="text-sm text-slate-600">
                 {workoutExercises.length} exercise{workoutExercises.length !== 1 ? 's' : ''}{' '}
-                • {completedSets}/{totalSets} sets completed
+                • {totalSets} set{totalSets !== 1 ? 's' : ''}
               </p>
             </div>
-            <Badge variant="secondary" className="text-lg px-3 py-1">
-              {Math.round((completedSets / totalSets) * 100) || 0}%
-            </Badge>
-          </div>
-          <div className="w-full bg-slate-200 rounded-full h-2">
-            <div
-              className="bg-green-500 h-2 rounded-full transition-all"
-              style={{
-                width: `${totalSets > 0 ? (completedSets / totalSets) * 100 : 0}%`,
-              }}
-            />
           </div>
         </div>
 
@@ -223,7 +209,7 @@ export function WorkoutSessionPage() {
       </div>
 
       {/* Fixed Bottom Actions */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 p-4 shadow-lg">
+      <div className="fixed bottom-16 md:bottom-0 left-0 right-0 bg-white border-t border-slate-200 p-4 shadow-lg z-40">
         <div className="container mx-auto flex gap-3">
           <Button
             onClick={() => setShowFinishDialog(true)}

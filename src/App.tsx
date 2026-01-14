@@ -11,7 +11,7 @@ import { ExerciseDetailPage } from './pages/ExerciseDetailPage';
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/fitness-app">
       <MainLayout>
         <Routes>
           {/* Dashboard */}
