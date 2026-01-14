@@ -1,10 +1,17 @@
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
-import { Plus, Trash2, ChevronUp, ChevronDown, Pencil } from 'lucide-react';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
+import { Plus, Trash2, ChevronUp, ChevronDown, Pencil, TrendingUp, Clock } from 'lucide-react';
 import type { WorkoutExercise, Exercise } from '@/types';
 import { SetInput } from './SetInput';
 import { useData } from '@/context/DataContext';
+import { useExerciseStats } from '@/hooks/useExerciseStats';
 
 interface WorkoutExerciseCardProps {
   workoutExercise: WorkoutExercise;
@@ -29,7 +36,8 @@ export function WorkoutExerciseCard({
   onMoveDown,
   onReplace,
 }: WorkoutExerciseCardProps) {
-  const { settings } = useData();
+  const { settings, workouts } = useData();
+  const stats = useExerciseStats(exercise.id, workouts);
 
   const addSet = () => {
     const lastSet = workoutExercise.sets[workoutExercise.sets.length - 1];
@@ -123,6 +131,47 @@ export function WorkoutExerciseCard({
           />
         ))}
       </div>
+
+      {/* Details Accordion */}
+      {(exercise.comments || stats) && (
+        <Accordion type="single" collapsible className="mb-3">
+          <AccordionItem value="details" className="border-none">
+            <AccordionTrigger className="py-2 text-sm font-medium">
+              Details
+            </AccordionTrigger>
+            <AccordionContent className="space-y-3 pt-2">
+              {exercise.comments && (
+                <div>
+                  <p className="text-xs font-medium text-slate-600 mb-1">Comments</p>
+                  <p className="text-sm text-slate-700">{exercise.comments}</p>
+                </div>
+              )}
+              {stats && (
+                <div className="space-y-2">
+                  {stats.maxWeight > 0 && (
+                    <div className="flex items-center gap-2 text-sm">
+                      <TrendingUp className="w-4 h-4 text-slate-500" />
+                      <span className="text-slate-600">Max:</span>
+                      <span className="font-semibold">
+                        {stats.maxWeight} {stats.maxWeightUnit} × {stats.maxWeightReps}
+                      </span>
+                    </div>
+                  )}
+                  {stats.lastWeight !== undefined && stats.lastWeight > 0 && (
+                    <div className="flex items-center gap-2 text-sm">
+                      <Clock className="w-4 h-4 text-slate-500" />
+                      <span className="text-slate-600">Last:</span>
+                      <span className="font-semibold">
+                        {stats.lastWeight} {stats.lastWeightUnit} × {stats.lastWeightReps}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              )}
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      )}
 
       <Button
         variant="outline"

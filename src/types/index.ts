@@ -60,6 +60,9 @@ export interface ExerciseStats {
   maxWeight: number;
   maxWeightReps: number;
   maxWeightUnit: WeightUnit;
+  lastWeight?: number;
+  lastWeightReps?: number;
+  lastWeightUnit?: WeightUnit;
   totalSets: number;
   lastPerformed?: string;
 }

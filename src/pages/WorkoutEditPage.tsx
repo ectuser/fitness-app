@@ -39,19 +39,44 @@ export function WorkoutEditPage() {
   }, [id, workouts, isEditing]);
 
   const handleAddExercise = (exercise: Exercise) => {
-    // Handle replacing an existing exercise
-    if (replacingExerciseIndex !== null) {
-      const updated = [...workoutExercises];
-      updated[replacingExerciseIndex] = {
-        exerciseId: exercise.id,
-        sets: [
+    // Find last workout data for this exercise
+    const completedWorkouts = workouts.filter((w) => w.isCompleted);
+    const sortedWorkouts = [...completedWorkouts].sort((a, b) =>
+      b.date.localeCompare(a.date)
+    );
+
+    let lastWorkoutExercise: WorkoutExercise | null = null;
+    for (const workout of sortedWorkouts) {
+      const found = workout.exercises.find((we) => we.exerciseId === exercise.id);
+      if (found) {
+        lastWorkoutExercise = found;
+        break;
+      }
+    }
+
+    // Create default sets based on last workout or use defaults
+    const defaultSets = lastWorkoutExercise
+      ? lastWorkoutExercise.sets.map((set) => ({
+          id: crypto.randomUUID(),
+          weight: set.weight,
+          weightUnit: set.weightUnit,
+          reps: set.reps,
+        }))
+      : [
           {
             id: crypto.randomUUID(),
             weight: 0,
             weightUnit: settings.defaultWeightUnit,
             reps: 0,
           },
-        ],
+        ];
+
+    // Handle replacing an existing exercise
+    if (replacingExerciseIndex !== null) {
+      const updated = [...workoutExercises];
+      updated[replacingExerciseIndex] = {
+        exerciseId: exercise.id,
+        sets: defaultSets,
         order: replacingExerciseIndex,
       };
       setWorkoutExercises(updated);
@@ -60,23 +85,9 @@ export function WorkoutEditPage() {
       return;
     }
 
-    // Check if exercise is already added
-    const exists = workoutExercises.some((we) => we.exerciseId === exercise.id);
-    if (exists) {
-      setShowExerciseSelector(false);
-      return;
-    }
-
     const newWorkoutExercise: WorkoutExercise = {
       exerciseId: exercise.id,
-      sets: [
-        {
-          id: crypto.randomUUID(),
-          weight: 0,
-          weightUnit: settings.defaultWeightUnit,
-          reps: 0,
-        },
-      ],
+      sets: defaultSets,
       order: workoutExercises.length,
     };
 
@@ -226,7 +237,7 @@ export function WorkoutEditPage() {
 
                 return (
                   <WorkoutExerciseCard
-                    key={workoutExercise.exerciseId}
+                    key={`${workoutExercise.exerciseId}-${index}`}
                     workoutExercise={workoutExercise}
                     exercise={exercise}
                     index={index}

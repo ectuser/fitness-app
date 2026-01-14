@@ -28,6 +28,9 @@ interface DataContextType {
   // Settings
   settings: Settings;
   updateSettings: (updates: Partial<Settings>) => void;
+
+  // Data management
+  resetAllData: () => void;
 }
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
@@ -190,6 +193,20 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     setSettings((prev) => ({ ...prev, ...updates }));
   }, []);
 
+  // Reset all data
+  const resetAllData = useCallback(() => {
+    // Clear localStorage
+    localStorage.removeItem(STORAGE_KEYS.EXERCISES);
+    localStorage.removeItem(STORAGE_KEYS.WORKOUTS);
+    localStorage.removeItem(STORAGE_KEYS.SETTINGS);
+
+    // Reset to initial state
+    const seededExercises = initializeSeedExercises();
+    setExercises(seededExercises);
+    setWorkouts([]);
+    setSettings({ defaultWeightUnit: 'kg' });
+  }, []);
+
   // Computed values
   const upcomingWorkouts = useMemo(() => {
     return workouts
@@ -227,6 +244,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     nextWorkout,
     settings,
     updateSettings,
+    resetAllData,
   };
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;

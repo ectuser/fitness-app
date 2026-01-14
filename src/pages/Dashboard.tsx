@@ -1,16 +1,127 @@
+import { useState, useRef } from 'react';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
-import { Plus, Play, Calendar } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import { Plus, Play, Calendar, Settings, Download, Upload } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useData } from '@/context/DataContext';
+import { STORAGE_KEYS, saveToStorage } from '@/lib/storage';
 
 export function Dashboard() {
   const navigate = useNavigate();
-  const { nextWorkout, upcomingWorkouts, exercises, workouts } = useData();
+  const { nextWorkout, upcomingWorkouts, exercises, workouts, settings, resetAllData } = useData();
+  const [showResetDialog, setShowResetDialog] = useState(false);
+  const [showImportDialog, setShowImportDialog] = useState(false);
+  const [importError, setImportError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const completedWorkouts = workouts.filter((w) => w.isCompleted);
+
+  const handleResetData = () => {
+    resetAllData();
+    setShowResetDialog(false);
+  };
+
+  const handleExportData = () => {
+    const exportData = {
+      version: '1.0',
+      exportDate: new Date().toISOString(),
+      data: {
+        exercises,
+        workouts,
+        settings,
+      },
+    };
+
+    const dataStr = JSON.stringify(exportData, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(dataBlob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `fitness-app-backup-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleImportClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const content = e.target?.result as string;
+        const importData = JSON.parse(content);
+
+        // Validate import data structure
+        if (!importData.data || !importData.data.exercises || !importData.data.workouts) {
+          setImportError('Invalid backup file format. Missing required data.');
+          setShowImportDialog(true);
+          return;
+        }
+
+        // Show confirmation dialog
+        setImportError(null);
+        setShowImportDialog(true);
+
+        // Store the parsed data temporarily for import
+        (window as any).__importData = importData.data;
+      } catch (error) {
+        setImportError('Failed to read backup file. Please make sure it\'s a valid JSON file.');
+        setShowImportDialog(true);
+      }
+    };
+
+    reader.readAsText(file);
+    // Reset file input
+    event.target.value = '';
+  };
+
+  const handleConfirmImport = () => {
+    const importData = (window as any).__importData;
+    if (!importData) return;
+
+    try {
+      // Save imported data to localStorage
+      saveToStorage(STORAGE_KEYS.EXERCISES, importData.exercises);
+      saveToStorage(STORAGE_KEYS.WORKOUTS, importData.workouts);
+      if (importData.settings) {
+        saveToStorage(STORAGE_KEYS.SETTINGS, importData.settings);
+      }
+
+      // Clean up temporary data
+      delete (window as any).__importData;
+
+      // Reload the page to apply changes
+      window.location.reload();
+    } catch (error) {
+      setImportError('Failed to import data. Please try again.');
+    }
+  };
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString + 'T00:00:00');
@@ -45,10 +156,43 @@ export function Dashboard() {
       <PageHeader
         title="Dashboard"
         action={
-          <Button onClick={() => navigate('/workouts/new')} size="sm">
-            <Plus className="w-4 h-4 mr-2" />
-            New Workout
-          </Button>
+          <div className="flex gap-2">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm">
+                  <Settings className="w-4 h-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={handleExportData}>
+                  <Download className="w-4 h-4 mr-2" />
+                  Export Data
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleImportClick}>
+                  <Upload className="w-4 h-4 mr-2" />
+                  Import Data
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={() => setShowResetDialog(true)}
+                  className="text-red-600 focus:text-red-600"
+                >
+                  Reset Data
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".json"
+              onChange={handleFileChange}
+              className="hidden"
+            />
+            <Button onClick={() => navigate('/workouts/new')} size="sm">
+              <Plus className="w-4 h-4 mr-2" />
+              New Workout
+            </Button>
+          </div>
         }
       />
 
@@ -191,6 +335,62 @@ export function Dashboard() {
           </div>
         </section>
       </div>
+
+      {/* Reset Data Dialog */}
+      <AlertDialog open={showResetDialog} onOpenChange={setShowResetDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Reset All Data?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete all your workouts, custom exercises, and
+              settings. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleResetData}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              Reset Data
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Import Data Dialog */}
+      <AlertDialog open={showImportDialog} onOpenChange={setShowImportDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {importError ? 'Import Failed' : 'Import Data?'}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {importError ? (
+                <span className="text-red-600">{importError}</span>
+              ) : (
+                'This will replace all your current data with the imported data. Your existing workouts, exercises, and settings will be overwritten.'
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel
+              onClick={() => {
+                setShowImportDialog(false);
+                setImportError(null);
+                delete (window as any).__importData;
+              }}
+            >
+              Cancel
+            </AlertDialogCancel>
+            {!importError && (
+              <AlertDialogAction onClick={handleConfirmImport}>
+                Import Data
+              </AlertDialogAction>
+            )}
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

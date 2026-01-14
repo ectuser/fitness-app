@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import type { Workout, ExerciseStats, WorkoutHistory } from '@/types';
+import type { Workout, ExerciseStats, WorkoutHistory, WorkoutExercise } from '@/types';
 
 /**
  * Hook to calculate exercise statistics from completed workouts
@@ -50,24 +50,41 @@ export function useExerciseStats(
       }
     });
 
-    // Find last performed date
+    // Find last performed date and last weight/reps
     let lastPerformed: string | undefined;
-    completedWorkouts.forEach((workout) => {
-      const hasExercise = workout.exercises.some(
+    let lastWeight: number | undefined;
+    let lastWeightReps: number | undefined;
+    let lastWeightUnit: 'kg' | 'lb' | undefined;
+
+    // Sort completed workouts by date to find the most recent
+    const sortedWorkouts = [...completedWorkouts].sort((a, b) =>
+      b.date.localeCompare(a.date)
+    );
+
+    // Find the most recent workout with this exercise
+    for (const workout of sortedWorkouts) {
+      const workoutExercise = workout.exercises.find(
         (we) => we.exerciseId === exerciseId
       );
-      if (hasExercise) {
-        if (!lastPerformed || workout.date > lastPerformed) {
-          lastPerformed = workout.date;
-        }
+      if (workoutExercise && workoutExercise.sets.length > 0) {
+        lastPerformed = workout.date;
+        // Get the first set's weight and reps from the last workout
+        const firstSet = workoutExercise.sets[0];
+        lastWeight = firstSet.weight;
+        lastWeightReps = firstSet.reps;
+        lastWeightUnit = firstSet.weightUnit as 'kg' | 'lb';
+        break;
       }
-    });
+    }
 
     return {
       exerciseId,
       maxWeight,
       maxWeightReps,
       maxWeightUnit,
+      lastWeight,
+      lastWeightReps,
+      lastWeightUnit,
       totalSets: exerciseSets.length,
       lastPerformed,
     };
@@ -105,5 +122,38 @@ export function useExerciseHistory(
 
     // Sort by date descending (most recent first)
     return history.sort((a, b) => b.date.localeCompare(a.date));
+  }, [exerciseId, workouts]);
+}
+
+/**
+ * Hook to get the last workout data for a specific exercise
+ * @param exerciseId - ID of the exercise
+ * @param workouts - All workouts
+ * @returns WorkoutExercise from the most recent completed workout, or null if not found
+ */
+export function useLastWorkoutExercise(
+  exerciseId: string,
+  workouts: Workout[]
+): WorkoutExercise | null {
+  return useMemo(() => {
+    // Only consider completed workouts
+    const completedWorkouts = workouts.filter((w) => w.isCompleted);
+
+    // Sort by date descending (most recent first)
+    const sortedWorkouts = [...completedWorkouts].sort((a, b) =>
+      b.date.localeCompare(a.date)
+    );
+
+    // Find the most recent workout with this exercise
+    for (const workout of sortedWorkouts) {
+      const workoutExercise = workout.exercises.find(
+        (we) => we.exerciseId === exerciseId
+      );
+      if (workoutExercise) {
+        return workoutExercise;
+      }
+    }
+
+    return null;
   }, [exerciseId, workouts]);
 }
