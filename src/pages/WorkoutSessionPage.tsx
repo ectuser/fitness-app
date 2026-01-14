@@ -26,6 +26,7 @@ export function WorkoutSessionPage() {
   const [workout, setWorkout] = useState<Workout | null>(null);
   const [workoutExercises, setWorkoutExercises] = useState<WorkoutExercise[]>([]);
   const [showExerciseSelector, setShowExerciseSelector] = useState(false);
+  const [replacingExerciseIndex, setReplacingExerciseIndex] = useState<number | null>(null);
   const [showFinishDialog, setShowFinishDialog] = useState(false);
   const [showExitDialog, setShowExitDialog] = useState(false);
 
@@ -61,6 +62,27 @@ export function WorkoutSessionPage() {
   const totalSets = workoutExercises.reduce((sum, we) => sum + we.sets.length, 0);
 
   const handleAddExercise = (exercise: Exercise) => {
+    // Handle replacing an existing exercise
+    if (replacingExerciseIndex !== null) {
+      const updated = [...workoutExercises];
+      updated[replacingExerciseIndex] = {
+        exerciseId: exercise.id,
+        sets: [
+          {
+            id: crypto.randomUUID(),
+            weight: 0,
+            weightUnit: settings.defaultWeightUnit,
+            reps: 0,
+          },
+        ],
+        order: replacingExerciseIndex,
+      };
+      setWorkoutExercises(updated);
+      setReplacingExerciseIndex(null);
+      setShowExerciseSelector(false);
+      return;
+    }
+
     const exists = workoutExercises.some((we) => we.exerciseId === exercise.id);
     if (exists) {
       setShowExerciseSelector(false);
@@ -110,6 +132,11 @@ export function WorkoutSessionPage() {
     const updated = [...workoutExercises];
     updated[index] = updatedExercise;
     setWorkoutExercises(updated);
+  };
+
+  const handleReplaceExercise = (index: number) => {
+    setReplacingExerciseIndex(index);
+    setShowExerciseSelector(true);
   };
 
   const handleFinishWorkout = () => {
@@ -189,6 +216,7 @@ export function WorkoutSessionPage() {
                   onRemove={() => handleRemoveExercise(index)}
                   onMoveUp={() => handleMoveExerciseUp(index)}
                   onMoveDown={() => handleMoveExerciseDown(index)}
+                  onReplace={() => handleReplaceExercise(index)}
                 />
               );
             })}

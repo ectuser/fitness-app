@@ -24,6 +24,7 @@ export function WorkoutEditPage() {
   });
   const [workoutExercises, setWorkoutExercises] = useState<WorkoutExercise[]>([]);
   const [showExerciseSelector, setShowExerciseSelector] = useState(false);
+  const [replacingExerciseIndex, setReplacingExerciseIndex] = useState<number | null>(null);
   const [errors, setErrors] = useState<{ name?: string; exercises?: string }>({});
 
   useEffect(() => {
@@ -38,6 +39,27 @@ export function WorkoutEditPage() {
   }, [id, workouts, isEditing]);
 
   const handleAddExercise = (exercise: Exercise) => {
+    // Handle replacing an existing exercise
+    if (replacingExerciseIndex !== null) {
+      const updated = [...workoutExercises];
+      updated[replacingExerciseIndex] = {
+        exerciseId: exercise.id,
+        sets: [
+          {
+            id: crypto.randomUUID(),
+            weight: 0,
+            weightUnit: settings.defaultWeightUnit,
+            reps: 0,
+          },
+        ],
+        order: replacingExerciseIndex,
+      };
+      setWorkoutExercises(updated);
+      setReplacingExerciseIndex(null);
+      setShowExerciseSelector(false);
+      return;
+    }
+
     // Check if exercise is already added
     const exists = workoutExercises.some((we) => we.exerciseId === exercise.id);
     if (exists) {
@@ -91,6 +113,11 @@ export function WorkoutEditPage() {
     const updated = [...workoutExercises];
     updated[index] = updatedExercise;
     setWorkoutExercises(updated);
+  };
+
+  const handleReplaceExercise = (index: number) => {
+    setReplacingExerciseIndex(index);
+    setShowExerciseSelector(true);
   };
 
   const validateForm = () => {
@@ -208,6 +235,7 @@ export function WorkoutEditPage() {
                     onRemove={() => handleRemoveExercise(index)}
                     onMoveUp={() => handleMoveExerciseUp(index)}
                     onMoveDown={() => handleMoveExerciseDown(index)}
+                    onReplace={() => handleReplaceExercise(index)}
                   />
                 );
               })}

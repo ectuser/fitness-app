@@ -22,11 +22,13 @@ A modern, mobile-first fitness workout tracking application built with React and
 - **Performance Stats** - Monitor max weight lifted and total volume
 - **Smart Dashboard** - Quick stats and upcoming workouts at a glance
 
-### 📱 Mobile-First Design
+### 📱 Mobile-First Design & PWA
+- **Progressive Web App** - Install on your device like a native app
+- **Offline Support** - Works offline with service worker caching
 - **Responsive UI** - Optimized for gym use on mobile devices
 - **Bottom Navigation** - Easy thumb-friendly navigation
 - **Touch-optimized Inputs** - Large tap targets and numeric keyboards
-- **Offline Support** - All data stored locally with localStorage
+- **Local Storage** - All data stored locally in your browser
 
 ## 🛠️ Tech Stack
 
@@ -59,7 +61,7 @@ npm install
 npm run dev
 ```
 
-The app will be available at `http://localhost:5173/`
+The app will be available at `http://localhost:5173/fitness-app/`
 
 ## 📝 Available Scripts
 
@@ -140,6 +142,29 @@ npm run build
 # Output will be in the `dist/` directory
 ```
 
+## 📲 Installing as a Progressive Web App (PWA)
+
+Once deployed to GitHub Pages, you can install the Fitness Tracker as a native app on your device:
+
+### On Mobile (iOS/Android)
+1. Open the app in your mobile browser
+2. **iOS (Safari)**: Tap the Share button → "Add to Home Screen"
+3. **Android (Chrome)**: Tap the menu (⋮) → "Install app" or "Add to Home Screen"
+4. The app icon will appear on your home screen
+
+### On Desktop (Chrome/Edge)
+1. Visit the app in Chrome or Edge
+2. Look for the install icon (⊕) in the address bar
+3. Click "Install" to add the app to your desktop
+4. Launch it like any native application
+
+### PWA Features
+- ✅ Works offline after first visit
+- ✅ Fast loading with service worker caching
+- ✅ Native app-like experience
+- ✅ No app store required
+- ✅ Automatic updates when you visit
+
 ## 💾 Data Persistence
 
 All data is stored locally in your browser using localStorage:
@@ -168,7 +193,6 @@ This app follows a mobile-first design approach:
 ## 🔮 Future Enhancements
 
 Potential features for future versions:
-- Progressive Web App (PWA) support for offline use
 - Rest timer between sets
 - Exercise photos/videos
 - Progress charts and visualizations
@@ -187,7 +211,8 @@ This app was **100% vibe coded** - built entirely through natural conversation a
 The result is a fully-functional, production-ready fitness tracking app with:
 - ✅ Complete CRUD operations
 - ✅ Real-time workout sessions
-- ✅ Data persistence
+- ✅ Progressive Web App (PWA) with offline support
+- ✅ Data persistence with localStorage
 - ✅ Mobile-responsive design
 - ✅ Type-safe codebase
 - ✅ Production build & deployment

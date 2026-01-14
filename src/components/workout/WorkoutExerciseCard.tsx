@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
-import { Plus, Trash2, ChevronUp, ChevronDown } from 'lucide-react';
+import { Plus, Trash2, ChevronUp, ChevronDown, Pencil } from 'lucide-react';
 import type { WorkoutExercise, Exercise } from '@/types';
 import { SetInput } from './SetInput';
 import { useData } from '@/context/DataContext';
@@ -15,6 +15,7 @@ interface WorkoutExerciseCardProps {
   onRemove: () => void;
   onMoveUp: () => void;
   onMoveDown: () => void;
+  onReplace?: () => void;
 }
 
 export function WorkoutExerciseCard({
@@ -26,6 +27,7 @@ export function WorkoutExerciseCard({
   onRemove,
   onMoveUp,
   onMoveDown,
+  onReplace,
 }: WorkoutExerciseCardProps) {
   const { settings } = useData();
 
@@ -61,7 +63,23 @@ export function WorkoutExerciseCard({
     <Card className="p-4">
       <div className="flex items-start justify-between mb-4">
         <div className="flex-1">
-          <h3 className="font-semibold text-lg mb-2">{exercise.name}</h3>
+          <div className="flex items-center gap-2 mb-2">
+            <h3
+              className={`font-semibold text-lg ${onReplace ? 'cursor-pointer hover:text-blue-600 transition-colors' : ''}`}
+              onClick={onReplace}
+            >
+              {exercise.name}
+            </h3>
+            {onReplace && (
+              <button
+                onClick={onReplace}
+                className="p-1 hover:bg-slate-100 rounded transition-colors"
+                aria-label="Replace exercise"
+              >
+                <Pencil className="w-4 h-4 text-slate-500" />
+              </button>
+            )}
+          </div>
           <div className="flex flex-wrap gap-1">
             {exercise.muscleGroups.map((muscle) => (
               <Badge key={muscle} variant="secondary" className="text-xs">

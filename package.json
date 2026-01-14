@@ -41,6 +41,7 @@
     "shadcn": "^3.6.3",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.46.4",
-    "vite": "^6.4.1"
+    "vite": "^6.4.1",
+    "vite-plugin-pwa": "^1.2.0"
   }
 }
