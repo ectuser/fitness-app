@@ -18,7 +18,7 @@ export function MainLayout({ children }: MainLayoutProps) {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
       {/* Desktop navigation */}
-      <nav className="hidden md:block bg-white shadow-sm border-b border-slate-200 sticky top-0 z-50">
+      <nav className="hidden md:block bg-white shadow-sm border-b border-slate-200">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -48,7 +48,7 @@ export function MainLayout({ children }: MainLayoutProps) {
       </nav>
 
       {/* Mobile header */}
-      <header className="md:hidden bg-white shadow-sm border-b border-slate-200 sticky top-0 z-50">
+      <header className="md:hidden bg-white shadow-sm border-b border-slate-200">
         <div className="container mx-auto px-4 py-4">
           <h1 className="text-xl font-bold text-center">💪 Fitness Tracker</h1>
         </div>

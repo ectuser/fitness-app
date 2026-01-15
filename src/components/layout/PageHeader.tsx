@@ -12,7 +12,7 @@ export function PageHeader({ title, showBack = false, action }: PageHeaderProps)
   const navigate = useNavigate();
 
   return (
-    <div className="sticky top-0 z-40 bg-white border-b border-slate-200">
+    <div className="bg-white border-b border-slate-200">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">

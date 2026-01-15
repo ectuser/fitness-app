@@ -186,7 +186,7 @@ export function WorkoutSessionPage() {
 
       <div className="container mx-auto px-4 py-6 space-y-6 pb-32">
         {/* Progress Indicator */}
-        <div className="bg-white rounded-lg p-4 shadow-sm sticky top-16 z-10">
+        <div className="bg-white rounded-lg p-4 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
               <h3 className="font-semibold text-lg">Workout in Progress</h3>

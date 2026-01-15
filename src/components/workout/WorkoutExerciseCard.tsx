@@ -7,11 +7,18 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import { Plus, Trash2, ChevronUp, ChevronDown, Pencil, TrendingUp, Clock } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Plus, Trash2, ChevronUp, ChevronDown, MoreVertical, Repeat, Pencil, TrendingUp, Clock } from 'lucide-react';
 import type { WorkoutExercise, Exercise } from '@/types';
 import { SetInput } from './SetInput';
 import { useData } from '@/context/DataContext';
 import { useExerciseStats } from '@/hooks/useExerciseStats';
+import { useNavigate } from 'react-router-dom';
 
 interface WorkoutExerciseCardProps {
   workoutExercise: WorkoutExercise;
@@ -38,6 +45,7 @@ export function WorkoutExerciseCard({
 }: WorkoutExerciseCardProps) {
   const { settings, workouts } = useData();
   const stats = useExerciseStats(exercise.id, workouts);
+  const navigate = useNavigate();
 
   const addSet = () => {
     const lastSet = workoutExercise.sets[workoutExercise.sets.length - 1];
@@ -72,21 +80,9 @@ export function WorkoutExerciseCard({
       <div className="flex items-start justify-between mb-4">
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-2">
-            <h3
-              className={`font-semibold text-lg ${onReplace ? 'cursor-pointer hover:text-blue-600 transition-colors' : ''}`}
-              onClick={onReplace}
-            >
+            <h3 className="font-semibold text-lg">
               {exercise.name}
             </h3>
-            {onReplace && (
-              <button
-                onClick={onReplace}
-                className="p-1 hover:bg-slate-100 rounded transition-colors"
-                aria-label="Replace exercise"
-              >
-                <Pencil className="w-4 h-4 text-slate-500" />
-              </button>
-            )}
           </div>
           <div className="flex flex-wrap gap-1">
             {exercise.muscleGroups.map((muscle) => (
@@ -114,9 +110,29 @@ export function WorkoutExerciseCard({
           >
             <ChevronDown className="w-4 h-4" />
           </Button>
-          <Button variant="ghost" size="icon" onClick={onRemove}>
-            <Trash2 className="w-4 h-4" />
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <MoreVertical className="w-4 h-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {onReplace && (
+                <DropdownMenuItem onClick={onReplace}>
+                  <Repeat className="w-4 h-4 mr-2" />
+                  Switch Exercise
+                </DropdownMenuItem>
+              )}
+              <DropdownMenuItem onClick={() => navigate(`/exercises/${exercise.id}/edit`)}>
+                <Pencil className="w-4 h-4 mr-2" />
+                Edit Exercise
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={onRemove} className="text-red-600 focus:text-red-600">
+                <Trash2 className="w-4 h-4 mr-2" />
+                Delete Exercise
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
 
