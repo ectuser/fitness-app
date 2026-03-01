@@ -24,6 +24,7 @@ import { Plus, Play, Calendar, Settings, Download, Upload } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useData } from '@/context/DataContext';
 import { STORAGE_KEYS, saveToStorage } from '@/lib/storage';
+import { migrateExercises } from '@/lib/migrations';
 
 export function Dashboard() {
   const navigate = useNavigate();
@@ -106,8 +107,10 @@ export function Dashboard() {
     if (!importData) return;
 
     try {
+      const migratedExercises = migrateExercises(importData.exercises || []);
+
       // Save imported data to localStorage
-      saveToStorage(STORAGE_KEYS.EXERCISES, importData.exercises);
+      saveToStorage(STORAGE_KEYS.EXERCISES, migratedExercises);
       saveToStorage(STORAGE_KEYS.WORKOUTS, importData.workouts);
       if (importData.settings) {
         saveToStorage(STORAGE_KEYS.SETTINGS, importData.settings);

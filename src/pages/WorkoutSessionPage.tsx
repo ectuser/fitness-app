@@ -16,7 +16,7 @@ import {
 import { CheckCircle2, Plus, X } from 'lucide-react';
 import { WorkoutExerciseCard } from '@/components/workout/WorkoutExerciseCard';
 import { ExerciseSelector } from '@/components/workout/ExerciseSelector';
-import type { Workout, WorkoutExercise, Exercise } from '@/types';
+import type { Workout, WorkoutExercise, Exercise, MuscleGroup } from '@/types';
 
 export function WorkoutSessionPage() {
   const { id } = useParams<{ id: string }>();
@@ -27,6 +27,7 @@ export function WorkoutSessionPage() {
   const [workoutExercises, setWorkoutExercises] = useState<WorkoutExercise[]>([]);
   const [showExerciseSelector, setShowExerciseSelector] = useState(false);
   const [replacingExerciseIndex, setReplacingExerciseIndex] = useState<number | null>(null);
+  const [selectorInitialFilterGroup, setSelectorInitialFilterGroup] = useState<MuscleGroup | null>(null);
   const [showFinishDialog, setShowFinishDialog] = useState(false);
   const [showExitDialog, setShowExitDialog] = useState(false);
 
@@ -104,6 +105,7 @@ export function WorkoutSessionPage() {
       };
       setWorkoutExercises(updated);
       setReplacingExerciseIndex(null);
+      setSelectorInitialFilterGroup(null);
       setShowExerciseSelector(false);
       return;
     }
@@ -115,7 +117,14 @@ export function WorkoutSessionPage() {
     };
 
     setWorkoutExercises([...workoutExercises, newWorkoutExercise]);
+    setSelectorInitialFilterGroup(null);
     setShowExerciseSelector(false);
+  };
+
+  const openAddExerciseSelector = () => {
+    setReplacingExerciseIndex(null);
+    setSelectorInitialFilterGroup(null);
+    setShowExerciseSelector(true);
   };
 
   const handleRemoveExercise = (index: number) => {
@@ -147,6 +156,9 @@ export function WorkoutSessionPage() {
   };
 
   const handleReplaceExercise = (index: number) => {
+    const currentExerciseId = workoutExercises[index]?.exerciseId;
+    const currentExercise = exercises.find((exercise) => exercise.id === currentExerciseId);
+    setSelectorInitialFilterGroup(currentExercise?.muscleGroups[0] ?? null);
     setReplacingExerciseIndex(index);
     setShowExerciseSelector(true);
   };
@@ -200,7 +212,7 @@ export function WorkoutSessionPage() {
 
         {/* Add Exercise Button */}
         <Button
-          onClick={() => setShowExerciseSelector(true)}
+          onClick={openAddExerciseSelector}
           variant="outline"
           className="w-full"
         >
@@ -238,7 +250,7 @@ export function WorkoutSessionPage() {
             <p className="text-slate-500 mb-4">No exercises in this workout</p>
             <Button
               variant="outline"
-              onClick={() => setShowExerciseSelector(true)}
+              onClick={openAddExerciseSelector}
             >
               <Plus className="w-4 h-4 mr-2" />
               Add Your First Exercise
@@ -267,6 +279,7 @@ export function WorkoutSessionPage() {
         onOpenChange={setShowExerciseSelector}
         onSelect={handleAddExercise}
         selectedExerciseIds={workoutExercises.map((we) => we.exerciseId)}
+        initialFilterGroup={selectorInitialFilterGroup}
       />
 
       {/* Finish Workout Dialog */}

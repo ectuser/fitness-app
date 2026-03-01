@@ -5,13 +5,13 @@ export const SEED_EXERCISES: Omit<Exercise, 'id' | 'createdAt'>[] = [
   // Chest
   {
     name: 'Bench Press',
-    muscleGroups: ['Chest', 'Arms'],
+    muscleGroups: ['Chest', 'Arms (Legacy)'],
     isCustom: false,
     comments: 'Compound chest exercise, great for building upper body strength',
   },
   {
     name: 'Push-ups',
-    muscleGroups: ['Chest', 'Arms', 'Core'],
+    muscleGroups: ['Chest', 'Arms (Legacy)', 'Core'],
     isCustom: false,
     comments: 'Bodyweight exercise that can be done anywhere',
   },
@@ -25,7 +25,7 @@ export const SEED_EXERCISES: Omit<Exercise, 'id' | 'createdAt'>[] = [
   // Back
   {
     name: 'Pull-ups',
-    muscleGroups: ['Back', 'Arms'],
+    muscleGroups: ['Back', 'Arms (Legacy)'],
     isCustom: false,
     comments: 'Excellent compound exercise for back and biceps',
   },
@@ -37,7 +37,7 @@ export const SEED_EXERCISES: Omit<Exercise, 'id' | 'createdAt'>[] = [
   },
   {
     name: 'Deadlift',
-    muscleGroups: ['Back', 'Legs', 'Core'],
+    muscleGroups: ['Back', 'Legs (Legacy)', 'Core'],
     isCustom: false,
     comments: 'The king of compound exercises, works entire posterior chain',
   },
@@ -45,19 +45,19 @@ export const SEED_EXERCISES: Omit<Exercise, 'id' | 'createdAt'>[] = [
   // Legs
   {
     name: 'Squats',
-    muscleGroups: ['Legs', 'Core'],
+    muscleGroups: ['Legs (Legacy)', 'Core'],
     isCustom: false,
     comments: 'Fundamental leg exercise for building overall strength',
   },
   {
     name: 'Lunges',
-    muscleGroups: ['Legs'],
+    muscleGroups: ['Legs (Legacy)'],
     isCustom: false,
     comments: 'Unilateral leg exercise for balance and strength',
   },
   {
     name: 'Leg Press',
-    muscleGroups: ['Legs'],
+    muscleGroups: ['Legs (Legacy)'],
     isCustom: false,
     comments: 'Machine-based leg exercise',
   },
@@ -65,7 +65,7 @@ export const SEED_EXERCISES: Omit<Exercise, 'id' | 'createdAt'>[] = [
   // Shoulders
   {
     name: 'Shoulder Press',
-    muscleGroups: ['Shoulders', 'Arms'],
+    muscleGroups: ['Shoulders', 'Arms (Legacy)'],
     isCustom: false,
     comments: 'Compound shoulder exercise',
   },
@@ -79,13 +79,13 @@ export const SEED_EXERCISES: Omit<Exercise, 'id' | 'createdAt'>[] = [
   // Arms
   {
     name: 'Bicep Curls',
-    muscleGroups: ['Arms'],
+    muscleGroups: ['Arms (Legacy)'],
     isCustom: false,
     comments: 'Classic isolation exercise for biceps',
   },
   {
     name: 'Tricep Dips',
-    muscleGroups: ['Arms'],
+    muscleGroups: ['Arms (Legacy)'],
     isCustom: false,
     comments: 'Compound exercise for triceps',
   },

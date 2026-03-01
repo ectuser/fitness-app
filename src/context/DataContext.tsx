@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect, useMemo, useCall
 import type { Exercise, Workout, Settings } from '@/types';
 import { STORAGE_KEYS, getFromStorage, saveToStorage } from '@/lib/storage';
 import { initializeSeedExercises } from '@/lib/seed-data';
+import { migrateExercises } from '@/lib/migrations';
 
 interface DataContextType {
   // Exercises
@@ -51,10 +52,10 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
 
     if (storedExercises.length === 0) {
       // First load - seed exercises
-      const seededExercises = initializeSeedExercises();
+      const seededExercises = migrateExercises(initializeSeedExercises());
       setExercises(seededExercises);
     } else {
-      setExercises(storedExercises);
+      setExercises(migrateExercises(storedExercises));
     }
 
     setWorkouts(storedWorkouts);
@@ -201,7 +202,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     localStorage.removeItem(STORAGE_KEYS.SETTINGS);
 
     // Reset to initial state
-    const seededExercises = initializeSeedExercises();
+    const seededExercises = migrateExercises(initializeSeedExercises());
     setExercises(seededExercises);
     setWorkouts([]);
     setSettings({ defaultWeightUnit: 'kg' });
