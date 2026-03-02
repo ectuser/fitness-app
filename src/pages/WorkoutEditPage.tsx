@@ -11,13 +11,20 @@ import { WorkoutExerciseCard } from '@/components/workout/WorkoutExerciseCard';
 import { ExerciseSelector } from '@/components/workout/ExerciseSelector';
 import type { Workout, WorkoutExercise, Exercise, MuscleGroup } from '@/types';
 
+const formatDefaultWorkoutName = (date: Date): string => {
+  const weekday = date.toLocaleDateString('en-US', { weekday: 'short' });
+  const month = date.toLocaleDateString('en-US', { month: 'long' });
+  const day = date.toLocaleDateString('en-US', { day: 'numeric' });
+  return `${weekday} ${month} ${day}`;
+};
+
 export function WorkoutEditPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { workouts, exercises, addWorkout, updateWorkout, settings } = useData();
   const isEditing = !!id;
 
-  const [name, setName] = useState('');
+  const [name, setName] = useState(() => formatDefaultWorkoutName(new Date()));
   const [date, setDate] = useState(() => {
     const today = new Date();
     return today.toISOString().split('T')[0];
