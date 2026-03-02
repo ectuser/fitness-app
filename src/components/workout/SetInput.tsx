@@ -10,6 +10,16 @@ interface SetInputProps {
   onRemove: () => void;
 }
 
+const normalizeWeight = (value: string): number => {
+  const parsed = Number.parseFloat(value);
+
+  if (!Number.isFinite(parsed) || parsed < 0) {
+    return 0;
+  }
+
+  return Math.trunc(parsed * 100) / 100;
+};
+
 export function SetInput({ set, setNumber, onChange, onRemove }: SetInputProps) {
 
   return (
@@ -22,15 +32,15 @@ export function SetInput({ set, setNumber, onChange, onRemove }: SetInputProps) 
         <div className="flex-1">
           <Input
             type="number"
-            inputMode="numeric"
+            inputMode="decimal"
             value={set.weight || ''}
             onChange={(e) =>
-              onChange({ ...set, weight: parseFloat(e.target.value) || 0 })
+              onChange({ ...set, weight: normalizeWeight(e.target.value) })
             }
             placeholder="Weight"
             className="text-base h-11"
             min="0"
-            step="0.5"
+            step="0.01"
           />
         </div>
 
