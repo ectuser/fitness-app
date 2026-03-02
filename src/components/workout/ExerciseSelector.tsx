@@ -53,11 +53,6 @@ function ExerciseCard({ exercise, isSelected, onClick }: ExerciseCardProps) {
           <div className="flex items-center gap-2 mb-2">
             <h3 className="font-semibold">{exercise.name}</h3>
             {isSelected && <Check className="w-4 h-4 text-green-600" />}
-            {exercise.isCustom && (
-              <Badge variant="outline" className="text-xs">
-                Custom
-              </Badge>
-            )}
           </div>
           <div className="flex flex-wrap gap-1 mb-2">
             {exercise.muscleGroups.map((muscle) => (

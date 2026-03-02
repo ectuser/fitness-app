@@ -29,14 +29,7 @@ export function ExercisesPage() {
               className="bg-white rounded-lg p-4 shadow-sm border border-slate-200 cursor-pointer hover:border-slate-300"
               onClick={() => navigate(`/exercises/${exercise.id}`)}
             >
-              <div className="flex justify-between items-start mb-2">
-                <h3 className="font-semibold">{exercise.name}</h3>
-                {exercise.isCustom && (
-                  <Badge variant="outline" className="text-xs">
-                    Custom
-                  </Badge>
-                )}
-              </div>
+              <h3 className="font-semibold mb-2">{exercise.name}</h3>
               <div className="flex flex-wrap gap-1">
                 {exercise.muscleGroups.map((muscle) => (
                   <Badge key={muscle} variant="secondary" className="text-xs">
