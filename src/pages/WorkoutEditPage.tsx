@@ -9,7 +9,7 @@ import { Card } from '@/components/ui/card';
 import { Plus, Save } from 'lucide-react';
 import { WorkoutExerciseCard } from '@/components/workout/WorkoutExerciseCard';
 import { ExerciseSelector } from '@/components/workout/ExerciseSelector';
-import type { Workout, WorkoutExercise, Exercise } from '@/types';
+import type { Workout, WorkoutExercise, Exercise, MuscleGroup } from '@/types';
 
 export function WorkoutEditPage() {
   const { id } = useParams<{ id: string }>();
@@ -25,6 +25,7 @@ export function WorkoutEditPage() {
   const [workoutExercises, setWorkoutExercises] = useState<WorkoutExercise[]>([]);
   const [showExerciseSelector, setShowExerciseSelector] = useState(false);
   const [replacingExerciseIndex, setReplacingExerciseIndex] = useState<number | null>(null);
+  const [selectorInitialFilterGroup, setSelectorInitialFilterGroup] = useState<MuscleGroup | null>(null);
   const [errors, setErrors] = useState<{ name?: string; exercises?: string }>({});
 
   useEffect(() => {
@@ -81,6 +82,7 @@ export function WorkoutEditPage() {
       };
       setWorkoutExercises(updated);
       setReplacingExerciseIndex(null);
+      setSelectorInitialFilterGroup(null);
       setShowExerciseSelector(false);
       return;
     }
@@ -92,7 +94,14 @@ export function WorkoutEditPage() {
     };
 
     setWorkoutExercises([...workoutExercises, newWorkoutExercise]);
+    setSelectorInitialFilterGroup(null);
     setShowExerciseSelector(false);
+  };
+
+  const openAddExerciseSelector = () => {
+    setReplacingExerciseIndex(null);
+    setSelectorInitialFilterGroup(null);
+    setShowExerciseSelector(true);
   };
 
   const handleRemoveExercise = (index: number) => {
@@ -127,6 +136,9 @@ export function WorkoutEditPage() {
   };
 
   const handleReplaceExercise = (index: number) => {
+    const currentExerciseId = workoutExercises[index]?.exerciseId;
+    const currentExercise = exercises.find((exercise) => exercise.id === currentExerciseId);
+    setSelectorInitialFilterGroup(currentExercise?.muscleGroups[0] ?? null);
     setReplacingExerciseIndex(index);
     setShowExerciseSelector(true);
   };
@@ -146,20 +158,29 @@ export function WorkoutEditPage() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSave = () => {
+  const saveWorkout = (finishWorkout: boolean) => {
     if (!validateForm()) {
       return;
     }
+
+    const existingWorkout = isEditing && id
+      ? workouts.find((w) => w.id === id)
+      : undefined;
+    const completedAt = finishWorkout
+      ? new Date().toISOString()
+      : existingWorkout?.isCompleted
+        ? existingWorkout.completedAt
+        : undefined;
 
     const workoutData: Omit<Workout, 'id' | 'createdAt' | 'updatedAt'> = {
       name: name.trim(),
       date,
       exercises: workoutExercises,
-      isCompleted: false,
+      isCompleted: finishWorkout ? true : existingWorkout?.isCompleted ?? false,
+      completedAt,
     };
 
     if (isEditing && id) {
-      const existingWorkout = workouts.find((w) => w.id === id);
       if (existingWorkout) {
         updateWorkout(id, workoutData);
       }
@@ -167,7 +188,15 @@ export function WorkoutEditPage() {
       addWorkout(workoutData);
     }
 
-    navigate('/workouts');
+    navigate(finishWorkout ? '/workouts/completed' : '/workouts');
+  };
+
+  const handleSave = () => {
+    saveWorkout(false);
+  };
+
+  const handleSaveAndFinish = () => {
+    saveWorkout(true);
   };
 
   const handleCancel = () => {
@@ -215,7 +244,7 @@ export function WorkoutEditPage() {
         <div>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold">Exercises</h2>
-            <Button onClick={() => setShowExerciseSelector(true)}>
+            <Button onClick={openAddExerciseSelector}>
               <Plus className="w-4 h-4 mr-2" />
               Add Exercise
             </Button>
@@ -256,7 +285,7 @@ export function WorkoutEditPage() {
               <p className="text-slate-500 mb-4">No exercises added yet</p>
               <Button
                 variant="outline"
-                onClick={() => setShowExerciseSelector(true)}
+                onClick={openAddExerciseSelector}
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Add Your First Exercise
@@ -266,12 +295,16 @@ export function WorkoutEditPage() {
         </div>
 
         {/* Actions */}
-        <div className="flex gap-3 pb-6">
-          <Button onClick={handleSave} className="flex-1">
+        <div className="flex flex-col gap-3 pb-6 sm:flex-row">
+          <Button variant="outline" onClick={handleSave} className="w-full sm:flex-1">
             <Save className="w-4 h-4 mr-2" />
             {isEditing ? 'Save Changes' : 'Create Workout'}
           </Button>
-          <Button variant="outline" onClick={handleCancel} className="flex-1">
+          <Button variant="outline" onClick={handleSaveAndFinish} className="w-full sm:flex-1">
+            <Save className="w-4 h-4 mr-2" />
+            Save and Finish Workout
+          </Button>
+          <Button variant="outline" onClick={handleCancel} className="w-full sm:flex-1">
             Cancel
           </Button>
         </div>
@@ -283,6 +316,7 @@ export function WorkoutEditPage() {
         onOpenChange={setShowExerciseSelector}
         onSelect={handleAddExercise}
         selectedExerciseIds={workoutExercises.map((we) => we.exerciseId)}
+        initialFilterGroup={selectorInitialFilterGroup}
       />
     </div>
   );

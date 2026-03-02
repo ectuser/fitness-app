@@ -15,11 +15,15 @@ interface ExerciseFormProps {
 const MUSCLE_GROUPS: MuscleGroup[] = [
   'Chest',
   'Back',
-  'Legs',
   'Shoulders',
-  'Arms',
   'Core',
-  'Full Body',
+  'Biceps',
+  'Triceps',
+  'Quads',
+  'Hamstrings',
+  'Glutes',
+  'Calves',
+  'None',
 ];
 
 export function ExerciseForm({ exercise, onSave, onCancel }: ExerciseFormProps) {

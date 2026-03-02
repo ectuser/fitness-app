@@ -5,6 +5,7 @@ export const STORAGE_KEYS = {
   EXERCISES: 'fitness-app-exercises',
   WORKOUTS: 'fitness-app-workouts',
   SETTINGS: 'fitness-app-settings',
+  LAST_VISITED_PATH: 'fitness-app-last-visited-path',
 } as const;
 
 // Generic function to get data from localStorage

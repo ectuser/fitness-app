@@ -1,8 +1,15 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import {
   Dialog,
   DialogContent,
@@ -12,7 +19,7 @@ import {
 } from '@/components/ui/dialog';
 import { Search, Plus, Check, TrendingUp, Clock } from 'lucide-react';
 import { useData } from '@/context/DataContext';
-import type { Exercise } from '@/types';
+import type { Exercise, MuscleGroup } from '@/types';
 import { ExerciseForm } from '@/components/exercise/ExerciseForm';
 import { useExerciseStats } from '@/hooks/useExerciseStats';
 
@@ -21,6 +28,7 @@ interface ExerciseSelectorProps {
   onOpenChange: (open: boolean) => void;
   onSelect: (exercise: Exercise) => void;
   selectedExerciseIds?: string[];
+  initialFilterGroup?: MuscleGroup | null;
 }
 
 interface ExerciseCardProps {
@@ -45,11 +53,6 @@ function ExerciseCard({ exercise, isSelected, onClick }: ExerciseCardProps) {
           <div className="flex items-center gap-2 mb-2">
             <h3 className="font-semibold">{exercise.name}</h3>
             {isSelected && <Check className="w-4 h-4 text-green-600" />}
-            {exercise.isCustom && (
-              <Badge variant="outline" className="text-xs">
-                Custom
-              </Badge>
-            )}
           </div>
           <div className="flex flex-wrap gap-1 mb-2">
             {exercise.muscleGroups.map((muscle) => (
@@ -94,16 +97,59 @@ export function ExerciseSelector({
   onOpenChange,
   onSelect,
   selectedExerciseIds = [],
+  initialFilterGroup = null,
 }: ExerciseSelectorProps) {
   const { exercises, addExercise } = useData();
   const [searchQuery, setSearchQuery] = useState('');
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [selectedFilterGroup, setSelectedFilterGroup] = useState<MuscleGroup | null>(null);
+
+  const muscleGroupOrder: MuscleGroup[] = [
+    'Chest',
+    'Back',
+    'Shoulders',
+    'Core',
+    'Biceps',
+    'Triceps',
+    'Quads',
+    'Hamstrings',
+    'Glutes',
+    'Calves',
+    'Arms (Legacy)',
+    'Legs (Legacy)',
+    'None',
+  ];
+
+  const availableMuscleGroups = useMemo(() => {
+    const uniqueGroups = new Set<MuscleGroup>();
+    exercises.forEach((exercise) => {
+      exercise.muscleGroups.forEach((group) => uniqueGroups.add(group));
+    });
+
+    return Array.from(uniqueGroups).sort((a, b) => {
+      const aIndex = muscleGroupOrder.indexOf(a);
+      const bIndex = muscleGroupOrder.indexOf(b);
+
+      if (aIndex === -1 && bIndex === -1) return a.localeCompare(b);
+      if (aIndex === -1) return 1;
+      if (bIndex === -1) return -1;
+      return aIndex - bIndex;
+    });
+  }, [exercises]);
+
+  useEffect(() => {
+    if (!open) return;
+    setSelectedFilterGroup(initialFilterGroup ?? null);
+  }, [initialFilterGroup, open]);
 
   const filteredExercises = exercises.filter((exercise) => {
     const matchesSearch = exercise.name
       .toLowerCase()
       .includes(searchQuery.toLowerCase());
-    return matchesSearch;
+    const matchesFilter = selectedFilterGroup
+      ? exercise.muscleGroups.includes(selectedFilterGroup)
+      : true;
+    return matchesSearch && matchesFilter;
   });
 
   const handleExerciseSave = (exerciseData: Omit<Exercise, 'id' | 'createdAt'>) => {
@@ -169,6 +215,50 @@ export function ExerciseSelector({
             </Button>
           </div>
 
+          <div className="flex flex-wrap items-center gap-2">
+            <Select
+              value={selectedFilterGroup ?? 'all'}
+              onValueChange={(value) => {
+                if (value === 'all') {
+                  setSelectedFilterGroup(null);
+                  return;
+                }
+                setSelectedFilterGroup(value as MuscleGroup);
+              }}
+            >
+              <SelectTrigger
+                className={`w-full sm:w-[260px] ${
+                  selectedFilterGroup ? 'border-slate-900 ring-1 ring-slate-200' : ''
+                }`}
+              >
+                <SelectValue placeholder="Filter by muscle group" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All muscle groups</SelectItem>
+                {availableMuscleGroups.map((group) => (
+                  <SelectItem key={group} value={group}>
+                    {group}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            {selectedFilterGroup && (
+              <Button
+                variant="outline"
+                onClick={() => setSelectedFilterGroup(null)}
+              >
+                Reset Filter
+              </Button>
+            )}
+          </div>
+
+          {selectedFilterGroup && (
+            <div className="rounded-md border border-slate-300 bg-slate-50 px-3 py-2 text-sm">
+              Filtering by <span className="font-semibold">{selectedFilterGroup}</span>. Reset to see all exercises.
+            </div>
+          )}
+
           {/* Exercise List */}
           <div className="flex-1 overflow-y-auto space-y-2 pr-2">
             {filteredExercises.length > 0 ? (
@@ -185,7 +275,11 @@ export function ExerciseSelector({
               })
             ) : (
               <div className="text-center py-12 text-slate-500">
-                <p className="mb-4">No exercises found</p>
+                <p className="mb-4">
+                  {selectedFilterGroup
+                    ? `No exercises found for ${selectedFilterGroup}`
+                    : 'No exercises found'}
+                </p>
                 <Button
                   variant="outline"
                   onClick={() => setShowCreateForm(true)}

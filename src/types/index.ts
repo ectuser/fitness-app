@@ -3,11 +3,17 @@
 export type MuscleGroup =
   | 'Chest'
   | 'Back'
-  | 'Legs'
   | 'Shoulders'
-  | 'Arms'
   | 'Core'
-  | 'Full Body';
+  | 'Biceps'
+  | 'Triceps'
+  | 'Quads'
+  | 'Hamstrings'
+  | 'Glutes'
+  | 'Calves'
+  | 'Arms (Legacy)'
+  | 'Legs (Legacy)'
+  | 'None';
 
 export type WeightUnit = 'kg' | 'lb';
 

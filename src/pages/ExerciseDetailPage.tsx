@@ -98,11 +98,6 @@ export function ExerciseDetailPage() {
           <div className="flex items-start justify-between mb-4">
             <div>
               <h2 className="text-xl font-bold mb-2">{exercise.name}</h2>
-              {exercise.isCustom && (
-                <Badge variant="outline" className="mb-3">
-                  Custom Exercise
-                </Badge>
-              )}
             </div>
           </div>
 
