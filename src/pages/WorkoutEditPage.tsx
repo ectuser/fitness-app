@@ -295,16 +295,16 @@ export function WorkoutEditPage() {
         </div>
 
         {/* Actions */}
-        <div className="flex gap-3 pb-6">
-          <Button onClick={handleSave} className="flex-1">
+        <div className="flex flex-col gap-3 pb-6 sm:flex-row">
+          <Button variant="outline" onClick={handleSave} className="w-full sm:flex-1">
             <Save className="w-4 h-4 mr-2" />
             {isEditing ? 'Save Changes' : 'Create Workout'}
           </Button>
-          <Button onClick={handleSaveAndFinish} variant="secondary" className="flex-1">
+          <Button variant="outline" onClick={handleSaveAndFinish} className="w-full sm:flex-1">
             <Save className="w-4 h-4 mr-2" />
             Save and Finish Workout
           </Button>
-          <Button variant="outline" onClick={handleCancel} className="flex-1">
+          <Button variant="outline" onClick={handleCancel} className="w-full sm:flex-1">
             Cancel
           </Button>
         </div>
