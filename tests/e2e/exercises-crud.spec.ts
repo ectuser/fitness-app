@@ -35,7 +35,7 @@ test('exercise create and edit custom flow', async ({ page }) => {
 
   await page.getByText('Cable Row').first().click();
 
-  await expect(page.getByRole('heading', { name: 'Cable Row' })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 1, name: 'Cable Row' })).toBeVisible();
   await page.getByRole('button').nth(1).click();
   await expect(page.getByRole('heading', { name: 'Edit Exercise' })).toBeVisible();
 
