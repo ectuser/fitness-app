@@ -94,6 +94,7 @@ export function WorkoutSessionPage() {
             reps: 0,
           },
         ];
+    const defaultComment = lastWorkoutExercise?.comment ?? exercise.comments ?? '';
 
     // Handle replacing an existing exercise
     if (replacingExerciseIndex !== null) {
@@ -102,6 +103,7 @@ export function WorkoutSessionPage() {
         exerciseId: exercise.id,
         sets: defaultSets,
         order: replacingExerciseIndex,
+        comment: defaultComment,
       };
       setWorkoutExercises(updated);
       setReplacingExerciseIndex(null);
@@ -114,6 +116,7 @@ export function WorkoutSessionPage() {
       exerciseId: exercise.id,
       sets: defaultSets,
       order: workoutExercises.length,
+      comment: defaultComment,
     };
 
     setWorkoutExercises([...workoutExercises, newWorkoutExercise]);
