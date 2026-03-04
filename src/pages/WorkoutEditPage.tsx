@@ -12,10 +12,11 @@ import { ExerciseSelector } from '@/components/workout/ExerciseSelector';
 import type { Workout, WorkoutExercise, Exercise, MuscleGroup } from '@/types';
 
 const formatDefaultWorkoutName = (date: Date): string => {
-  const weekday = date.toLocaleDateString('en-US', { weekday: 'short' });
-  const month = date.toLocaleDateString('en-US', { month: 'long' });
-  const day = date.toLocaleDateString('en-US', { day: 'numeric' });
-  return `${weekday} ${month} ${day}`;
+  return date.toLocaleDateString('en-US', {
+    weekday: 'short',
+    month: 'long',
+    day: 'numeric',
+  });
 };
 
 export function WorkoutEditPage() {

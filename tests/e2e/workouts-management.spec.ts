@@ -12,6 +12,15 @@ test('workout create with selector search and sets', async ({ page }) => {
   await clearAppStorage(page);
   await page.goto('workouts/new');
 
+  const expectedDefaultName = await page.evaluate(() =>
+    new Date().toLocaleDateString('en-US', {
+      weekday: 'short',
+      month: 'long',
+      day: 'numeric',
+    })
+  );
+  await expect(page.getByLabel('Workout Name')).toHaveValue(expectedDefaultName);
+
   await page.getByLabel('Workout Name').fill('Push Day');
   await page.getByRole('button', { name: 'Add Exercise' }).click();
   await page.getByPlaceholder('Search exercises...').fill('Bench Press');
