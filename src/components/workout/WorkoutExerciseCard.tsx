@@ -74,6 +74,8 @@ export function WorkoutExerciseCard({
       sets: workoutExercise.sets.filter((s) => s.id !== setId),
     });
   };
+  const commentId = `exercise-comment-${exercise.id}-${index}`;
+  const commentValue = workoutExercise.comment ?? exercise.comments ?? '';
 
   return (
     <Card className="p-4">
@@ -148,46 +150,55 @@ export function WorkoutExerciseCard({
         ))}
       </div>
 
-      {/* Details Accordion */}
-      {(exercise.comments || stats) && (
-        <Accordion type="single" collapsible className="mb-3">
-          <AccordionItem value="details" className="border-none">
-            <AccordionTrigger className="py-2 text-sm font-medium">
-              Details
-            </AccordionTrigger>
-            <AccordionContent className="space-y-3 pt-2">
-              {exercise.comments && (
-                <div>
-                  <p className="text-xs font-medium text-slate-600 mb-1">Comments</p>
-                  <p className="text-sm text-slate-700">{exercise.comments}</p>
-                </div>
-              )}
-              {stats && (
-                <div className="space-y-2">
-                  {stats.maxWeight > 0 && (
-                    <div className="flex items-center gap-2 text-sm">
-                      <TrendingUp className="w-4 h-4 text-slate-500" />
-                      <span className="text-slate-600">Max:</span>
-                      <span className="font-semibold">
-                        {stats.maxWeight} {stats.maxWeightUnit} × {stats.maxWeightReps}
-                      </span>
-                    </div>
-                  )}
-                  {stats.lastWeight !== undefined && stats.lastWeight > 0 && (
-                    <div className="flex items-center gap-2 text-sm">
-                      <Clock className="w-4 h-4 text-slate-500" />
-                      <span className="text-slate-600">Last:</span>
-                      <span className="font-semibold">
-                        {stats.lastWeight} {stats.lastWeightUnit} × {stats.lastWeightReps}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              )}
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
-      )}
+      <Accordion type="single" collapsible className="mb-3">
+        <AccordionItem value="details" className="border-none">
+          <AccordionTrigger className="py-2 text-sm font-medium">
+            Details
+          </AccordionTrigger>
+          <AccordionContent className="space-y-3 pt-2">
+            {stats && (
+              <div className="space-y-2">
+                {stats.maxWeight > 0 && (
+                  <div className="flex items-center gap-2 text-sm">
+                    <TrendingUp className="w-4 h-4 text-slate-500" />
+                    <span className="text-slate-600">Max:</span>
+                    <span className="font-semibold">
+                      {stats.maxWeight} {stats.maxWeightUnit} × {stats.maxWeightReps}
+                    </span>
+                  </div>
+                )}
+                {stats.lastWeight !== undefined && stats.lastWeight > 0 && (
+                  <div className="flex items-center gap-2 text-sm">
+                    <Clock className="w-4 h-4 text-slate-500" />
+                    <span className="text-slate-600">Last:</span>
+                    <span className="font-semibold">
+                      {stats.lastWeight} {stats.lastWeightUnit} × {stats.lastWeightReps}
+                    </span>
+                  </div>
+                )}
+              </div>
+            )}
+            <div className="space-y-1">
+              <label htmlFor={commentId} className="text-xs font-medium text-slate-600">
+                Comment
+              </label>
+              <textarea
+                id={commentId}
+                value={commentValue}
+                onChange={(event) =>
+                  onChange({
+                    ...workoutExercise,
+                    comment: event.target.value,
+                  })
+                }
+                placeholder="Add a note for this exercise..."
+                rows={3}
+                className="w-full px-3 py-2 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent"
+              />
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
 
       <Button
         variant="outline"

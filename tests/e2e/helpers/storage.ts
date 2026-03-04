@@ -29,6 +29,7 @@ export interface WorkoutExerciseFixture {
   exerciseId: string;
   sets: WorkoutSetFixture[];
   order: number;
+  comment?: string;
 }
 
 export interface WorkoutFixture {
@@ -107,12 +108,14 @@ export function buildWorkout(overrides: Partial<WorkoutFixture> & Pick<WorkoutFi
 export function buildWorkoutExercise(
   exerciseId: string,
   order: number,
-  sets: WorkoutSetFixture[]
+  sets: WorkoutSetFixture[],
+  comment?: string
 ): WorkoutExerciseFixture {
   return {
     exerciseId,
     order,
     sets,
+    comment,
   };
 }
 

@@ -37,6 +37,7 @@ export interface WorkoutExercise {
   exerciseId: string;
   sets: Set[];
   order: number;
+  comment?: string;
 }
 
 export interface Workout {
