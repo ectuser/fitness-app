@@ -1,15 +1,10 @@
-import { useEffect, useMemo, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Search, Plus, Check, TrendingUp, Clock } from 'lucide-react';
+import { useMemo, useState } from 'react';
+
+import { ExerciseForm } from '@/components/exercise/ExerciseForm';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import {
   Dialog,
   DialogContent,
@@ -17,11 +12,17 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Search, Plus, Check, TrendingUp, Clock } from 'lucide-react';
-import { useData } from '@/context/DataContext';
-import type { Exercise, MuscleGroup } from '@/types';
-import { ExerciseForm } from '@/components/exercise/ExerciseForm';
+import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { useData } from '@/context/useData';
 import { useExerciseStats } from '@/hooks/useExerciseStats';
+import type { Exercise, MuscleGroup } from '@/types';
 
 interface ExerciseSelectorProps {
   open: boolean;
@@ -36,6 +37,22 @@ interface ExerciseCardProps {
   isSelected: boolean;
   onClick: () => void;
 }
+
+const MUSCLE_GROUP_ORDER: MuscleGroup[] = [
+  'Chest',
+  'Back',
+  'Shoulders',
+  'Core',
+  'Biceps',
+  'Triceps',
+  'Quads',
+  'Hamstrings',
+  'Glutes',
+  'Calves',
+  'Arms (Legacy)',
+  'Legs (Legacy)',
+  'None',
+];
 
 function ExerciseCard({ exercise, isSelected, onClick }: ExerciseCardProps) {
   const { workouts } = useData();
@@ -102,23 +119,9 @@ export function ExerciseSelector({
   const { exercises, addExercise } = useData();
   const [searchQuery, setSearchQuery] = useState('');
   const [showCreateForm, setShowCreateForm] = useState(false);
-  const [selectedFilterGroup, setSelectedFilterGroup] = useState<MuscleGroup | null>(null);
-
-  const muscleGroupOrder: MuscleGroup[] = [
-    'Chest',
-    'Back',
-    'Shoulders',
-    'Core',
-    'Biceps',
-    'Triceps',
-    'Quads',
-    'Hamstrings',
-    'Glutes',
-    'Calves',
-    'Arms (Legacy)',
-    'Legs (Legacy)',
-    'None',
-  ];
+  const [selectedFilterGroup, setSelectedFilterGroup] = useState<MuscleGroup | null>(() =>
+    initialFilterGroup ?? null
+  );
 
   const availableMuscleGroups = useMemo(() => {
     const uniqueGroups = new Set<MuscleGroup>();
@@ -127,8 +130,8 @@ export function ExerciseSelector({
     });
 
     return Array.from(uniqueGroups).sort((a, b) => {
-      const aIndex = muscleGroupOrder.indexOf(a);
-      const bIndex = muscleGroupOrder.indexOf(b);
+      const aIndex = MUSCLE_GROUP_ORDER.indexOf(a);
+      const bIndex = MUSCLE_GROUP_ORDER.indexOf(b);
 
       if (aIndex === -1 && bIndex === -1) return a.localeCompare(b);
       if (aIndex === -1) return 1;
@@ -136,11 +139,6 @@ export function ExerciseSelector({
       return aIndex - bIndex;
     });
   }, [exercises]);
-
-  useEffect(() => {
-    if (!open) return;
-    setSelectedFilterGroup(initialFilterGroup ?? null);
-  }, [initialFilterGroup, open]);
 
   const filteredExercises = exercises.filter((exercise) => {
     const matchesSearch = exercise.name

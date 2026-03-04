@@ -1,24 +1,28 @@
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Card } from '@/components/ui/card';
+import { Plus, Trash2, ChevronUp, ChevronDown, MoreVertical, Repeat, Pencil, TrendingUp, Clock } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+
+import { SetInput } from './SetInput';
+
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Plus, Trash2, ChevronUp, ChevronDown, MoreVertical, Repeat, Pencil, TrendingUp, Clock } from 'lucide-react';
-import type { WorkoutExercise, Exercise } from '@/types';
-import { SetInput } from './SetInput';
-import { useData } from '@/context/DataContext';
+import { useData } from '@/context/useData';
 import { useExerciseStats } from '@/hooks/useExerciseStats';
-import { useNavigate } from 'react-router-dom';
+import type { WorkoutExercise, Exercise } from '@/types';
+
+
 
 interface WorkoutExerciseCardProps {
   workoutExercise: WorkoutExercise;

@@ -1,15 +1,8 @@
+import { Plus, Play, Calendar, Settings, Download, Upload } from 'lucide-react';
 import { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import { PageHeader } from '@/components/layout/PageHeader';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Card } from '@/components/ui/card';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,11 +13,19 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { Plus, Play, Calendar, Settings, Download, Upload } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import { useData } from '@/context/DataContext';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { useData } from '@/context/useData';
+import { createBackupPayload, parseBackupPayload, type BackupData } from '@/lib/backup';
 import { STORAGE_KEYS, saveToStorage } from '@/lib/storage';
-import { migrateExercises } from '@/lib/migrations';
 
 export function Dashboard() {
   const navigate = useNavigate();
@@ -32,6 +33,7 @@ export function Dashboard() {
   const [showResetDialog, setShowResetDialog] = useState(false);
   const [showImportDialog, setShowImportDialog] = useState(false);
   const [importError, setImportError] = useState<string | null>(null);
+  const [pendingImportData, setPendingImportData] = useState<BackupData | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const completedWorkouts = workouts.filter((w) => w.isCompleted);
@@ -42,15 +44,11 @@ export function Dashboard() {
   };
 
   const handleExportData = () => {
-    const exportData = {
-      version: '1.0',
-      exportDate: new Date().toISOString(),
-      data: {
-        exercises,
-        workouts,
-        settings,
-      },
-    };
+    const exportData = createBackupPayload({
+      exercises,
+      workouts,
+      settings,
+    });
 
     const dataStr = JSON.stringify(exportData, null, 2);
     const dataBlob = new Blob([dataStr], { type: 'application/json' });
@@ -75,24 +73,24 @@ export function Dashboard() {
     const reader = new FileReader();
     reader.onload = (e) => {
       try {
-        const content = e.target?.result as string;
-        const importData = JSON.parse(content);
-
-        // Validate import data structure
-        if (!importData.data || !importData.data.exercises || !importData.data.workouts) {
-          setImportError('Invalid backup file format. Missing required data.');
-          setShowImportDialog(true);
-          return;
+        const content = e.target?.result;
+        if (typeof content !== 'string') {
+          throw new Error('Failed to read backup file. Please make sure it\'s a valid JSON file.');
         }
 
-        // Show confirmation dialog
-        setImportError(null);
-        setShowImportDialog(true);
+        const parsedBackup = parseBackupPayload(content);
 
-        // Store the parsed data temporarily for import
-        (window as any).__importData = importData.data;
+        // Show confirmation dialog.
+        setImportError(null);
+        setPendingImportData(parsedBackup);
+        setShowImportDialog(true);
       } catch (error) {
-        setImportError('Failed to read backup file. Please make sure it\'s a valid JSON file.');
+        setPendingImportData(null);
+        setImportError(
+          error instanceof Error
+            ? error.message
+            : 'Failed to read backup file. Please make sure it\'s a valid JSON file.'
+        );
         setShowImportDialog(true);
       }
     };
@@ -103,25 +101,20 @@ export function Dashboard() {
   };
 
   const handleConfirmImport = () => {
-    const importData = (window as any).__importData;
-    if (!importData) return;
+    if (!pendingImportData) return;
 
     try {
-      const migratedExercises = migrateExercises(importData.exercises || []);
-
-      // Save imported data to localStorage
-      saveToStorage(STORAGE_KEYS.EXERCISES, migratedExercises);
-      saveToStorage(STORAGE_KEYS.WORKOUTS, importData.workouts);
-      if (importData.settings) {
-        saveToStorage(STORAGE_KEYS.SETTINGS, importData.settings);
+      // Save imported data to localStorage.
+      saveToStorage(STORAGE_KEYS.EXERCISES, pendingImportData.exercises);
+      saveToStorage(STORAGE_KEYS.WORKOUTS, pendingImportData.workouts);
+      if (pendingImportData.settings) {
+        saveToStorage(STORAGE_KEYS.SETTINGS, pendingImportData.settings);
       }
 
-      // Clean up temporary data
-      delete (window as any).__importData;
-
-      // Reload the page to apply changes
+      setPendingImportData(null);
+      // Reload the page to apply changes.
       window.location.reload();
-    } catch (error) {
+    } catch {
       setImportError('Failed to import data. Please try again.');
     }
   };
@@ -381,7 +374,7 @@ export function Dashboard() {
               onClick={() => {
                 setShowImportDialog(false);
                 setImportError(null);
-                delete (window as any).__importData;
+                setPendingImportData(null);
               }}
             >
               Cancel

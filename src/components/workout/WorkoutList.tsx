@@ -1,4 +1,5 @@
 import { WorkoutCard } from './WorkoutCard';
+
 import type { Workout, Exercise } from '@/types';
 
 interface WorkoutListProps {

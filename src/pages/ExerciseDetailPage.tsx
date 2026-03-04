@@ -1,11 +1,7 @@
-import { useParams, useNavigate } from 'react-router-dom';
-import { useData } from '@/context/DataContext';
-import { useExerciseStats, useExerciseHistory } from '@/hooks/useExerciseStats';
-import { PageHeader } from '@/components/layout/PageHeader';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Card } from '@/components/ui/card';
 import { Edit, Trash2 } from 'lucide-react';
+import { useParams, useNavigate } from 'react-router-dom';
+
+import { PageHeader } from '@/components/layout/PageHeader';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -17,6 +13,11 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { useData } from '@/context/useData';
+import { useExerciseStats, useExerciseHistory } from '@/hooks/useExerciseStats';
 
 export function ExerciseDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -73,7 +74,7 @@ export function ExerciseDetailPage() {
                   <AlertDialogHeader>
                     <AlertDialogTitle>Delete Exercise?</AlertDialogTitle>
                     <AlertDialogDescription>
-                      This will permanently delete "{exercise.name}". This action cannot be undone.
+                      This will permanently delete &quot;{exercise.name}&quot;. This action cannot be undone.
                       {history.length > 0 && (
                         <p className="mt-2 text-red-600 font-medium">
                           Warning: This exercise has been used in {history.length} workout(s).
@@ -184,7 +185,7 @@ export function ExerciseDetailPage() {
             </div>
           ) : (
             <Card className="p-6 text-center text-slate-500">
-              No workout history yet. This exercise hasn't been used in any completed workouts.
+              No workout history yet. This exercise has not been used in any completed workouts.
             </Card>
           )}
         </div>

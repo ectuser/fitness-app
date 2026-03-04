@@ -1,6 +1,7 @@
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
+
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import type { Set as SetType } from '@/types';
 
 interface SetInputProps {

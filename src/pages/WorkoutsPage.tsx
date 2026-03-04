@@ -1,10 +1,11 @@
+import { Plus } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Plus } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import { useData } from '@/context/DataContext';
 import { WorkoutList } from '@/components/workout/WorkoutList';
+import { useData } from '@/context/useData';
 
 export function WorkoutsPage() {
   const navigate = useNavigate();

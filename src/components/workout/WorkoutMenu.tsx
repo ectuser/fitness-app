@@ -1,11 +1,6 @@
-import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { MoreVertical, Edit, Copy, Trash2, Check, X } from 'lucide-react';
+import { useState } from 'react';
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -16,9 +11,16 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { MoreVertical, Edit, Copy, Trash2, Check, X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import type { Workout } from '@/types';
-import { useState } from 'react';
+
 
 interface WorkoutMenuProps {
   workout: Workout;
@@ -88,7 +90,7 @@ export function WorkoutMenu({
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Workout?</AlertDialogTitle>
             <AlertDialogDescription>
-              This will permanently delete "{workout.name}". This action cannot be
+              This will permanently delete &quot;{workout.name}&quot;. This action cannot be
               undone.
             </AlertDialogDescription>
           </AlertDialogHeader>

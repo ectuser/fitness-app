@@ -1,14 +1,23 @@
-import { useState, useEffect } from 'react';
+import { Plus, Save } from 'lucide-react';
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useData } from '@/context/DataContext';
+
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card } from '@/components/ui/card';
-import { Plus, Save } from 'lucide-react';
-import { WorkoutExerciseCard } from '@/components/workout/WorkoutExerciseCard';
 import { ExerciseSelector } from '@/components/workout/ExerciseSelector';
+import { WorkoutExerciseCard } from '@/components/workout/WorkoutExerciseCard';
+import { useData } from '@/context/useData';
+import {
+  addOrReplaceWorkoutExercise,
+  createDefaultSets,
+  findLastCompletedWorkoutExercise,
+  moveWorkoutExercise,
+  removeWorkoutExerciseAtIndex,
+  replaceWorkoutExerciseAtIndex,
+} from '@/lib/workout-exercises';
 import type { Workout, WorkoutExercise, Exercise, MuscleGroup } from '@/types';
 
 const formatDefaultWorkoutName = (date: Date): string => {
@@ -23,123 +32,65 @@ export function WorkoutEditPage() {
   const navigate = useNavigate();
   const { workouts, exercises, addWorkout, updateWorkout, settings } = useData();
   const isEditing = !!id;
+  const existingWorkout = isEditing && id
+    ? workouts.find((workout) => workout.id === id)
+    : undefined;
 
-  const [name, setName] = useState(() => formatDefaultWorkoutName(new Date()));
+  const [name, setName] = useState(() => existingWorkout?.name ?? formatDefaultWorkoutName(new Date()));
   const [date, setDate] = useState(() => {
+    if (existingWorkout) {
+      return existingWorkout.date;
+    }
+
     const today = new Date();
     return today.toISOString().split('T')[0];
   });
-  const [workoutExercises, setWorkoutExercises] = useState<WorkoutExercise[]>([]);
+  const [workoutExercises, setWorkoutExercises] = useState<WorkoutExercise[]>(
+    () => existingWorkout?.exercises ?? []
+  );
   const [showExerciseSelector, setShowExerciseSelector] = useState(false);
   const [replacingExerciseIndex, setReplacingExerciseIndex] = useState<number | null>(null);
   const [selectorInitialFilterGroup, setSelectorInitialFilterGroup] = useState<MuscleGroup | null>(null);
+  const [selectorSessionId, setSelectorSessionId] = useState(0);
   const [errors, setErrors] = useState<{ name?: string; exercises?: string }>({});
 
-  useEffect(() => {
-    if (isEditing) {
-      const workout = workouts.find((w) => w.id === id);
-      if (workout) {
-        setName(workout.name);
-        setDate(workout.date);
-        setWorkoutExercises(workout.exercises);
-      }
-    }
-  }, [id, workouts, isEditing]);
-
   const handleAddExercise = (exercise: Exercise) => {
-    // Find last workout data for this exercise
-    const completedWorkouts = workouts.filter((w) => w.isCompleted);
-    const sortedWorkouts = [...completedWorkouts].sort((a, b) =>
-      b.date.localeCompare(a.date)
+    const lastWorkoutExercise = findLastCompletedWorkoutExercise(workouts, exercise.id);
+    const defaultSets = createDefaultSets(lastWorkoutExercise, settings.defaultWeightUnit);
+
+    const updatedExercises = addOrReplaceWorkoutExercise(
+      workoutExercises,
+      exercise,
+      defaultSets,
+      replacingExerciseIndex
     );
-
-    let lastWorkoutExercise: WorkoutExercise | null = null;
-    for (const workout of sortedWorkouts) {
-      const found = workout.exercises.find((we) => we.exerciseId === exercise.id);
-      if (found) {
-        lastWorkoutExercise = found;
-        break;
-      }
-    }
-
-    // Create default sets based on last workout or use defaults
-    const defaultSets = lastWorkoutExercise
-      ? lastWorkoutExercise.sets.map((set) => ({
-          id: crypto.randomUUID(),
-          weight: set.weight,
-          weightUnit: set.weightUnit,
-          reps: set.reps,
-        }))
-      : [
-          {
-            id: crypto.randomUUID(),
-            weight: 0,
-            weightUnit: settings.defaultWeightUnit,
-            reps: 0,
-          },
-        ];
-
-    // Handle replacing an existing exercise
-    if (replacingExerciseIndex !== null) {
-      const updated = [...workoutExercises];
-      updated[replacingExerciseIndex] = {
-        exerciseId: exercise.id,
-        sets: defaultSets,
-        order: replacingExerciseIndex,
-      };
-      setWorkoutExercises(updated);
-      setReplacingExerciseIndex(null);
-      setSelectorInitialFilterGroup(null);
-      setShowExerciseSelector(false);
-      return;
-    }
-
-    const newWorkoutExercise: WorkoutExercise = {
-      exerciseId: exercise.id,
-      sets: defaultSets,
-      order: workoutExercises.length,
-    };
-
-    setWorkoutExercises([...workoutExercises, newWorkoutExercise]);
+    setWorkoutExercises(updatedExercises);
     setSelectorInitialFilterGroup(null);
+    setReplacingExerciseIndex(null);
     setShowExerciseSelector(false);
   };
 
   const openAddExerciseSelector = () => {
     setReplacingExerciseIndex(null);
     setSelectorInitialFilterGroup(null);
+    setSelectorSessionId((current) => current + 1);
     setShowExerciseSelector(true);
   };
 
   const handleRemoveExercise = (index: number) => {
-    const updated = workoutExercises.filter((_, i) => i !== index);
-    // Reassign order
-    const reordered = updated.map((we, idx) => ({ ...we, order: idx }));
-    setWorkoutExercises(reordered);
+    setWorkoutExercises(removeWorkoutExerciseAtIndex(workoutExercises, index));
   };
 
   const handleMoveExerciseUp = (index: number) => {
-    if (index === 0) return;
-    const updated = [...workoutExercises];
-    [updated[index - 1], updated[index]] = [updated[index], updated[index - 1]];
-    // Reassign order
-    const reordered = updated.map((we, idx) => ({ ...we, order: idx }));
-    setWorkoutExercises(reordered);
+    setWorkoutExercises(moveWorkoutExercise(workoutExercises, index, 'up'));
   };
 
   const handleMoveExerciseDown = (index: number) => {
-    if (index === workoutExercises.length - 1) return;
-    const updated = [...workoutExercises];
-    [updated[index], updated[index + 1]] = [updated[index + 1], updated[index]];
-    // Reassign order
-    const reordered = updated.map((we, idx) => ({ ...we, order: idx }));
-    setWorkoutExercises(reordered);
+    setWorkoutExercises(moveWorkoutExercise(workoutExercises, index, 'down'));
   };
 
   const handleUpdateExercise = (index: number, updatedExercise: WorkoutExercise) => {
-    const updated = [...workoutExercises];
-    updated[index] = updatedExercise;
-    setWorkoutExercises(updated);
+    setWorkoutExercises(replaceWorkoutExerciseAtIndex(workoutExercises, index, updatedExercise));
   };
 
   const handleReplaceExercise = (index: number) => {
@@ -147,6 +98,7 @@ export function WorkoutEditPage() {
     const currentExercise = exercises.find((exercise) => exercise.id === currentExerciseId);
     setSelectorInitialFilterGroup(currentExercise?.muscleGroups[0] ?? null);
     setReplacingExerciseIndex(index);
+    setSelectorSessionId((current) => current + 1);
     setShowExerciseSelector(true);
   };
 
@@ -170,9 +122,6 @@ export function WorkoutEditPage() {
       return;
     }
 
-    const existingWorkout = isEditing && id
-      ? workouts.find((w) => w.id === id)
-      : undefined;
     const completedAt = finishWorkout
       ? new Date().toISOString()
       : existingWorkout?.isCompleted
@@ -319,6 +268,7 @@ export function WorkoutEditPage() {
 
       {/* Exercise Selector Dialog */}
       <ExerciseSelector
+        key={`${selectorSessionId}-${selectorInitialFilterGroup ?? 'all'}`}
         open={showExerciseSelector}
         onOpenChange={setShowExerciseSelector}
         onSelect={handleAddExercise}

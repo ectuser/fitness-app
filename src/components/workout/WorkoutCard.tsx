@@ -1,9 +1,12 @@
-import { Badge } from '@/components/ui/badge';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Calendar, Play } from 'lucide-react';
-import type { Workout, Exercise } from '@/types';
+
 import { WorkoutMenu } from './WorkoutMenu';
+
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import type { Workout, Exercise } from '@/types';
+
 
 interface WorkoutCardProps {
   workout: Workout;

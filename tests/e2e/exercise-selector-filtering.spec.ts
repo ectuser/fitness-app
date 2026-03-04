@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 import {
   clearAppStorage,
   seedAppStorage,
@@ -67,7 +67,7 @@ test('switch exercise opens selector with preselected muscle filter', async ({ p
   await expect(page.getByRole('heading', { name: 'Edit Workout' })).toBeVisible();
 
   const benchCard = page.locator(
-    'xpath=//h3[normalize-space()=\"Bench Press\"]/ancestor::div[contains(@class,\"p-4\")][1]'
+    "xpath=//h3[normalize-space()='Bench Press']/ancestor::div[contains(@class,'p-4')][1]"
   );
   await benchCard.getByRole('button').nth(2).click();
   await page.getByRole('menuitem', { name: 'Switch Exercise' }).click();

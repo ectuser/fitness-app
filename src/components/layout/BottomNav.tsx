@@ -1,5 +1,6 @@
-import { Link, useLocation } from 'react-router-dom';
 import { Home, Dumbbell, ListTodo } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+
 import { cn } from '@/lib/utils';
 
 export function BottomNav() {

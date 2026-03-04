@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 import { seedAppStorage, buildExercise } from './helpers/storage';
 
 test('muscle taxonomy migration and exercise form options', async ({ page }) => {

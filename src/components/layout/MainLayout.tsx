@@ -1,5 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
+
 import { BottomNav } from './BottomNav';
+
 import { cn } from '@/lib/utils';
 
 interface MainLayoutProps {

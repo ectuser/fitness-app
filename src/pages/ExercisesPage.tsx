@@ -1,9 +1,10 @@
-import { PageHeader } from '@/components/layout/PageHeader';
-import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useData } from '@/context/DataContext';
+
+import { PageHeader } from '@/components/layout/PageHeader';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { useData } from '@/context/useData';
 
 export function ExercisesPage() {
   const navigate = useNavigate();
@@ -24,8 +25,9 @@ export function ExercisesPage() {
       <div className="container mx-auto px-4 py-6">
         <div className="space-y-3">
           {exercises.map((exercise) => (
-            <div
+            <button
               key={exercise.id}
+              type="button"
               className="bg-white rounded-lg p-4 shadow-sm border border-slate-200 cursor-pointer hover:border-slate-300"
               onClick={() => navigate(`/exercises/${exercise.id}`)}
             >
@@ -37,7 +39,7 @@ export function ExercisesPage() {
                   </Badge>
                 ))}
               </div>
-            </div>
+            </button>
           ))}
         </div>
       </div>

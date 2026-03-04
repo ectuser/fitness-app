@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 import { clearAppStorage } from './helpers/storage';
 
 test('dashboard smoke navigation and quick stats render', async ({ page }) => {

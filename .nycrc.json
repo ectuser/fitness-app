@@ -1,0 +1,28 @@
+{
+  "all": true,
+  "extension": [
+    ".ts",
+    ".tsx"
+  ],
+  "include": [
+    "src/App.tsx",
+    "src/pages/ExercisesPage.tsx",
+    "src/pages/ExerciseFormPage.tsx",
+    "src/pages/ExerciseDetailPage.tsx",
+    "src/pages/WorkoutsPage.tsx",
+    "src/pages/WorkoutEditPage.tsx"
+  ],
+  "exclude": [
+    "src/components/ui/**",
+    "src/main.tsx",
+    "tests/**",
+    "**/*.d.ts"
+  ],
+  "reporter": [
+    "text-summary",
+    "html",
+    "json-summary"
+  ],
+  "report-dir": "coverage/e2e",
+  "temp-dir": ".nyc_output"
+}

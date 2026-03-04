@@ -1,15 +1,16 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { BrowserRouter, Routes, Route, matchPath, useLocation, useNavigate } from 'react-router-dom';
+
 import { MainLayout } from './components/layout/MainLayout';
+import { STORAGE_KEYS, getFromStorage, saveToStorage } from './lib/storage';
 import { Dashboard } from './pages/Dashboard';
-import { WorkoutsPage } from './pages/WorkoutsPage';
-import { WorkoutsCompletedPage } from './pages/WorkoutsCompletedPage';
+import { ExerciseDetailPage } from './pages/ExerciseDetailPage';
+import { ExerciseFormPage } from './pages/ExerciseFormPage';
+import { ExercisesPage } from './pages/ExercisesPage';
 import { WorkoutEditPage } from './pages/WorkoutEditPage';
 import { WorkoutSessionPage } from './pages/WorkoutSessionPage';
-import { ExercisesPage } from './pages/ExercisesPage';
-import { ExerciseFormPage } from './pages/ExerciseFormPage';
-import { ExerciseDetailPage } from './pages/ExerciseDetailPage';
-import { STORAGE_KEYS, getFromStorage, saveToStorage } from './lib/storage';
+import { WorkoutsCompletedPage } from './pages/WorkoutsCompletedPage';
+import { WorkoutsPage } from './pages/WorkoutsPage';
 
 const RESTORABLE_ROUTES = [
   '/',
@@ -33,7 +34,6 @@ function isRestorableRoute(pathname: string): boolean {
 function LastVisitedRouteHandler() {
   const location = useLocation();
   const navigate = useNavigate();
-  const [isInitialized, setIsInitialized] = useState(false);
   const hasRestoredRef = useRef(false);
   const restoreTargetRef = useRef<string | null>(null);
 
@@ -55,11 +55,10 @@ function LastVisitedRouteHandler() {
     }
 
     hasRestoredRef.current = true;
-    setIsInitialized(true);
   }, [location.pathname, navigate]);
 
   useEffect(() => {
-    if (!isInitialized) {
+    if (!hasRestoredRef.current) {
       return;
     }
 
@@ -75,7 +74,7 @@ function LastVisitedRouteHandler() {
     if (restoreTargetRef.current === location.pathname) {
       restoreTargetRef.current = null;
     }
-  }, [isInitialized, location.pathname]);
+  }, [location.pathname]);
 
   return null;
 }

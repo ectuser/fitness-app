@@ -1,7 +1,8 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import { useData } from '@/context/DataContext';
-import { PageHeader } from '@/components/layout/PageHeader';
+
 import { ExerciseForm } from '@/components/exercise/ExerciseForm';
+import { PageHeader } from '@/components/layout/PageHeader';
+import { useData } from '@/context/useData';
 import type { Exercise } from '@/types';
 
 export function ExerciseFormPage() {

@@ -1,88 +1,46 @@
-import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
-import type { Exercise, Workout, Settings } from '@/types';
-import { STORAGE_KEYS, getFromStorage, saveToStorage } from '@/lib/storage';
-import { initializeSeedExercises } from '@/lib/seed-data';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+
+import { DataContext, type DataContextType } from './DataContextValue';
+
 import { migrateExercises } from '@/lib/migrations';
+import { initializeSeedExercises } from '@/lib/seed-data';
+import { STORAGE_KEYS, getFromStorage, saveToStorage } from '@/lib/storage';
+import type { Exercise, Workout, Settings } from '@/types';
 
-interface DataContextType {
-  // Exercises
-  exercises: Exercise[];
-  addExercise: (exercise: Omit<Exercise, 'id' | 'createdAt'>) => Exercise;
-  updateExercise: (id: string, updates: Partial<Exercise>) => void;
-  deleteExercise: (id: string) => void;
-  getExerciseById: (id: string) => Exercise | undefined;
+const DEFAULT_SETTINGS: Settings = { defaultWeightUnit: 'kg' };
 
-  // Workouts
-  workouts: Workout[];
-  addWorkout: (workout: Omit<Workout, 'id' | 'createdAt' | 'updatedAt'>) => Workout;
-  updateWorkout: (id: string, updates: Partial<Workout>) => void;
-  deleteWorkout: (id: string) => void;
-  duplicateWorkout: (id: string) => Workout | null;
-  toggleWorkoutComplete: (id: string) => void;
-  getWorkoutById: (id: string) => Workout | undefined;
+function getInitialExercises(): Exercise[] {
+  const storedExercises = getFromStorage<Exercise[]>(STORAGE_KEYS.EXERCISES, []);
+  if (storedExercises.length === 0) {
+    return migrateExercises(initializeSeedExercises());
+  }
 
-  // Computed data
-  upcomingWorkouts: Workout[];
-  completedWorkouts: Workout[];
-  nextWorkout: Workout | null;
-
-  // Settings
-  settings: Settings;
-  updateSettings: (updates: Partial<Settings>) => void;
-
-  // Data management
-  resetAllData: () => void;
+  return migrateExercises(storedExercises);
 }
 
-const DataContext = createContext<DataContextType | undefined>(undefined);
-
 export function DataProvider({ children }: { children: React.ReactNode }) {
-  const [exercises, setExercises] = useState<Exercise[]>([]);
-  const [workouts, setWorkouts] = useState<Workout[]>([]);
-  const [settings, setSettings] = useState<Settings>({ defaultWeightUnit: 'kg' });
-  const [isInitialized, setIsInitialized] = useState(false);
-
-  // Initialize from localStorage on mount
-  useEffect(() => {
-    const storedExercises = getFromStorage<Exercise[]>(STORAGE_KEYS.EXERCISES, []);
-    const storedWorkouts = getFromStorage<Workout[]>(STORAGE_KEYS.WORKOUTS, []);
-    const storedSettings = getFromStorage<Settings>(STORAGE_KEYS.SETTINGS, {
-      defaultWeightUnit: 'kg',
-    });
-
-    if (storedExercises.length === 0) {
-      // First load - seed exercises
-      const seededExercises = migrateExercises(initializeSeedExercises());
-      setExercises(seededExercises);
-    } else {
-      setExercises(migrateExercises(storedExercises));
-    }
-
-    setWorkouts(storedWorkouts);
-    setSettings(storedSettings);
-    setIsInitialized(true);
-  }, []);
+  const [exercises, setExercises] = useState<Exercise[]>(() => getInitialExercises());
+  const [workouts, setWorkouts] = useState<Workout[]>(() =>
+    getFromStorage<Workout[]>(STORAGE_KEYS.WORKOUTS, [])
+  );
+  const [settings, setSettings] = useState<Settings>(() =>
+    getFromStorage<Settings>(STORAGE_KEYS.SETTINGS, DEFAULT_SETTINGS)
+  );
 
   // Sync exercises to localStorage
   useEffect(() => {
-    if (isInitialized) {
-      saveToStorage(STORAGE_KEYS.EXERCISES, exercises);
-    }
-  }, [exercises, isInitialized]);
+    saveToStorage(STORAGE_KEYS.EXERCISES, exercises);
+  }, [exercises]);
 
   // Sync workouts to localStorage
   useEffect(() => {
-    if (isInitialized) {
-      saveToStorage(STORAGE_KEYS.WORKOUTS, workouts);
-    }
-  }, [workouts, isInitialized]);
+    saveToStorage(STORAGE_KEYS.WORKOUTS, workouts);
+  }, [workouts]);
 
   // Sync settings to localStorage
   useEffect(() => {
-    if (isInitialized) {
-      saveToStorage(STORAGE_KEYS.SETTINGS, settings);
-    }
-  }, [settings, isInitialized]);
+    saveToStorage(STORAGE_KEYS.SETTINGS, settings);
+  }, [settings]);
 
   // Exercise CRUD operations
   const addExercise = useCallback((exercise: Omit<Exercise, 'id' | 'createdAt'>) => {
@@ -205,7 +163,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     const seededExercises = migrateExercises(initializeSeedExercises());
     setExercises(seededExercises);
     setWorkouts([]);
-    setSettings({ defaultWeightUnit: 'kg' });
+    setSettings(DEFAULT_SETTINGS);
   }, []);
 
   // Computed values
@@ -249,12 +207,4 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   };
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;
-}
-
-export function useData() {
-  const context = useContext(DataContext);
-  if (context === undefined) {
-    throw new Error('useData must be used within a DataProvider');
-  }
-  return context;
 }

@@ -1,16 +1,35 @@
 import path from 'path'
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+
 import tailwindcss from '@tailwindcss/vite'
+import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite'
+import istanbul from 'vite-plugin-istanbul'
 import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vite.dev/config/
-export default defineConfig({
-  base: '/fitness-app/',
-  plugins: [
-    react(),
-    tailwindcss(),
-    VitePWA({
+export default defineConfig(() => {
+  const enableCoverageInstrumentation = process.env.VITE_COVERAGE === 'true';
+
+  return {
+    base: '/fitness-app/',
+    plugins: [
+      react(),
+      tailwindcss(),
+      enableCoverageInstrumentation &&
+        istanbul({
+          include: [
+            'src/App.tsx',
+            'src/pages/ExercisesPage.tsx',
+            'src/pages/ExerciseFormPage.tsx',
+            'src/pages/ExerciseDetailPage.tsx',
+            'src/pages/WorkoutsPage.tsx',
+            'src/pages/WorkoutEditPage.tsx',
+          ],
+          exclude: ['node_modules', 'tests', 'src/components/ui/**', 'src/main.tsx'],
+          extension: ['.ts', '.tsx'],
+          requireEnv: true,
+        }),
+      VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
       manifest: {
@@ -60,11 +79,36 @@ export default defineConfig({
           }
         ]
       }
-    })
-  ],
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src'),
+    }),
+    ].filter(Boolean),
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, './src'),
+      },
     },
-  },
+    test: {
+      environment: 'jsdom',
+      globals: true,
+      setupFiles: ['./src/test/setup.ts'],
+      include: ['src/**/*.{test,spec}.{ts,tsx}'],
+      coverage: {
+        provider: 'v8',
+        all: true,
+        reportsDirectory: './coverage/unit',
+        reporter: ['text-summary', 'html', 'json-summary'],
+        include: [
+          'src/context/**/*.tsx',
+          'src/hooks/**/*.ts',
+          'src/lib/**/*.ts',
+        ],
+        exclude: ['src/components/ui/**', 'src/main.tsx', 'src/assets/**', '**/*.d.ts'],
+        thresholds: {
+          statements: 90,
+          branches: 90,
+          functions: 90,
+          lines: 90,
+        },
+      },
+    },
+  };
 })
