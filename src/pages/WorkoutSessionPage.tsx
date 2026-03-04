@@ -41,12 +41,11 @@ export function WorkoutSessionPage() {
 
   // Auto-save changes to localStorage
   useEffect(() => {
-    if (workout && id && workoutExercises.length > 0) {
-      updateWorkout(id, {
-        exercises: workoutExercises,
-      });
-    }
-  }, [workoutExercises, id]);
+    if (!id || workoutExercises.length === 0) return;
+    updateWorkout(id, {
+      exercises: workoutExercises,
+    });
+  }, [id, updateWorkout, workoutExercises]);
 
   if (!workout) {
     return (

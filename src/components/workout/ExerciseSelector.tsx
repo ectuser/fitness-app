@@ -37,6 +37,22 @@ interface ExerciseCardProps {
   onClick: () => void;
 }
 
+const muscleGroupOrder: MuscleGroup[] = [
+  'Chest',
+  'Back',
+  'Shoulders',
+  'Core',
+  'Biceps',
+  'Triceps',
+  'Quads',
+  'Hamstrings',
+  'Glutes',
+  'Calves',
+  'Arms (Legacy)',
+  'Legs (Legacy)',
+  'None',
+];
+
 function ExerciseCard({ exercise, isSelected, onClick }: ExerciseCardProps) {
   const { workouts } = useData();
   const stats = useExerciseStats(exercise.id, workouts);
@@ -103,22 +119,6 @@ export function ExerciseSelector({
   const [searchQuery, setSearchQuery] = useState('');
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [selectedFilterGroup, setSelectedFilterGroup] = useState<MuscleGroup | null>(null);
-
-  const muscleGroupOrder: MuscleGroup[] = [
-    'Chest',
-    'Back',
-    'Shoulders',
-    'Core',
-    'Biceps',
-    'Triceps',
-    'Quads',
-    'Hamstrings',
-    'Glutes',
-    'Calves',
-    'Arms (Legacy)',
-    'Legs (Legacy)',
-    'None',
-  ];
 
   const availableMuscleGroups = useMemo(() => {
     const uniqueGroups = new Set<MuscleGroup>();

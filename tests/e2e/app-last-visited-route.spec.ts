@@ -16,7 +16,7 @@ test('app restores last visited page and falls back safely for invalid saved rou
   await expect(page.getByRole('heading', { name: 'Exercises' })).toBeVisible();
   await expect.poll(async () => {
     return page.evaluate(() => {
-      return JSON.parse(localStorage.getItem('fitness-app-last-visited-path') || '\"\"');
+      return JSON.parse(localStorage.getItem('fitness-app-last-visited-path') || '""');
     });
   }).toBe('/exercises');
 

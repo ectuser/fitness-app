@@ -88,7 +88,7 @@ export function WorkoutMenu({
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Workout?</AlertDialogTitle>
             <AlertDialogDescription>
-              This will permanently delete "{workout.name}". This action cannot be
+              This will permanently delete &quot;{workout.name}&quot;. This action cannot be
               undone.
             </AlertDialogDescription>
           </AlertDialogHeader>

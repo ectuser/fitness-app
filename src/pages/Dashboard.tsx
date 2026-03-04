@@ -25,6 +25,13 @@ import { useNavigate } from 'react-router-dom';
 import { useData } from '@/context/DataContext';
 import { STORAGE_KEYS, saveToStorage } from '@/lib/storage';
 import { migrateExercises } from '@/lib/migrations';
+import type { Exercise, Settings as AppSettings, Workout } from '@/types';
+
+interface ImportPayload {
+  exercises: Exercise[];
+  workouts: Workout[];
+  settings?: AppSettings;
+}
 
 export function Dashboard() {
   const navigate = useNavigate();
@@ -33,6 +40,7 @@ export function Dashboard() {
   const [showImportDialog, setShowImportDialog] = useState(false);
   const [importError, setImportError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const pendingImportRef = useRef<ImportPayload | null>(null);
 
   const completedWorkouts = workouts.filter((w) => w.isCompleted);
 
@@ -76,10 +84,14 @@ export function Dashboard() {
     reader.onload = (e) => {
       try {
         const content = e.target?.result as string;
-        const importData = JSON.parse(content);
+        const importData = JSON.parse(content) as { data?: ImportPayload };
 
         // Validate import data structure
-        if (!importData.data || !importData.data.exercises || !importData.data.workouts) {
+        if (
+          !importData.data ||
+          !Array.isArray(importData.data.exercises) ||
+          !Array.isArray(importData.data.workouts)
+        ) {
           setImportError('Invalid backup file format. Missing required data.');
           setShowImportDialog(true);
           return;
@@ -90,8 +102,8 @@ export function Dashboard() {
         setShowImportDialog(true);
 
         // Store the parsed data temporarily for import
-        (window as any).__importData = importData.data;
-      } catch (error) {
+        pendingImportRef.current = importData.data;
+      } catch {
         setImportError('Failed to read backup file. Please make sure it\'s a valid JSON file.');
         setShowImportDialog(true);
       }
@@ -103,7 +115,7 @@ export function Dashboard() {
   };
 
   const handleConfirmImport = () => {
-    const importData = (window as any).__importData;
+    const importData = pendingImportRef.current;
     if (!importData) return;
 
     try {
@@ -117,11 +129,11 @@ export function Dashboard() {
       }
 
       // Clean up temporary data
-      delete (window as any).__importData;
+      pendingImportRef.current = null;
 
       // Reload the page to apply changes
       window.location.reload();
-    } catch (error) {
+    } catch {
       setImportError('Failed to import data. Please try again.');
     }
   };
@@ -381,7 +393,7 @@ export function Dashboard() {
               onClick={() => {
                 setShowImportDialog(false);
                 setImportError(null);
-                delete (window as any).__importData;
+                pendingImportRef.current = null;
               }}
             >
               Cancel
