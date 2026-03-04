@@ -27,5 +27,15 @@ export default defineConfig([
         version: 'detect',
       },
     },
+    rules: {
+      'react-hooks/set-state-in-effect': 'off',
+      'react-refresh/only-export-components': [
+        'error',
+        {
+          allowConstantExport: true,
+          allowExportNames: ['useData'],
+        },
+      ],
+    },
   },
 ])

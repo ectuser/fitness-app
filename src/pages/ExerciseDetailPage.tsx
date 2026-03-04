@@ -73,7 +73,7 @@ export function ExerciseDetailPage() {
                   <AlertDialogHeader>
                     <AlertDialogTitle>Delete Exercise?</AlertDialogTitle>
                     <AlertDialogDescription>
-                      This will permanently delete "{exercise.name}". This action cannot be undone.
+                      This will permanently delete &quot;{exercise.name}&quot;. This action cannot be undone.
                       {history.length > 0 && (
                         <p className="mt-2 text-red-600 font-medium">
                           Warning: This exercise has been used in {history.length} workout(s).
@@ -184,7 +184,7 @@ export function ExerciseDetailPage() {
             </div>
           ) : (
             <Card className="p-6 text-center text-slate-500">
-              No workout history yet. This exercise hasn't been used in any completed workouts.
+              No workout history yet. This exercise hasn&apos;t been used in any completed workouts.
             </Card>
           )}
         </div>

@@ -104,7 +104,7 @@ test('workout menu duplicate delete and complete/incomplete transitions', async 
   });
 
   const workoutCard = (name: string) =>
-    page.locator(`xpath=//h3[normalize-space()=\"${name}\"]/ancestor::div[contains(@class,\"p-4\")][1]`);
+    page.locator(`xpath=//h3[normalize-space()='${name}']/ancestor::div[contains(@class,'p-4')][1]`);
 
   await page.goto('workouts');
   await expect(page.getByRole('heading', { name: 'Menu Day' })).toBeVisible();
