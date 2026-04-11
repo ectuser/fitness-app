@@ -45,7 +45,7 @@ test('workout exercise details shows stats and allows editing comment', async ({
     settings: { defaultWeightUnit: 'kg' },
   });
 
-  await page.goto('/fitness-app/workouts/workout-details-active/session');
+  await page.goto('/workouts/workout-details-active/session');
   await expect(page.getByRole('heading', { name: 'Bench Press' })).toBeVisible();
 
   await page.getByRole('button', { name: 'Details' }).click();
@@ -97,7 +97,7 @@ test('workout exercise details comment stays editable without exercise stats', a
     settings: { defaultWeightUnit: 'kg' },
   });
 
-  await page.goto('/fitness-app/workouts/workout-details-no-stats/session');
+  await page.goto('/workouts/workout-details-no-stats/session');
   await page.getByRole('button', { name: 'Details' }).click();
 
   await expect(page.getByText('Max:')).toHaveCount(0);

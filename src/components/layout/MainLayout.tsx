@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation } from '@/lib/router-compat';
 import { BottomNav } from './BottomNav';
 import { cn } from '@/lib/utils';
 

@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from '@/lib/router-compat';
 import { useData } from '@/context/DataContext';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { ExerciseForm } from '@/components/exercise/ExerciseForm';

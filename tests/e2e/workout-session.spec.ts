@@ -39,7 +39,7 @@ test('workout session add exercise finish and update stats', async ({ page }) =>
     settings: { defaultWeightUnit: 'kg' },
   });
 
-  await page.goto('/fitness-app/workouts/workout-session-1/session');
+  await page.goto('/workouts/workout-session-1/session');
   await expect(page.getByRole('heading', { name: 'Session Day' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Bench Press' })).toBeVisible();
   await page.getByPlaceholder('Weight').first().fill('50.257');

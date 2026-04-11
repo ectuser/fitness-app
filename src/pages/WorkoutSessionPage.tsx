@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from '@/lib/router-compat';
 import { useData } from '@/context/DataContext';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Button } from '@/components/ui/button';
@@ -69,8 +69,8 @@ export function WorkoutSessionPage() {
     );
 
     let lastWorkoutExercise: WorkoutExercise | null = null;
-    for (const workout of sortedWorkouts) {
-      const found = workout.exercises.find((we) => we.exerciseId === exercise.id);
+    for (const completedWorkout of sortedWorkouts) {
+      const found = completedWorkout.exercises.find((we) => we.exerciseId === exercise.id);
       if (found) {
         lastWorkoutExercise = found;
         break;

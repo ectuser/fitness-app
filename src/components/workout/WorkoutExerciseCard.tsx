@@ -18,7 +18,7 @@ import type { WorkoutExercise, Exercise } from '@/types';
 import { SetInput } from './SetInput';
 import { useData } from '@/context/DataContext';
 import { useExerciseStats } from '@/hooks/useExerciseStats';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@/lib/router-compat';
 
 interface WorkoutExerciseCardProps {
   workoutExercise: WorkoutExercise;
@@ -48,12 +48,12 @@ export function WorkoutExerciseCard({
   const navigate = useNavigate();
 
   const addSet = () => {
-    const lastSet = workoutExercise.sets[workoutExercise.sets.length - 1];
+    const lastSet = workoutExercise.sets.at(-1);
     const newSet = {
       id: crypto.randomUUID(),
-      weight: lastSet?.weight || 0,
-      weightUnit: lastSet?.weightUnit || settings.defaultWeightUnit,
-      reps: lastSet?.reps || 0,
+      weight: lastSet?.weight ?? 0,
+      weightUnit: lastSet?.weightUnit ?? settings.defaultWeightUnit,
+      reps: lastSet?.reps ?? 0,
     };
     onChange({
       ...workoutExercise,

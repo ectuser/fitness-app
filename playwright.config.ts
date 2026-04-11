@@ -19,14 +19,14 @@ export default defineConfig({
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
   /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 1 : undefined,
+  workers: 1,
   reporter: [
     ['list'],
     ['html', { open: 'never' }],
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
-    baseURL: 'http://127.0.0.1:4173/fitness-app/',
+    baseURL: 'http://127.0.0.1:4173/',
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
@@ -42,7 +42,7 @@ export default defineConfig({
 
   webServer: {
     command: 'npm run dev -- --host 127.0.0.1 --port 4173 --strictPort',
-    url: 'http://127.0.0.1:4173/fitness-app/',
+    url: 'http://127.0.0.1:4173/',
     reuseExistingServer: !process.env.CI,
   },
 });

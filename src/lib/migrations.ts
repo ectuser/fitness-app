@@ -16,7 +16,7 @@ const VALID_MUSCLE_GROUPS = new Set<MuscleGroup>([
   'None',
 ]);
 
-const LEGACY_MIGRATION_MAP: Record<string, MuscleGroup> = {
+const LEGACY_MIGRATION_MAP: Partial<Record<string, MuscleGroup>> = {
   Arms: 'Arms (Legacy)',
   Legs: 'Legs (Legacy)',
   'Full Body': 'None',
@@ -28,8 +28,9 @@ function normalizeMuscleGroup(group: string): MuscleGroup | null {
     return null;
   }
 
-  if (LEGACY_MIGRATION_MAP[trimmedGroup]) {
-    return LEGACY_MIGRATION_MAP[trimmedGroup];
+  const legacyGroup = LEGACY_MIGRATION_MAP[trimmedGroup];
+  if (legacyGroup) {
+    return legacyGroup;
   }
 
   if (VALID_MUSCLE_GROUPS.has(trimmedGroup as MuscleGroup)) {

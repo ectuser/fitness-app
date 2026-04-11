@@ -10,7 +10,7 @@ test('app restores last visited page and falls back safely for invalid saved rou
 
   await page.goto('');
   await expect(page.getByRole('heading', { name: 'Workouts' })).toBeVisible();
-  await expect(page).toHaveURL(/\/fitness-app\/workouts$/);
+  await expect(page).toHaveURL(/\/workouts$/);
 
   await page.getByRole('link', { name: 'Exercises' }).click();
   await expect(page.getByRole('heading', { name: 'Exercises' })).toBeVisible();
@@ -21,16 +21,16 @@ test('app restores last visited page and falls back safely for invalid saved rou
   }).toBe('/exercises');
 
   const reopenedPage = await page.context().newPage();
-  await reopenedPage.goto('/fitness-app/');
+  await reopenedPage.goto('/');
   await expect(reopenedPage.getByRole('heading', { name: 'Exercises' })).toBeVisible();
-  await expect(reopenedPage).toHaveURL(/\/fitness-app\/exercises$/);
+  await expect(reopenedPage).toHaveURL(/\/exercises$/);
 
   await reopenedPage.evaluate(() => {
     localStorage.setItem('fitness-app-last-visited-path', JSON.stringify('/not-a-real-route'));
   });
 
   const invalidRoutePage = await page.context().newPage();
-  await invalidRoutePage.goto('/fitness-app/');
+  await invalidRoutePage.goto('/');
   await expect(invalidRoutePage.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
-  await expect(invalidRoutePage).toHaveURL(/\/fitness-app\/$/);
+  await expect(invalidRoutePage).toHaveURL(/\/$/);
 });

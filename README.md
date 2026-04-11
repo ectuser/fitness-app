@@ -1,229 +1,70 @@
-# 💪 Fitness Tracker
+# Fitness Tracker
 
-A modern, mobile-first fitness workout tracking application built with React and TypeScript. Track your workouts, manage exercises, and monitor your progress - all stored locally in your browser.
+A mobile-first workout tracker built with React, TypeScript, TanStack Start, TanStack Router, Tailwind CSS, and shadcn/ui. Workouts, exercises, session progress, and exercise stats are stored locally in the browser.
 
-## ✨ Features
+## Features
 
-### 🏋️ Workout Management
-- **Create & Edit Workouts** - Build custom workout routines with multiple exercises
-- **Active Workout Sessions** - Real-time tracking during your workout with progress indicators
-- **Complete & Archive** - Mark workouts as complete and view your history
-- **Duplicate Workouts** - Quickly copy existing workouts for recurring routines
+- Create, edit, duplicate, complete, and reopen workouts.
+- Run active workout sessions with per-set completion tracking.
+- Manage a seeded exercise library and custom exercises.
+- Create exercises inline while building a workout.
+- View exercise history and stats from completed workouts.
+- Restore the last visited app route on reload.
 
-### 💪 Exercise Library
-- **15 Pre-configured Exercises** - Popular exercises ready to use
-- **Custom Exercises** - Create your own exercises with custom muscle groups
-- **Inline Creation** - Add new exercises on-the-fly without losing your workout progress
-- **Exercise Statistics** - Track max weight, total sets, and performance history
+## Tech Stack
 
-### 📊 Progress Tracking
-- **Real-time Session Tracking** - See completion percentage and sets completed
-- **Exercise History** - View all past workouts for each exercise
-- **Performance Stats** - Monitor max weight lifted and total volume
-- **Smart Dashboard** - Quick stats and upcoming workouts at a glance
+- React 19
+- TanStack Start and TanStack Router
+- TypeScript
+- Tailwind CSS v4
+- shadcn/ui and Radix UI
+- Playwright end-to-end tests
+- Browser localStorage persistence
 
-### 📱 Mobile-First Design & PWA
-- **Progressive Web App** - Install on your device like a native app
-- **Offline Support** - Works offline with service worker caching
-- **Responsive UI** - Optimized for gym use on mobile devices
-- **Bottom Navigation** - Easy thumb-friendly navigation
-- **Touch-optimized Inputs** - Large tap targets and numeric keyboards
-- **Local Storage** - All data stored locally in your browser
-
-## 🛠️ Tech Stack
-
-- **React 19** - Modern React with latest features
-- **TypeScript** - Type-safe development
-- **Vite 6** - Lightning-fast build tool and dev server
-- **Tailwind CSS v4** - Utility-first styling with latest CSS features
-- **shadcn/ui** - Beautiful, accessible UI components
-- **React Router v7** - Client-side routing
-- **Lucide React** - Modern icon library
-- **localStorage API** - Client-side data persistence
-
-## 🚀 Quick Start
-
-### Prerequisites
-- Node.js 20+
-- npm or yarn
-
-### Installation
+## Getting Started
 
 ```bash
-# Clone the repository
-git clone https://github.com/ivanmenshchikov/fitness-app.git
-cd fitness-app
-
-# Install dependencies
 npm install
-
-# Start development server
 npm run dev
 ```
 
-The app will be available at `http://localhost:5173/fitness-app/`
+The local app runs at `http://localhost:3000/`.
 
-## 📝 Available Scripts
+## Scripts
 
 ```bash
-# Start development server with hot reload
 npm run dev
-
-# Build for production
 npm run build
-
-# Preview production build locally
 npm run preview
-
-# Run ESLint
+npm run typecheck
 npm run lint
+npm run test:e2e
 ```
 
-## 🏗️ Project Structure
+## Project Structure
 
-```
+```text
 src/
-├── components/          # React components
-│   ├── ui/             # shadcn/ui components
-│   ├── layout/         # Layout components (nav, header)
-│   ├── workout/        # Workout-related components
-│   └── exercise/       # Exercise-related components
-├── pages/              # Page components (routes)
-├── context/            # React Context (DataContext)
-├── hooks/              # Custom React hooks
-├── lib/                # Utilities and helpers
-│   ├── storage.ts      # localStorage utilities
-│   ├── seed-data.ts    # Pre-configured exercises
-│   └── utils.ts        # General utilities
-└── types/              # TypeScript type definitions
+├── components/          # UI, layout, workout, and exercise components
+├── context/             # DataContext local app state
+├── hooks/               # Custom React hooks
+├── lib/                 # Storage, migrations, seed data, router compatibility
+├── pages/               # Migrated page components
+├── routes/              # TanStack Router file routes
+└── types/               # Shared TypeScript types
 ```
 
-## 🎯 Key Features Explained
+## Data Persistence
 
-### Active Workout Sessions
-The app includes a dedicated workout session mode where you can:
-- Track progress in real-time with a progress bar
-- Add/remove exercises on the fly
-- Modify sets during your workout
-- Auto-save changes as you go
-- Mark workout as complete when finished
+All app data is stored in browser localStorage:
 
-### Exercise Statistics
-Statistics are calculated only from **completed workouts**, ensuring accurate tracking:
-- Maximum weight lifted with reps
-- Total number of sets performed
-- Complete workout history
-- Last performed date
+- Exercises
+- Workouts
+- Last visited route
+- Schema migration state
 
-### Inline Exercise Creation
-Create new exercises without interrupting your workflow:
-- Click "Add Exercise" during workout creation
-- Select "Create New" from the exercise picker
-- Define name, muscle groups, and notes
-- Exercise is immediately added to your workout
+Clearing browser data will remove local workouts and custom exercises.
 
-## 🌐 Deployment
+## Deployment
 
-The app is configured for GitHub Pages deployment with GitHub Actions.
-
-### Deploy to GitHub Pages
-
-1. Push your code to GitHub
-2. Go to repository Settings → Pages
-3. Under "Source", select **GitHub Actions**
-4. The app will automatically deploy on every push to `main`
-
-Your app will be live at: `https://yourusername.github.io/fitness-app/`
-
-### Manual Build
-
-```bash
-npm run build
-# Output will be in the `dist/` directory
-```
-
-## 📲 Installing as a Progressive Web App (PWA)
-
-Once deployed to GitHub Pages, you can install the Fitness Tracker as a native app on your device:
-
-### On Mobile (iOS/Android)
-1. Open the app in your mobile browser
-2. **iOS (Safari)**: Tap the Share button → "Add to Home Screen"
-3. **Android (Chrome)**: Tap the menu (⋮) → "Install app" or "Add to Home Screen"
-4. The app icon will appear on your home screen
-
-### On Desktop (Chrome/Edge)
-1. Visit the app in Chrome or Edge
-2. Look for the install icon (⊕) in the address bar
-3. Click "Install" to add the app to your desktop
-4. Launch it like any native application
-
-### PWA Features
-- ✅ Works offline after first visit
-- ✅ Fast loading with service worker caching
-- ✅ Native app-like experience
-- ✅ No app store required
-- ✅ Automatic updates when you visit
-
-## 💾 Data Persistence
-
-All data is stored locally in your browser using localStorage:
-- **Exercises** - Custom and pre-configured exercises
-- **Workouts** - All workout data including sets and completion status
-- **Settings** - User preferences (default weight unit)
-
-**Note:** Data is stored per-browser. Clearing browser data will delete all workouts.
-
-## 🎨 Design Philosophy
-
-This app follows a mobile-first design approach:
-- Clean, minimal interface optimized for quick access
-- Large touch targets for gym use
-- Bottom navigation for easy thumb reach
-- Numeric keyboards for weight/reps entry
-- No unnecessary features - focused on core functionality
-
-## 📱 Browser Support
-
-- Chrome/Edge (latest)
-- Safari (latest)
-- Firefox (latest)
-- Mobile browsers (iOS Safari, Chrome Mobile)
-
-## 🔮 Future Enhancements
-
-Potential features for future versions:
-- Rest timer between sets
-- Exercise photos/videos
-- Progress charts and visualizations
-- Export/import workout data
-- Workout templates
-- Dark mode
-
-## 📄 License
-
-MIT License - feel free to use this project for personal or commercial purposes.
-
-## 🎉 About This Project
-
-This app was **100% vibe coded** - built entirely through natural conversation and iterative development without traditional planning documents or specifications. The entire codebase, from initial setup to deployment configuration, was created through an intuitive, exploratory development process.
-
-The result is a fully-functional, production-ready fitness tracking app with:
-- ✅ Complete CRUD operations
-- ✅ Real-time workout sessions
-- ✅ Progressive Web App (PWA) with offline support
-- ✅ Data persistence with localStorage
-- ✅ Mobile-responsive design
-- ✅ Type-safe codebase
-- ✅ Production build & deployment
-
-**Tech Stack Highlights:**
-- Latest React 19 with TypeScript
-- Tailwind CSS v4 (latest major version)
-- Vite 6 for optimal performance
-- Modern shadcn/ui components
-- GitHub Actions CI/CD
-
----
-
-**Built with ❤️ for fitness enthusiasts**
+`npm run build` emits TanStack Start output under `dist/client` and `dist/server`. Deploy it to a target that supports the TanStack Start server output, or add a static adapter before deploying to static-only hosting.

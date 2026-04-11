@@ -67,7 +67,7 @@ test('workout edit and save changes', async ({ page }) => {
     settings: { defaultWeightUnit: 'kg' },
   });
 
-  await page.goto('/fitness-app/workouts/workout-edit-1/edit');
+  await page.goto('/workouts/workout-edit-1/edit');
   await expect(page.getByRole('heading', { name: 'Edit Workout' })).toBeVisible();
 
   await page.getByLabel('Workout Name').fill('Upper Mix Updated');

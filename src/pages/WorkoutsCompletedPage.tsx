@@ -1,7 +1,7 @@
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@/lib/router-compat';
 import { useData } from '@/context/DataContext';
 import { WorkoutList } from '@/components/workout/WorkoutList';
 

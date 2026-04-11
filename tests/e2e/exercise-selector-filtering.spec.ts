@@ -63,7 +63,7 @@ test('switch exercise opens selector with preselected muscle filter', async ({ p
     settings: { defaultWeightUnit: 'kg' },
   });
 
-  await page.goto('/fitness-app/workouts/switch-filter-workout/edit');
+  await page.goto('/workouts/switch-filter-workout/edit');
   await expect(page.getByRole('heading', { name: 'Edit Workout' })).toBeVisible();
 
   const benchCard = page.locator(

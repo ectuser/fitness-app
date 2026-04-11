@@ -21,7 +21,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Plus, Play, Calendar, Settings, Download, Upload } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@/lib/router-compat';
 import { useData } from '@/context/DataContext';
 import { STORAGE_KEYS, saveToStorage } from '@/lib/storage';
 import { migrateExercises } from '@/lib/migrations';
@@ -119,7 +119,7 @@ export function Dashboard() {
     if (!importData) return;
 
     try {
-      const migratedExercises = migrateExercises(importData.exercises || []);
+      const migratedExercises = migrateExercises(importData.exercises);
 
       // Save imported data to localStorage
       saveToStorage(STORAGE_KEYS.EXERCISES, migratedExercises);

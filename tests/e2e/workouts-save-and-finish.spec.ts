@@ -58,7 +58,7 @@ test('save and finish updates existing workout from edit page', async ({ page })
     settings: { defaultWeightUnit: 'kg' },
   });
 
-  await page.goto('/fitness-app/workouts/save-finish-workout/edit');
+  await page.goto('/workouts/save-finish-workout/edit');
   await expect(page.getByRole('heading', { name: 'Edit Workout' })).toBeVisible();
 
   await page.getByLabel('Workout Name').fill('Finish From Edit Updated');
