@@ -13,9 +13,10 @@
     "test:e2e": "playwright test --project=chromium",
     "test:e2e:headed": "playwright test --project=chromium --headed",
     "lint": "eslint",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "npm run paraglide && tsc --noEmit",
     "format": "prettier --check .",
-    "check": "prettier --write . && eslint --fix"
+    "check": "prettier --write . && eslint --fix",
+    "paraglide": "paraglide-js compile --project ./project.inlang --outdir ./src/paraglide --strategy url baseLocale --silent"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.12",
