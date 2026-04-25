@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
@@ -7,12 +8,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { Plus, Trash2, ChevronUp, ChevronDown, MoreVertical, Repeat, Pencil, TrendingUp, Clock } from 'lucide-react';
 import type { WorkoutExercise, Exercise } from '@/types';
 import { SetInput } from './SetInput';
@@ -46,6 +41,7 @@ export function WorkoutExerciseCard({
   const { settings, workouts } = useData();
   const stats = useExerciseStats(exercise.id, workouts);
   const navigate = useNavigate();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const addSet = () => {
     const lastSet = workoutExercise.sets.at(-1);
@@ -95,7 +91,7 @@ export function WorkoutExerciseCard({
           </div>
         </div>
 
-        <div className="flex gap-1 ml-2">
+        <div className="relative flex gap-1 ml-2">
           <Button
             variant="ghost"
             size="icon"
@@ -112,29 +108,58 @@ export function WorkoutExerciseCard({
           >
             <ChevronDown className="w-4 h-4" />
           </Button>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <MoreVertical className="w-4 h-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsMenuOpen((currentValue) => !currentValue)}
+          >
+            <MoreVertical className="w-4 h-4" />
+          </Button>
+          {isMenuOpen && (
+            <div
+              role="menu"
+              className="absolute right-0 top-10 z-20 min-w-44 rounded-md border bg-white p-1 shadow-md"
+            >
               {onReplace && (
-                <DropdownMenuItem onClick={onReplace}>
+                <button
+                  type="button"
+                  role="menuitem"
+                  onClick={() => {
+                    setIsMenuOpen(false);
+                    onReplace();
+                  }}
+                  className="flex w-full items-center rounded-sm px-2 py-2 text-sm hover:bg-slate-100"
+                >
                   <Repeat className="w-4 h-4 mr-2" />
                   Switch Exercise
-                </DropdownMenuItem>
+                </button>
               )}
-              <DropdownMenuItem onClick={() => navigate(`/exercises/${exercise.id}/edit`)}>
+              <button
+                type="button"
+                role="menuitem"
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  navigate(`/exercises/${exercise.id}/edit`);
+                }}
+                className="flex w-full items-center rounded-sm px-2 py-2 text-sm hover:bg-slate-100"
+              >
                 <Pencil className="w-4 h-4 mr-2" />
                 Edit Exercise
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={onRemove} className="text-red-600 focus:text-red-600">
+              </button>
+              <button
+                type="button"
+                role="menuitem"
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  onRemove();
+                }}
+                className="flex w-full items-center rounded-sm px-2 py-2 text-sm text-red-600 hover:bg-slate-100"
+              >
                 <Trash2 className="w-4 h-4 mr-2" />
                 Delete Exercise
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+              </button>
+            </div>
+          )}
         </div>
       </div>
 

@@ -10,6 +10,10 @@ export const STORAGE_KEYS = {
 
 // Generic function to get data from localStorage
 export function getFromStorage<T>(key: string, defaultValue: T): T {
+  if (typeof localStorage === 'undefined') {
+    return defaultValue;
+  }
+
   try {
     const item = localStorage.getItem(key);
     return item ? JSON.parse(item) : defaultValue;
@@ -21,6 +25,10 @@ export function getFromStorage<T>(key: string, defaultValue: T): T {
 
 // Generic function to save data to localStorage
 export function saveToStorage<T>(key: string, value: T): void {
+  if (typeof localStorage === 'undefined') {
+    return;
+  }
+
   try {
     localStorage.setItem(key, JSON.stringify(value));
   } catch (error) {
@@ -30,6 +38,10 @@ export function saveToStorage<T>(key: string, value: T): void {
 
 // Function to remove an item from localStorage
 export function removeFromStorage(key: string): void {
+  if (typeof localStorage === 'undefined') {
+    return;
+  }
+
   try {
     localStorage.removeItem(key);
   } catch (error) {
@@ -39,6 +51,10 @@ export function removeFromStorage(key: string): void {
 
 // Function to clear all app data
 export function clearAllStorage(): void {
+  if (typeof localStorage === 'undefined') {
+    return;
+  }
+
   try {
     Object.values(STORAGE_KEYS).forEach((key) => {
       localStorage.removeItem(key);

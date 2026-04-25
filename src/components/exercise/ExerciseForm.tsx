@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
+import { ALL_MUSCLE_GROUPS } from '@/lib/exercises';
 import { X } from 'lucide-react';
 
 interface ExerciseFormProps {
@@ -11,20 +12,6 @@ interface ExerciseFormProps {
   onSave: (exercise: Omit<Exercise, 'id' | 'createdAt'>) => void;
   onCancel: () => void;
 }
-
-const MUSCLE_GROUPS: MuscleGroup[] = [
-  'Chest',
-  'Back',
-  'Shoulders',
-  'Core',
-  'Biceps',
-  'Triceps',
-  'Quads',
-  'Hamstrings',
-  'Glutes',
-  'Calves',
-  'None',
-];
 
 export function ExerciseForm({ exercise, onSave, onCancel }: ExerciseFormProps) {
   const [name, setName] = useState(exercise?.name || '');
@@ -86,7 +73,7 @@ export function ExerciseForm({ exercise, onSave, onCancel }: ExerciseFormProps) 
       <div className="space-y-3">
         <Label>Muscle Groups</Label>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-          {MUSCLE_GROUPS.map((muscle) => {
+          {ALL_MUSCLE_GROUPS.map((muscle) => {
             const isSelected = selectedMuscles.includes(muscle);
             return (
               <button

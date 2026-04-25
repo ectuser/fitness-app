@@ -10,18 +10,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
 import { Search, Plus, Check, TrendingUp, Clock } from 'lucide-react';
 import { useData } from '@/context/DataContext';
+import { getOrderedMuscleGroups } from '@/lib/exercises';
 import type { Exercise, MuscleGroup } from '@/types';
 import { ExerciseForm } from '@/components/exercise/ExerciseForm';
 import { useExerciseStats } from '@/hooks/useExerciseStats';
+import { SimpleModal } from '@/components/ui/simple-modal';
 
 interface ExerciseSelectorProps {
   open: boolean;
@@ -36,22 +31,6 @@ interface ExerciseCardProps {
   isSelected: boolean;
   onClick: () => void;
 }
-
-const muscleGroupOrder: MuscleGroup[] = [
-  'Chest',
-  'Back',
-  'Shoulders',
-  'Core',
-  'Biceps',
-  'Triceps',
-  'Quads',
-  'Hamstrings',
-  'Glutes',
-  'Calves',
-  'Arms (Legacy)',
-  'Legs (Legacy)',
-  'None',
-];
 
 function ExerciseCard({ exercise, isSelected, onClick }: ExerciseCardProps) {
   const { workouts } = useData();
@@ -120,22 +99,7 @@ export function ExerciseSelector({
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [selectedFilterGroup, setSelectedFilterGroup] = useState<MuscleGroup | null>(null);
 
-  const availableMuscleGroups = useMemo(() => {
-    const uniqueGroups = new Set<MuscleGroup>();
-    exercises.forEach((exercise) => {
-      exercise.muscleGroups.forEach((group) => uniqueGroups.add(group));
-    });
-
-    return Array.from(uniqueGroups).sort((a, b) => {
-      const aIndex = muscleGroupOrder.indexOf(a);
-      const bIndex = muscleGroupOrder.indexOf(b);
-
-      if (aIndex === -1 && bIndex === -1) return a.localeCompare(b);
-      if (aIndex === -1) return 1;
-      if (bIndex === -1) return -1;
-      return aIndex - bIndex;
-    });
-  }, [exercises]);
+  const availableMuscleGroups = useMemo(() => getOrderedMuscleGroups(exercises), [exercises]);
 
   useEffect(() => {
     if (!open) return;
@@ -166,33 +130,30 @@ export function ExerciseSelector({
 
   if (showCreateForm) {
     return (
-      <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Create New Exercise</DialogTitle>
-            <DialogDescription>
-              Create a custom exercise and add it to your workout.
-            </DialogDescription>
-          </DialogHeader>
+      <SimpleModal
+        open={open}
+        onClose={() => onOpenChange(false)}
+        title="Create New Exercise"
+        description="Create a custom exercise and add it to your workout."
+      >
+        <div className="max-h-[90vh] overflow-y-auto">
           <ExerciseForm
             onSave={handleExerciseSave}
             onCancel={() => setShowCreateForm(false)}
           />
-        </DialogContent>
-      </Dialog>
+        </div>
+      </SimpleModal>
     );
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] flex flex-col">
-        <DialogHeader>
-          <DialogTitle>Add Exercise</DialogTitle>
-          <DialogDescription>
-            Select an exercise to add to your workout or create a new one.
-          </DialogDescription>
-        </DialogHeader>
-
+    <SimpleModal
+      open={open}
+      onClose={() => onOpenChange(false)}
+      title="Add Exercise"
+      description="Select an exercise to add to your workout or create a new one."
+    >
+      <div className="max-w-2xl max-h-[90vh] flex flex-col">
         <div className="space-y-4 flex-1 overflow-hidden flex flex-col">
           {/* Search and Create */}
           <div className="flex gap-2">
@@ -291,7 +252,7 @@ export function ExerciseSelector({
             )}
           </div>
         </div>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </SimpleModal>
   );
 }
