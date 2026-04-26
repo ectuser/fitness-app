@@ -138,7 +138,7 @@ function RootApp() {
 
   return (
     <DataProvider>
-      {hasMounted && <LastVisitedRouteHandler />}
+      <LastVisitedRouteHandler />
       <MainLayout>
         {hasMounted ? (
           <Outlet />

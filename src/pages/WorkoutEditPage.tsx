@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from '@/lib/router-compat';
 import { useData } from '@/context/DataContext';
 import { PageHeader } from '@/components/layout/PageHeader';
@@ -7,166 +7,61 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card } from '@/components/ui/card';
 import { Plus, Save } from 'lucide-react';
-import { WorkoutExerciseCard } from '@/components/workout/WorkoutExerciseCard';
 import { ExerciseSelector } from '@/components/workout/ExerciseSelector';
-import type { Workout, WorkoutExercise, Exercise, MuscleGroup } from '@/types';
-
-const formatDefaultWorkoutName = (date: Date): string => {
-  return date.toLocaleDateString('en-US', {
-    weekday: 'short',
-    month: 'long',
-    day: 'numeric',
-  });
-};
+import { WorkoutExerciseList } from '@/components/workout/WorkoutExerciseList';
+import { useWorkoutExerciseEditor } from '@/hooks/useWorkoutExerciseEditor';
+import { formatDefaultWorkoutName, validateWorkoutForm } from '@/lib/workout-editor';
+import type { Workout } from '@/types';
 
 export function WorkoutEditPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { workouts, exercises, addWorkout, updateWorkout, settings } = useData();
   const isEditing = !!id;
+  const [loadedWorkoutId, setLoadedWorkoutId] = useState<string | null>(null);
 
   const [name, setName] = useState(() => formatDefaultWorkoutName(new Date()));
-  const [date, setDate] = useState(() => {
-    const today = new Date();
-    return today.toISOString().split('T')[0];
-  });
-  const [workoutExercises, setWorkoutExercises] = useState<WorkoutExercise[]>([]);
-  const [showExerciseSelector, setShowExerciseSelector] = useState(false);
-  const [replacingExerciseIndex, setReplacingExerciseIndex] = useState<number | null>(null);
-  const [selectorInitialFilterGroup, setSelectorInitialFilterGroup] = useState<MuscleGroup | null>(null);
+  const [date, setDate] = useState(() => new Date().toISOString().split('T')[0]);
   const [errors, setErrors] = useState<{ name?: string; exercises?: string }>({});
+  const {
+    handleAddExercise,
+    handleMoveExerciseDown,
+    handleMoveExerciseUp,
+    handleRemoveExercise,
+    handleReplaceExercise,
+    handleUpdateExercise,
+    openAddExerciseSelector,
+    selectedExerciseIds,
+    selectorInitialFilterGroup,
+    setWorkoutExercises,
+    setShowExerciseSelector,
+    showExerciseSelector,
+    workoutExercises,
+  } = useWorkoutExerciseEditor({
+    defaultWeightUnit: settings.defaultWeightUnit,
+    exercises,
+    initialWorkoutExercises: [],
+    workouts,
+  });
 
   useEffect(() => {
-    if (isEditing) {
-      const workout = workouts.find((w) => w.id === id);
-      if (workout) {
-        setName(workout.name);
-        setDate(workout.date);
-        setWorkoutExercises(workout.exercises);
-      }
-    }
-  }, [id, workouts, isEditing]);
-
-  const handleAddExercise = (exercise: Exercise) => {
-    // Find last workout data for this exercise
-    const completedWorkouts = workouts.filter((w) => w.isCompleted);
-    const sortedWorkouts = [...completedWorkouts].sort((a, b) =>
-      b.date.localeCompare(a.date)
-    );
-
-    let lastWorkoutExercise: WorkoutExercise | null = null;
-    for (const workout of sortedWorkouts) {
-      const found = workout.exercises.find((we) => we.exerciseId === exercise.id);
-      if (found) {
-        lastWorkoutExercise = found;
-        break;
-      }
-    }
-
-    // Create default sets based on last workout or use defaults
-    const defaultSets = lastWorkoutExercise
-      ? lastWorkoutExercise.sets.map((set) => ({
-          id: crypto.randomUUID(),
-          weight: set.weight,
-          weightUnit: set.weightUnit,
-          reps: set.reps,
-        }))
-      : [
-          {
-            id: crypto.randomUUID(),
-            weight: 0,
-            weightUnit: settings.defaultWeightUnit,
-            reps: 0,
-          },
-        ];
-    const defaultComment = lastWorkoutExercise?.comment ?? exercise.comments ?? '';
-
-    // Handle replacing an existing exercise
-    if (replacingExerciseIndex !== null) {
-      const updated = [...workoutExercises];
-      updated[replacingExerciseIndex] = {
-        exerciseId: exercise.id,
-        sets: defaultSets,
-        order: replacingExerciseIndex,
-        comment: defaultComment,
-      };
-      setWorkoutExercises(updated);
-      setReplacingExerciseIndex(null);
-      setSelectorInitialFilterGroup(null);
-      setShowExerciseSelector(false);
+    if (!isEditing || !id || loadedWorkoutId === id) {
       return;
     }
 
-    const newWorkoutExercise: WorkoutExercise = {
-      exerciseId: exercise.id,
-      sets: defaultSets,
-      order: workoutExercises.length,
-      comment: defaultComment,
-    };
-
-    setWorkoutExercises([...workoutExercises, newWorkoutExercise]);
-    setSelectorInitialFilterGroup(null);
-    setShowExerciseSelector(false);
-  };
-
-  const openAddExerciseSelector = () => {
-    setReplacingExerciseIndex(null);
-    setSelectorInitialFilterGroup(null);
-    setShowExerciseSelector(true);
-  };
-
-  const handleRemoveExercise = (index: number) => {
-    const updated = workoutExercises.filter((_, i) => i !== index);
-    // Reassign order
-    const reordered = updated.map((we, idx) => ({ ...we, order: idx }));
-    setWorkoutExercises(reordered);
-  };
-
-  const handleMoveExerciseUp = (index: number) => {
-    if (index === 0) return;
-    const updated = [...workoutExercises];
-    [updated[index - 1], updated[index]] = [updated[index], updated[index - 1]];
-    // Reassign order
-    const reordered = updated.map((we, idx) => ({ ...we, order: idx }));
-    setWorkoutExercises(reordered);
-  };
-
-  const handleMoveExerciseDown = (index: number) => {
-    if (index === workoutExercises.length - 1) return;
-    const updated = [...workoutExercises];
-    [updated[index], updated[index + 1]] = [updated[index + 1], updated[index]];
-    // Reassign order
-    const reordered = updated.map((we, idx) => ({ ...we, order: idx }));
-    setWorkoutExercises(reordered);
-  };
-
-  const handleUpdateExercise = (index: number, updatedExercise: WorkoutExercise) => {
-    const updated = [...workoutExercises];
-    updated[index] = updatedExercise;
-    setWorkoutExercises(updated);
-  };
-
-  const handleReplaceExercise = (index: number) => {
-    const currentExerciseId = workoutExercises[index]?.exerciseId;
-    const currentExercise = exercises.find((exercise) => exercise.id === currentExerciseId);
-    setSelectorInitialFilterGroup(currentExercise?.muscleGroups[0] ?? null);
-    setReplacingExerciseIndex(index);
-    setShowExerciseSelector(true);
-  };
+    const workout = workouts.find((entry) => entry.id === id);
+    if (workout) {
+      setName(workout.name);
+      setDate(workout.date);
+      setWorkoutExercises(workout.exercises);
+      setLoadedWorkoutId(id);
+    }
+  }, [id, isEditing, loadedWorkoutId, setWorkoutExercises, workouts]);
 
   const validateForm = () => {
-    const newErrors: { name?: string; exercises?: string } = {};
-
-    if (!name.trim()) {
-      newErrors.name = 'Workout name is required';
-    }
-
-    if (workoutExercises.length === 0) {
-      newErrors.exercises = 'Add at least one exercise';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    const nextErrors = validateWorkoutForm(name, workoutExercises);
+    setErrors(nextErrors);
+    return Object.keys(nextErrors).length === 0;
   };
 
   const saveWorkout = (finishWorkout: boolean) => {
@@ -175,7 +70,7 @@ export function WorkoutEditPage() {
     }
 
     const existingWorkout = isEditing && id
-      ? workouts.find((w) => w.id === id)
+      ? workouts.find((workout) => workout.id === id)
       : undefined;
     const completedAt = finishWorkout
       ? new Date().toISOString()
@@ -202,18 +97,6 @@ export function WorkoutEditPage() {
     navigate(finishWorkout ? '/workouts/completed' : '/workouts');
   };
 
-  const handleSave = () => {
-    saveWorkout(false);
-  };
-
-  const handleSaveAndFinish = () => {
-    saveWorkout(true);
-  };
-
-  const handleCancel = () => {
-    navigate('/workouts');
-  };
-
   return (
     <div>
       <PageHeader
@@ -222,7 +105,6 @@ export function WorkoutEditPage() {
       />
 
       <div className="container mx-auto px-4 py-6 space-y-6">
-        {/* Workout Details */}
         <Card className="p-6">
           <div className="space-y-4">
             <div>
@@ -230,7 +112,7 @@ export function WorkoutEditPage() {
               <Input
                 id="name"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(event) => setName(event.target.value)}
                 placeholder="e.g., Upper Body Day"
                 className={errors.name ? 'border-red-500' : ''}
               />
@@ -245,13 +127,12 @@ export function WorkoutEditPage() {
                 id="date"
                 type="date"
                 value={date}
-                onChange={(e) => setDate(e.target.value)}
+                onChange={(event) => setDate(event.target.value)}
               />
             </div>
           </div>
         </Card>
 
-        {/* Exercises */}
         <div>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold">Exercises</h2>
@@ -267,66 +148,49 @@ export function WorkoutEditPage() {
             </div>
           )}
 
-          {workoutExercises.length > 0 ? (
-            <div className="space-y-4">
-              {workoutExercises.map((workoutExercise, index) => {
-                const exercise = exercises.find(
-                  (e) => e.id === workoutExercise.exerciseId
-                );
-                if (!exercise) return null;
-
-                return (
-                  <WorkoutExerciseCard
-                    key={`${workoutExercise.exerciseId}-${index}`}
-                    workoutExercise={workoutExercise}
-                    exercise={exercise}
-                    index={index}
-                    totalCount={workoutExercises.length}
-                    onChange={(updated) => handleUpdateExercise(index, updated)}
-                    onRemove={() => handleRemoveExercise(index)}
-                    onMoveUp={() => handleMoveExerciseUp(index)}
-                    onMoveDown={() => handleMoveExerciseDown(index)}
-                    onReplace={() => handleReplaceExercise(index)}
-                  />
-                );
-              })}
-            </div>
-          ) : (
-            <Card className="p-12 text-center">
-              <p className="text-slate-500 mb-4">No exercises added yet</p>
-              <Button
-                variant="outline"
-                onClick={openAddExerciseSelector}
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                Add Your First Exercise
-              </Button>
-            </Card>
-          )}
+          <WorkoutExerciseList
+            workoutExercises={workoutExercises}
+            exercises={exercises}
+            onChangeExercise={handleUpdateExercise}
+            onMoveExerciseDown={handleMoveExerciseDown}
+            onMoveExerciseUp={handleMoveExerciseUp}
+            onRemoveExercise={handleRemoveExercise}
+            onReplaceExercise={handleReplaceExercise}
+            emptyState={
+              <Card className="p-12 text-center">
+                <p className="text-slate-500 mb-4">No exercises added yet</p>
+                <Button
+                  variant="outline"
+                  onClick={openAddExerciseSelector}
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Your First Exercise
+                </Button>
+              </Card>
+            }
+          />
         </div>
 
-        {/* Actions */}
         <div className="flex flex-col gap-3 pb-6 sm:flex-row">
-          <Button variant="outline" onClick={handleSave} className="w-full sm:flex-1">
+          <Button variant="outline" onClick={() => saveWorkout(false)} className="w-full sm:flex-1">
             <Save className="w-4 h-4 mr-2" />
             {isEditing ? 'Save Changes' : 'Create Workout'}
           </Button>
-          <Button variant="outline" onClick={handleSaveAndFinish} className="w-full sm:flex-1">
+          <Button variant="outline" onClick={() => saveWorkout(true)} className="w-full sm:flex-1">
             <Save className="w-4 h-4 mr-2" />
             Save and Finish Workout
           </Button>
-          <Button variant="outline" onClick={handleCancel} className="w-full sm:flex-1">
+          <Button variant="outline" onClick={() => navigate('/workouts')} className="w-full sm:flex-1">
             Cancel
           </Button>
         </div>
       </div>
 
-      {/* Exercise Selector Dialog */}
       <ExerciseSelector
         open={showExerciseSelector}
         onOpenChange={setShowExerciseSelector}
         onSelect={handleAddExercise}
-        selectedExerciseIds={workoutExercises.map((we) => we.exerciseId)}
+        selectedExerciseIds={selectedExerciseIds}
         initialFilterGroup={selectorInitialFilterGroup}
       />
     </div>

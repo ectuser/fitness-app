@@ -5,14 +5,13 @@ import { Plus } from 'lucide-react';
 import { useNavigate } from '@/lib/router-compat';
 import { useData } from '@/context/DataContext';
 import { WorkoutList } from '@/components/workout/WorkoutList';
+import { getUpcomingWorkouts } from '@/lib/workouts';
 
 export function WorkoutsPage() {
   const navigate = useNavigate();
-  const { workouts, exercises, addWorkout, deleteWorkout, updateWorkout } = useData();
+  const { workouts, exercises, deleteWorkout, duplicateWorkout, updateWorkout } = useData();
 
-  const upcomingWorkouts = workouts
-    .filter((w) => !w.isCompleted)
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  const upcomingWorkouts = getUpcomingWorkouts(workouts);
 
   const handleStart = (workoutId: string) => {
     navigate(`/workouts/${workoutId}/session`);
@@ -23,26 +22,9 @@ export function WorkoutsPage() {
   };
 
   const handleDuplicate = (workoutId: string) => {
-    const workout = workouts.find((w) => w.id === workoutId);
-    if (!workout) return;
-
-    const today = new Date();
-    const newDate = today.toISOString().split('T')[0];
-
-    const duplicatedWorkout = {
-      name: `${workout.name} (Copy)`,
-      date: newDate,
-      exercises: workout.exercises.map((we) => ({
-        ...we,
-        sets: we.sets.map((set) => ({
-          ...set,
-          id: crypto.randomUUID(),
-        })),
-      })),
-      isCompleted: false,
-    };
-
-    addWorkout(duplicatedWorkout);
+    duplicateWorkout(workoutId, {
+      date: new Date().toISOString().split('T')[0],
+    });
   };
 
   const handleDelete = (workoutId: string) => {

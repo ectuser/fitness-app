@@ -1,3 +1,4 @@
+import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import { paraglideVitePlugin } from '@inlang/paraglide-js'
 
@@ -7,7 +8,12 @@ import viteReact from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
 const config = defineConfig({
-  resolve: { tsconfigPaths: true },
+  resolve: {
+    alias: {
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+    },
+    dedupe: ['react', 'react-dom'],
+  },
   plugins: [
     paraglideVitePlugin({
       project: './project.inlang',
