@@ -27,7 +27,7 @@ Scope: Persist only the `/workouts/new` form draft in localStorage, with explici
 - Persist full form payload:
   - `name`
   - `date`
-  - `exercises` (including sets, comments, order)
+  - `exercises` (including sets, comment, order)
 - Draft expiration window: 7 days.
 - Validation approach: Zod schema with strict reject-on-error behavior.
 - Type source of truth: infer TypeScript type from the Zod schema.
