@@ -18,7 +18,7 @@ const WorkoutExerciseSchema = z.object({
 
 export const WorkoutCreateDraftSchema = z.object({
   name: z.string(),
-  date: z.string(),
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   exercises: z.array(WorkoutExerciseSchema),
   updatedAt: z.string().datetime(),
 });
@@ -66,6 +66,10 @@ export function parseWorkoutCreateDraft(rawValue: string | null, now: Date = new
   const updatedAtMs = Date.parse(parsedDraft.data.updatedAt);
 
   if (Number.isNaN(updatedAtMs)) {
+    return { status: 'invalid' };
+  }
+
+  if (updatedAtMs > now.getTime()) {
     return { status: 'invalid' };
   }
 

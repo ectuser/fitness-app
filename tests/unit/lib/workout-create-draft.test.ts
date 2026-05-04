@@ -72,6 +72,57 @@ describe('workout create draft helpers', () => {
     });
   });
 
+  it('rejects invalid date format', () => {
+    expect(
+      parseWorkoutCreateDraft(
+        JSON.stringify({
+          ...draftInput,
+          date: '2026/05/04',
+          updatedAt: now.toISOString(),
+        }),
+        now
+      )
+    ).toEqual({
+      status: 'invalid',
+    });
+  });
+
+  it('accepts draft at exact TTL boundary', () => {
+    const boundaryUpdatedAt = new Date(now.getTime() - WORKOUT_CREATE_DRAFT_TTL_MS).toISOString();
+
+    expect(
+      parseWorkoutCreateDraft(
+        JSON.stringify({
+          ...draftInput,
+          updatedAt: boundaryUpdatedAt,
+        }),
+        now
+      )
+    ).toEqual({
+      status: 'valid',
+      value: {
+        ...draftInput,
+        updatedAt: boundaryUpdatedAt,
+      },
+    });
+  });
+
+  it('rejects future timestamp draft', () => {
+    const futureUpdatedAt = new Date(now.getTime() + 1).toISOString();
+
+    expect(
+      parseWorkoutCreateDraft(
+        JSON.stringify({
+          ...draftInput,
+          updatedAt: futureUpdatedAt,
+        }),
+        now
+      )
+    ).toEqual({
+      status: 'invalid',
+    });
+  });
+
   it('rejects expired draft older than 7 days', () => {
     const expiredAt = new Date(now.getTime() - WORKOUT_CREATE_DRAFT_TTL_MS - 1).toISOString();
 
