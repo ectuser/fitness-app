@@ -11,14 +11,14 @@ type PersistDraftInput = {
 
 export function useWorkoutCreateDraft() {
   const restoreDraft = useCallback(() => {
-    if (typeof localStorage === 'undefined') {
-      return null;
-    }
-
     let rawDraft: string | null = null;
 
     try {
-      rawDraft = localStorage.getItem(STORAGE_KEYS.WORKOUT_CREATE_DRAFT);
+      const storage = localStorage;
+      if (typeof storage === 'undefined') {
+        return null;
+      }
+      rawDraft = storage.getItem(STORAGE_KEYS.WORKOUT_CREATE_DRAFT);
     } catch {
       return null;
     }
