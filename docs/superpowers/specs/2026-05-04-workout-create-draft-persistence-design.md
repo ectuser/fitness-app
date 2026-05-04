@@ -27,7 +27,7 @@ Scope: Persist only the `/workouts/new` form draft in localStorage, with explici
 - Persist full form payload:
   - `name`
   - `date`
-  - `workoutExercises` (including sets, comments, order)
+  - `exercises` (including sets, comments, order)
 - Draft expiration window: 7 days.
 - Validation approach: Zod schema with strict reject-on-error behavior.
 - Type source of truth: infer TypeScript type from the Zod schema.
@@ -56,8 +56,8 @@ Define a schema in the draft hook (or draft helper module):
 
 - `name: z.string()`
 - `date: z.string()`
-- `workoutExercises: z.array(...)` (schema mirrors persisted `WorkoutExercise` structure)
-- `savedAt: z.string()` (ISO timestamp)
+- `exercises: z.array(...)` (schema mirrors persisted `WorkoutExercise` structure)
+- `updatedAt: z.string()` (ISO timestamp)
 
 Type definition:
 - `type WorkoutCreateDraft = z.infer<typeof WorkoutCreateDraftSchema>`
@@ -72,15 +72,15 @@ Type definition:
 4. If parse fails or validation fails:
    - remove draft key
    - return no draft
-5. If validation succeeds, evaluate staleness using `savedAt`.
+5. If validation succeeds, evaluate staleness using `updatedAt`.
 6. If older than 7 days:
    - remove draft key
    - return no draft
-7. If valid and fresh, hydrate `name`, `date`, and `workoutExercises` into page state.
+7. If valid and fresh, hydrate `name`, `date`, and `exercises` into page state.
 
 ### Persist flow (create mode only)
 
-On any create-form mutation (`name`, `date`, or `workoutExercises` changes), write full snapshot with refreshed `savedAt`.
+On any create-form mutation (`name`, `date`, or `exercises` changes), write full snapshot with refreshed `updatedAt`.
 
 ### Cleanup flow
 
@@ -104,7 +104,7 @@ Add unit coverage for draft logic (hook-level or extracted helper-level):
 - removes and rejects malformed JSON
 - removes and rejects schema-invalid draft
 - removes and rejects expired draft (`> 7 days`)
-- persists full payload with `savedAt`
+- persists full payload with `updatedAt`
 - clears draft on explicit clear call
 
 ### E2E tests
