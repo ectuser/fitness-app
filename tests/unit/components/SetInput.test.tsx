@@ -31,9 +31,11 @@ describe('SetInput', () => {
       weightUnit: 'kg',
     });
 
+    const callCountBeforeCommaDecimal = onChange.mock.calls.length;
     fireEvent.change(screen.getByPlaceholderText('Weight'), {
       target: { value: '50,257' },
     });
+    expect(onChange).toHaveBeenCalledTimes(callCountBeforeCommaDecimal + 1);
     expect(onChange).toHaveBeenLastCalledWith({
       id: 'set-1',
       reps: 8,
