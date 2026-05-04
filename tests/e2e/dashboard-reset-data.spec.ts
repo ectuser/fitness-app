@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 import {
   seedAppStorage,
+  STORAGE_KEYS,
   buildExercise,
   buildWorkout,
   buildWorkoutExercise,
@@ -31,6 +32,18 @@ test('dashboard reset data clears workouts and restores seeded exercises', async
     settings: { defaultWeightUnit: 'kg' },
   });
 
+  await page.addInitScript((draftKey) => {
+    localStorage.setItem(
+      draftKey,
+      JSON.stringify({
+        name: 'Draft To Be Cleared',
+        date: '2026-03-05',
+        exercises: [],
+        updatedAt: '2026-03-05T10:00:00.000Z',
+      })
+    );
+  }, STORAGE_KEYS.WORKOUT_CREATE_DRAFT);
+
   await page.goto('');
   await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
 
@@ -50,4 +63,10 @@ test('dashboard reset data clears workouts and restores seeded exercises', async
       return { workouts: workouts.length, exercises: exercises.length };
     });
   }).toEqual({ workouts: 0, exercises: 15 });
+
+  await expect.poll(async () => {
+    return page.evaluate(() => {
+      return localStorage.getItem('fitness-app-workout-create-draft');
+    });
+  }).toBeNull();
 });

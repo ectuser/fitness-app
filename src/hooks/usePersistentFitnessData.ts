@@ -122,6 +122,7 @@ export function usePersistentFitnessData(): FitnessDataValue {
         localStorage.removeItem(STORAGE_KEYS.EXERCISES);
         localStorage.removeItem(STORAGE_KEYS.WORKOUTS);
         localStorage.removeItem(STORAGE_KEYS.SETTINGS);
+        localStorage.removeItem(STORAGE_KEYS.WORKOUT_CREATE_DRAFT);
       }
 
       const resetState = resetFitnessData();
