@@ -1,5 +1,20 @@
 import { z } from 'zod';
 
+function isValidIsoCalendarDate(date: string): boolean {
+  const [yearStr, monthStr, dayStr] = date.split('-');
+  const year = Number(yearStr);
+  const month = Number(monthStr);
+  const day = Number(dayStr);
+
+  const parsed = new Date(Date.UTC(year, month - 1, day));
+
+  return (
+    parsed.getUTCFullYear() === year &&
+    parsed.getUTCMonth() === month - 1 &&
+    parsed.getUTCDate() === day
+  );
+}
+
 const WeightUnitSchema = z.enum(['kg', 'lb']);
 
 const WorkoutSetSchema = z.object({
@@ -18,7 +33,12 @@ const WorkoutExerciseSchema = z.object({
 
 export const WorkoutCreateDraftSchema = z.object({
   name: z.string(),
-  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  date: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/)
+    .refine((value) => isValidIsoCalendarDate(value), {
+      message: 'Invalid calendar date',
+    }),
   exercises: z.array(WorkoutExerciseSchema),
   updatedAt: z.string().datetime(),
 });

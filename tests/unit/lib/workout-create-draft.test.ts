@@ -87,6 +87,34 @@ describe('workout create draft helpers', () => {
     });
   });
 
+  it('rejects impossible calendar dates', () => {
+    expect(
+      parseWorkoutCreateDraft(
+        JSON.stringify({
+          ...draftInput,
+          date: '2026-99-99',
+          updatedAt: now.toISOString(),
+        }),
+        now
+      )
+    ).toEqual({
+      status: 'invalid',
+    });
+
+    expect(
+      parseWorkoutCreateDraft(
+        JSON.stringify({
+          ...draftInput,
+          date: '2026-02-30',
+          updatedAt: now.toISOString(),
+        }),
+        now
+      )
+    ).toEqual({
+      status: 'invalid',
+    });
+  });
+
   it('accepts draft at exact TTL boundary', () => {
     const boundaryUpdatedAt = new Date(now.getTime() - WORKOUT_CREATE_DRAFT_TTL_MS).toISOString();
 
