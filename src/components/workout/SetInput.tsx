@@ -12,7 +12,15 @@ interface SetInputProps {
 }
 
 const normalizeWeight = (value: string): number => {
-  const canonicalValue = value.replace(',', '.');
+  const canonicalValue = value.replace(',', '.').trim();
+  const isValidNumericPattern = /^[+-]?(?:\d+\.?\d*|\.\d+)$/.test(
+    canonicalValue
+  );
+
+  if (!isValidNumericPattern) {
+    return 0;
+  }
+
   const parsed = Number.parseFloat(canonicalValue);
 
   if (!Number.isFinite(parsed) || parsed < 0) {

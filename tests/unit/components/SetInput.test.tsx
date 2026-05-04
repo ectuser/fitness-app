@@ -91,6 +91,26 @@ describe('SetInput', () => {
       weightUnit: 'kg',
     });
 
+    fireEvent.change(screen.getByPlaceholderText('Weight'), {
+      target: { value: '12abc' },
+    });
+    expect(onChange).toHaveBeenLastCalledWith({
+      id: 'set-1',
+      reps: 8,
+      weight: 0,
+      weightUnit: 'kg',
+    });
+
+    fireEvent.change(screen.getByPlaceholderText('Weight'), {
+      target: { value: '1..2' },
+    });
+    expect(onChange).toHaveBeenLastCalledWith({
+      id: 'set-1',
+      reps: 8,
+      weight: 0,
+      weightUnit: 'kg',
+    });
+
     fireEvent.change(screen.getByPlaceholderText('Reps'), {
       target: { value: '11' },
     });
