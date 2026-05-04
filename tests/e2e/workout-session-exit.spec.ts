@@ -55,9 +55,45 @@ test('workout session autosaves changes across continue and exit flows', async (
 
   await page.getByRole('button', { name: 'Exit' }).click();
   await expect(page.getByRole('heading', { name: 'Exit Workout?' })).toBeVisible();
-  await page.getByRole('button', { name: 'Continue Workout' }).last().click();
+  const continueFromExitButton = page.getByRole('button', { name: 'Continue Workout' }).last();
+  const exitFromDialogButton = page.getByRole('button', { name: 'Exit' }).last();
+
+  await expect(continueFromExitButton).not.toHaveClass(/border-input/);
+  await expect(exitFromDialogButton).toHaveClass(/border-input/);
+
+  const desktopContinuePosition = await continueFromExitButton.boundingBox();
+  const desktopExitPosition = await exitFromDialogButton.boundingBox();
+  expect(desktopContinuePosition?.x).toBeLessThan(desktopExitPosition?.x ?? 0);
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  const mobileContinuePosition = await continueFromExitButton.boundingBox();
+  const mobileExitPosition = await exitFromDialogButton.boundingBox();
+  expect(mobileExitPosition?.y).toBeLessThan(mobileContinuePosition?.y ?? 0);
+
+  await continueFromExitButton.click();
   await expect(page.getByRole('heading', { name: 'Exit Workout?' })).toHaveCount(0);
   await expect(page).toHaveURL(/\/workouts\/session-exit-workout\/session$/);
+
+  await page.getByRole('button', { name: 'Finish Workout' }).first().click();
+  await expect(page.getByRole('heading', { name: 'Finish Workout?' })).toBeVisible();
+
+  const continueFromFinishButton = page.getByRole('button', { name: 'Continue Workout' }).last();
+  const finishFromDialogButton = page.getByRole('button', { name: 'Finish Workout' }).last();
+
+  await expect(continueFromFinishButton).not.toHaveClass(/border-input/);
+  await expect(finishFromDialogButton).toHaveClass(/border-input/);
+
+  const mobileFinishPosition = await finishFromDialogButton.boundingBox();
+  const mobileContinueFromFinishPosition = await continueFromFinishButton.boundingBox();
+  expect(mobileFinishPosition?.y).toBeLessThan(mobileContinueFromFinishPosition?.y ?? 0);
+
+  await page.setViewportSize({ width: 1280, height: 720 });
+  const desktopContinueFromFinishPosition = await continueFromFinishButton.boundingBox();
+  const desktopFinishPosition = await finishFromDialogButton.boundingBox();
+  expect(desktopContinueFromFinishPosition?.x).toBeLessThan(desktopFinishPosition?.x ?? 0);
+
+  await continueFromFinishButton.click();
+  await expect(page.getByRole('heading', { name: 'Finish Workout?' })).toHaveCount(0);
 
   await page.getByRole('button', { name: 'Exit' }).click();
   await page.getByRole('button', { name: 'Exit' }).last().click();

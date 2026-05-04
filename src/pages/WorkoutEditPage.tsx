@@ -171,18 +171,33 @@ export function WorkoutEditPage() {
           />
         </div>
 
-        <div className="flex flex-col gap-3 pb-6 sm:flex-row">
-          <Button variant="outline" onClick={() => saveWorkout(false)} className="w-full sm:flex-1">
-            <Save className="w-4 h-4 mr-2" />
-            {isEditing ? 'Save Changes' : 'Create Workout'}
-          </Button>
-          <Button variant="outline" onClick={() => saveWorkout(true)} className="w-full sm:flex-1">
-            <Save className="w-4 h-4 mr-2" />
-            Save and Finish Workout
-          </Button>
-          <Button variant="outline" onClick={() => navigate('/workouts')} className="w-full sm:flex-1">
-            Cancel
-          </Button>
+        <div className="pb-6">
+          <div className="flex flex-col gap-3 sm:hidden">
+            <Button variant="outline" onClick={() => saveWorkout(false)} className="w-full">
+              <Save className="w-4 h-4 mr-2" />
+              {isEditing ? 'Save Changes' : 'Create Workout'}
+            </Button>
+            <Button variant="outline" onClick={() => saveWorkout(true)} className="w-full">
+              <Save className="w-4 h-4 mr-2" />
+              Save and Finish Workout
+            </Button>
+            <Button variant="ghost" onClick={() => navigate('/workouts')} className="w-full">
+              Cancel
+            </Button>
+          </div>
+          <div className="hidden gap-3 sm:flex">
+            <Button variant="ghost" onClick={() => navigate('/workouts')} className="flex-1">
+              Cancel
+            </Button>
+            <Button variant="outline" onClick={() => saveWorkout(false)} className="flex-1">
+              <Save className="w-4 h-4 mr-2" />
+              {isEditing ? 'Save Changes' : 'Create Workout'}
+            </Button>
+            <Button variant="outline" onClick={() => saveWorkout(true)} className="flex-1">
+              <Save className="w-4 h-4 mr-2" />
+              Save and Finish Workout
+            </Button>
+          </div>
         </div>
       </div>
 

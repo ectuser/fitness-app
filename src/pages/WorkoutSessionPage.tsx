@@ -180,11 +180,33 @@ export function WorkoutSessionPage() {
         title="Finish Workout?"
         description="Mark this workout as completed? Your progress will be saved and exercise statistics will be updated."
       >
-        <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-          <Button variant="outline" onClick={() => setShowFinishDialog(false)}>
+        <div className="sm:hidden space-y-2">
+          <Button
+            variant="outline"
+            onClick={() => {
+              if (id) {
+                updateWorkout(id, {
+                  exercises: workoutExercises,
+                  isCompleted: true,
+                  completedAt: new Date().toISOString(),
+                });
+                navigate('/workouts');
+              }
+            }}
+            className="w-full"
+          >
+            Finish Workout
+          </Button>
+          <Button variant="ghost" onClick={() => setShowFinishDialog(false)} className="w-full">
+            Continue Workout
+          </Button>
+        </div>
+        <div className="hidden sm:flex sm:justify-end sm:gap-2">
+          <Button variant="ghost" onClick={() => setShowFinishDialog(false)}>
             Continue Workout
           </Button>
           <Button
+            variant="outline"
             onClick={() => {
               if (id) {
                 updateWorkout(id, {
@@ -208,11 +230,17 @@ export function WorkoutSessionPage() {
         title="Exit Workout?"
         description="Your progress has been auto-saved. You can resume this workout later from the workouts page."
       >
-        <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-          <Button variant="outline" onClick={() => setShowExitDialog(false)}>
+        <div className="sm:hidden space-y-2">
+          <Button variant="outline" onClick={() => navigate('/workouts')} className="w-full">Exit</Button>
+          <Button variant="ghost" onClick={() => setShowExitDialog(false)} className="w-full">
             Continue Workout
           </Button>
-          <Button onClick={() => navigate('/workouts')}>Exit</Button>
+        </div>
+        <div className="hidden sm:flex sm:justify-end sm:gap-2">
+          <Button variant="ghost" onClick={() => setShowExitDialog(false)}>
+            Continue Workout
+          </Button>
+          <Button variant="outline" onClick={() => navigate('/workouts')}>Exit</Button>
         </div>
       </SimpleModal>
     </div>

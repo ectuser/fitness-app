@@ -55,4 +55,28 @@ describe('ExerciseForm', () => {
     fireEvent.click(screen.getAllByRole('button', { name: /cancel/i }).at(-1)!);
     expect(onCancel).toHaveBeenCalled();
   });
+
+  it('renders action buttons with correct variants, order, and responsive row semantics', () => {
+    render(<ExerciseForm onCancel={vi.fn()} onSave={vi.fn()} />);
+
+    const cancelButton = screen.getByRole('button', { name: /^cancel$/i });
+    const saveButton = screen.getByRole('button', { name: /save exercise/i });
+    const actions = saveButton.parentElement;
+
+    expect(actions).not.toBeNull();
+    expect(actions?.className).toContain('flex-col-reverse');
+    expect(actions?.className).toContain('sm:flex-row');
+
+    expect(saveButton.className).toContain('border');
+    expect(saveButton.className).toContain('border-input');
+    expect(saveButton.className).toContain('bg-background');
+    expect(cancelButton.className).toContain('hover:bg-accent');
+    expect(cancelButton.className).not.toContain('border-input');
+    expect(cancelButton.className).not.toContain('bg-background');
+
+    const actionButtons = Array.from(actions?.querySelectorAll('button') ?? []);
+    expect(actionButtons).toHaveLength(2);
+    expect(actionButtons[0]).toBe(cancelButton);
+    expect(actionButtons[1]).toBe(saveButton);
+  });
 });
