@@ -21,6 +21,7 @@ interface WorkoutExerciseCardProps {
   index: number;
   totalCount: number;
   onChange: (exercise: WorkoutExercise) => void;
+  onEditExercise?: (exercise: Exercise) => void;
   onRemove: () => void;
   onMoveUp: () => void;
   onMoveDown: () => void;
@@ -33,6 +34,7 @@ export function WorkoutExerciseCard({
   index,
   totalCount,
   onChange,
+  onEditExercise,
   onRemove,
   onMoveUp,
   onMoveDown,
@@ -139,6 +141,10 @@ export function WorkoutExerciseCard({
                 role="menuitem"
                 onClick={() => {
                   setIsMenuOpen(false);
+                  if (onEditExercise) {
+                    onEditExercise(exercise);
+                    return;
+                  }
                   navigate(`/exercises/${exercise.id}/edit`);
                 }}
                 className="flex w-full items-center rounded-sm px-2 py-2 text-sm hover:bg-slate-100"

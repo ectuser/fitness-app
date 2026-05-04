@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from '@/lib/router-compat';
+import { useEffect, useRef, useState } from 'react';
+import { useParams, useNavigate, useLocation } from '@/lib/router-compat';
 import { useData } from '@/context/DataContext';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Button } from '@/components/ui/button';
@@ -11,14 +11,19 @@ import { ExerciseSelector } from '@/components/workout/ExerciseSelector';
 import { WorkoutExerciseList } from '@/components/workout/WorkoutExerciseList';
 import { useWorkoutExerciseEditor } from '@/hooks/useWorkoutExerciseEditor';
 import { formatDefaultWorkoutName, validateWorkoutForm } from '@/lib/workout-editor';
-import type { Workout } from '@/types';
+import { consumeWorkoutFormDraft, saveWorkoutFormDraft } from '@/lib/workout-form-draft';
+import type { Exercise, Workout } from '@/types';
 
 export function WorkoutEditPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   const { workouts, exercises, addWorkout, updateWorkout, settings } = useData();
   const isEditing = !!id;
   const [loadedWorkoutId, setLoadedWorkoutId] = useState<string | null>(null);
+  const shouldSkipStoredWorkoutInitializationRef = useRef(false);
+  const hasRestoredDraftRef = useRef(false);
+  const restoredPathnameRef = useRef<string | null>(null);
 
   const [name, setName] = useState(() => formatDefaultWorkoutName(new Date()));
   const [date, setDate] = useState(() => new Date().toISOString().split('T')[0]);
@@ -45,7 +50,38 @@ export function WorkoutEditPage() {
   });
 
   useEffect(() => {
-    if (!isEditing || !id || loadedWorkoutId === id) {
+    if (restoredPathnameRef.current !== location.pathname) {
+      hasRestoredDraftRef.current = false;
+      restoredPathnameRef.current = location.pathname;
+      shouldSkipStoredWorkoutInitializationRef.current = false;
+    }
+
+    if (hasRestoredDraftRef.current) {
+      return;
+    }
+
+    const draft = consumeWorkoutFormDraft(location.pathname);
+    if (!draft) {
+      return;
+    }
+
+    hasRestoredDraftRef.current = true;
+    shouldSkipStoredWorkoutInitializationRef.current = true;
+    setName(draft.name);
+    setDate(draft.date);
+    setWorkoutExercises(draft.workoutExercises);
+    if (isEditing && id) {
+      setLoadedWorkoutId(id);
+    }
+  }, [id, isEditing, location.pathname, setWorkoutExercises]);
+
+  useEffect(() => {
+    if (
+      shouldSkipStoredWorkoutInitializationRef.current ||
+      !isEditing ||
+      !id ||
+      loadedWorkoutId === id
+    ) {
       return;
     }
 
@@ -95,6 +131,15 @@ export function WorkoutEditPage() {
     }
 
     navigate(finishWorkout ? '/workouts/completed' : '/workouts');
+  };
+
+  const handleEditExerciseFromWorkout = (exercise: Exercise) => {
+    saveWorkoutFormDraft(location.pathname, {
+      name,
+      date,
+      workoutExercises,
+    });
+    navigate(`/exercises/${exercise.id}/edit?returnTo=${encodeURIComponent(location.pathname)}`);
   };
 
   return (
@@ -152,6 +197,7 @@ export function WorkoutEditPage() {
             workoutExercises={workoutExercises}
             exercises={exercises}
             onChangeExercise={handleUpdateExercise}
+            onEditExercise={handleEditExerciseFromWorkout}
             onMoveExerciseDown={handleMoveExerciseDown}
             onMoveExerciseUp={handleMoveExerciseUp}
             onRemoveExercise={handleRemoveExercise}
