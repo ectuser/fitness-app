@@ -2,24 +2,8 @@ import { useNavigate, useParams } from '@/lib/router-compat';
 import { useData } from '@/context/DataContext';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { ExerciseForm } from '@/components/exercise/ExerciseForm';
+import { getReturnToWorkoutPathFromSearch } from '@/lib/exercise-return-path';
 import type { Exercise } from '@/types';
-
-function getReturnToWorkoutPathFromSearch(): string | null {
-  if (typeof window === 'undefined') {
-    return null;
-  }
-
-  const returnTo = new URLSearchParams(window.location.search).get('returnTo');
-  if (!returnTo) {
-    return null;
-  }
-
-  if (returnTo === '/workouts/new' || /^\/workouts\/[^/]+\/edit$/.test(returnTo)) {
-    return returnTo;
-  }
-
-  return null;
-}
 
 export function ExerciseFormPage() {
   const { id } = useParams<{ id: string }>();
@@ -28,7 +12,9 @@ export function ExerciseFormPage() {
 
   const exercise = id ? exercises.find((e) => e.id === id) : undefined;
   const isEditing = !!id;
-  const returnToWorkoutPath = getReturnToWorkoutPathFromSearch();
+  const returnToWorkoutPath = typeof window === 'undefined'
+    ? null
+    : getReturnToWorkoutPathFromSearch(window.location.search);
 
   const handleSave = (exerciseData: Omit<Exercise, 'id' | 'createdAt'>) => {
     if (isEditing && id) {
