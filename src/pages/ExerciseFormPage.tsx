@@ -22,12 +22,16 @@ export function ExerciseFormPage() {
     } else {
       addExercise(exerciseData);
     }
-    navigate(returnToWorkoutPath ?? '/exercises');
+    if (returnToWorkoutPath) {
+      navigate(returnToWorkoutPath, { replace: true });
+      return;
+    }
+    navigate('/exercises');
   };
 
   const handleCancel = () => {
     if (returnToWorkoutPath) {
-      navigate(returnToWorkoutPath);
+      navigate(returnToWorkoutPath, { replace: true });
       return;
     }
     navigate(-1);
