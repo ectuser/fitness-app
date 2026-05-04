@@ -29,7 +29,7 @@ export function SetInput({ set, setNumber, onChange, onRemove }: SetInputProps) 
 
   useEffect(() => {
     setRawWeight(set.weight === 0 ? '' : String(set.weight));
-  }, [set.id]);
+  }, [set.id, set.weight]);
 
   return (
     <div className="flex items-center gap-2 p-3 bg-slate-50 rounded-lg">
@@ -50,8 +50,6 @@ export function SetInput({ set, setNumber, onChange, onRemove }: SetInputProps) 
             }}
             placeholder="Weight"
             className="text-base h-11"
-            min="0"
-            step="0.01"
           />
         </div>
 
