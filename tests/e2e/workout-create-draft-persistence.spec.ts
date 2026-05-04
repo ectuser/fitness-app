@@ -1,10 +1,10 @@
 import { test, expect } from '@playwright/test';
 import type { Page } from '@playwright/test';
-import { clearAppStorage, seedAppStorage, buildExercise, STORAGE_KEYS } from './helpers/storage';
+import { seedAppStorage, buildExercise, STORAGE_KEYS } from './helpers/storage';
 
 const workoutExerciseCard = (page: Page, name: string) =>
-  page.locator(
-    `xpath=//h3[normalize-space()='${name}']/ancestor::div[contains(@class,'p-4')][1]`
+  page.getByRole('heading', { name, exact: true }).locator(
+    "xpath=ancestor::*[.//input[@placeholder='Weight'] and .//input[@placeholder='Reps'] and .//button[normalize-space()='Details']][1]"
   );
 
 const draftValue = (page: Page) =>
