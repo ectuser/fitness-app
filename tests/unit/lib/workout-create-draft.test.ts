@@ -72,6 +72,21 @@ describe('workout create draft helpers', () => {
     });
   });
 
+  it('rejects drafts with unknown extra fields', () => {
+    expect(
+      parseWorkoutCreateDraft(
+        JSON.stringify({
+          ...draftInput,
+          updatedAt: now.toISOString(),
+          unexpectedField: 'unexpected-value',
+        }),
+        now
+      )
+    ).toEqual({
+      status: 'invalid',
+    });
+  });
+
   it('rejects invalid date format', () => {
     expect(
       parseWorkoutCreateDraft(

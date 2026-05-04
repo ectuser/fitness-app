@@ -34,13 +34,17 @@ export function useWorkoutCreateDraft() {
   }, []);
 
   const persistDraft = useCallback(({ name, date, workoutExercises }: PersistDraftInput) => {
-    const draft = buildWorkoutCreateDraft({
-      name,
-      date,
-      exercises: workoutExercises,
-    });
+    try {
+      const draft = buildWorkoutCreateDraft({
+        name,
+        date,
+        exercises: workoutExercises,
+      });
 
-    saveToStorage(STORAGE_KEYS.WORKOUT_CREATE_DRAFT, draft);
+      saveToStorage(STORAGE_KEYS.WORKOUT_CREATE_DRAFT, draft);
+    } catch {
+      // Fail closed: invalid transient input should never break workout create flow.
+    }
   }, []);
 
   const clearDraft = useCallback(() => {

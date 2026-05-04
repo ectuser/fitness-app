@@ -22,14 +22,14 @@ const WorkoutSetSchema = z.object({
   weight: z.number(),
   weightUnit: WeightUnitSchema,
   reps: z.number(),
-});
+}).strict();
 
 const WorkoutExerciseSchema = z.object({
   exerciseId: z.string(),
   sets: z.array(WorkoutSetSchema),
   order: z.number(),
   comment: z.string().optional(),
-});
+}).strict();
 
 export const WorkoutCreateDraftSchema = z.object({
   name: z.string(),
@@ -41,7 +41,7 @@ export const WorkoutCreateDraftSchema = z.object({
     }),
   exercises: z.array(WorkoutExerciseSchema),
   updatedAt: z.string().datetime(),
-});
+}).strict();
 
 export type WorkoutCreateDraft = z.infer<typeof WorkoutCreateDraftSchema>;
 
