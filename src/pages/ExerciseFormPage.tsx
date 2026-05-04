@@ -4,6 +4,23 @@ import { PageHeader } from '@/components/layout/PageHeader';
 import { ExerciseForm } from '@/components/exercise/ExerciseForm';
 import type { Exercise } from '@/types';
 
+function getReturnToWorkoutPathFromSearch(): string | null {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+
+  const returnTo = new URLSearchParams(window.location.search).get('returnTo');
+  if (!returnTo) {
+    return null;
+  }
+
+  if (returnTo === '/workouts/new' || /^\/workouts\/[^/]+\/edit$/.test(returnTo)) {
+    return returnTo;
+  }
+
+  return null;
+}
+
 export function ExerciseFormPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -11,6 +28,7 @@ export function ExerciseFormPage() {
 
   const exercise = id ? exercises.find((e) => e.id === id) : undefined;
   const isEditing = !!id;
+  const returnToWorkoutPath = getReturnToWorkoutPathFromSearch();
 
   const handleSave = (exerciseData: Omit<Exercise, 'id' | 'createdAt'>) => {
     if (isEditing && id) {
@@ -18,10 +36,14 @@ export function ExerciseFormPage() {
     } else {
       addExercise(exerciseData);
     }
-    navigate('/exercises');
+    navigate(returnToWorkoutPath ?? '/exercises');
   };
 
   const handleCancel = () => {
+    if (returnToWorkoutPath) {
+      navigate(returnToWorkoutPath);
+      return;
+    }
     navigate(-1);
   };
 

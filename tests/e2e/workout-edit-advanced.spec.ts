@@ -192,7 +192,9 @@ test('workout edit can switch an exercise and keep last completed workout defaul
   );
 });
 
-test('workout edit menu can open exercise editing from the workout flow', async ({ page }) => {
+test('workout edit menu returns to workout form after exercise save and preserves draft state', async ({
+  page,
+}) => {
   await seedAppStorage(page, {
     exercises: [
       buildExercise({
@@ -221,6 +223,10 @@ test('workout edit menu can open exercise editing from the workout flow', async 
   await page.goto('/workouts/edit-entrypoint-workout/edit');
   await expect(page.getByRole('heading', { name: 'Edit Workout' })).toBeVisible();
 
+  await page.getByLabel('Workout Name').fill('Entry Workout Draft');
+  await workoutExerciseCard(page, 'Editable Fly').getByPlaceholder('Weight').first().fill('15');
+  await workoutExerciseCard(page, 'Editable Fly').getByPlaceholder('Reps').first().fill('9');
+
   await workoutExerciseCard(page, 'Editable Fly').getByRole('button').nth(2).click();
   await page.getByRole('menuitem', { name: 'Edit Exercise' }).click();
 
@@ -228,6 +234,52 @@ test('workout edit menu can open exercise editing from the workout flow', async 
   await page.getByLabel('Exercise Name').fill('Editable Fly Updated');
   await page.getByRole('button', { name: 'Save Exercise' }).click();
 
-  await expect(page.getByRole('heading', { name: 'Exercises' })).toBeVisible();
-  await expect(page.getByText('Editable Fly Updated')).toBeVisible();
+  await expect(page).toHaveURL('/workouts/edit-entrypoint-workout/edit');
+  await expect(page.getByRole('heading', { name: 'Edit Workout' })).toBeVisible();
+  await expect(page.getByLabel('Workout Name')).toHaveValue('Entry Workout Draft');
+  await expect(page.getByRole('heading', { name: 'Editable Fly Updated' })).toBeVisible();
+  await expect(workoutExerciseCard(page, 'Editable Fly Updated').getByPlaceholder('Weight').first()).toHaveValue('15');
+  await expect(workoutExerciseCard(page, 'Editable Fly Updated').getByPlaceholder('Reps').first()).toHaveValue('9');
+});
+
+test('workout create returns to form after exercise save and keeps unsaved draft state', async ({
+  page,
+}) => {
+  await seedAppStorage(page, {
+    exercises: [
+      buildExercise({
+        id: 'create-entrypoint-custom',
+        name: 'Draft Fly',
+        muscleGroups: ['Chest'],
+        isCustom: true,
+      }),
+    ],
+    workouts: [],
+    settings: { defaultWeightUnit: 'kg' },
+  });
+
+  await page.goto('/workouts/new');
+  await expect(page.getByRole('heading', { name: 'Create Workout' })).toBeVisible();
+
+  await page.getByLabel('Workout Name').fill('Workout Draft');
+  await page.getByRole('button', { name: 'Add Exercise' }).click();
+  await page.getByRole('heading', { name: 'Draft Fly' }).click();
+
+  await expect(workoutExerciseCard(page, 'Draft Fly')).toBeVisible();
+  await workoutExerciseCard(page, 'Draft Fly').getByPlaceholder('Weight').first().fill('11');
+  await workoutExerciseCard(page, 'Draft Fly').getByPlaceholder('Reps').first().fill('7');
+
+  await workoutExerciseCard(page, 'Draft Fly').getByRole('button').nth(2).click();
+  await page.getByRole('menuitem', { name: 'Edit Exercise' }).click();
+  await expect(page.getByRole('heading', { name: 'Edit Exercise' })).toBeVisible();
+
+  await page.getByLabel('Exercise Name').fill('Draft Fly Updated');
+  await page.getByRole('button', { name: 'Save Exercise' }).click();
+
+  await expect(page).toHaveURL('/workouts/new');
+  await expect(page.getByRole('heading', { name: 'Create Workout' })).toBeVisible();
+  await expect(page.getByLabel('Workout Name')).toHaveValue('Workout Draft');
+  await expect(workoutExerciseCard(page, 'Draft Fly Updated')).toBeVisible();
+  await expect(workoutExerciseCard(page, 'Draft Fly Updated').getByPlaceholder('Weight').first()).toHaveValue('11');
+  await expect(workoutExerciseCard(page, 'Draft Fly Updated').getByPlaceholder('Reps').first()).toHaveValue('7');
 });
