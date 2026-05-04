@@ -9,6 +9,7 @@ import { Card } from '@/components/ui/card';
 import { Plus, Save } from 'lucide-react';
 import { ExerciseSelector } from '@/components/workout/ExerciseSelector';
 import { WorkoutExerciseList } from '@/components/workout/WorkoutExerciseList';
+import { useWorkoutCreateDraft } from '@/hooks/useWorkoutCreateDraft';
 import { useWorkoutExerciseEditor } from '@/hooks/useWorkoutExerciseEditor';
 import { formatDefaultWorkoutName, validateWorkoutForm } from '@/lib/workout-editor';
 import type { Workout } from '@/types';
@@ -19,6 +20,8 @@ export function WorkoutEditPage() {
   const { workouts, exercises, addWorkout, updateWorkout, settings } = useData();
   const isEditing = !!id;
   const [loadedWorkoutId, setLoadedWorkoutId] = useState<string | null>(null);
+  const [hasHydratedCreateDraft, setHasHydratedCreateDraft] = useState(false);
+  const { clearDraft, persistDraft, restoreDraft } = useWorkoutCreateDraft();
 
   const [name, setName] = useState(() => formatDefaultWorkoutName(new Date()));
   const [date, setDate] = useState(() => new Date().toISOString().split('T')[0]);
@@ -58,6 +61,34 @@ export function WorkoutEditPage() {
     }
   }, [id, isEditing, loadedWorkoutId, setWorkoutExercises, workouts]);
 
+  useEffect(() => {
+    if (isEditing) {
+      return;
+    }
+
+    const draft = restoreDraft();
+
+    if (draft) {
+      setName(draft.name);
+      setDate(draft.date);
+      setWorkoutExercises(draft.exercises);
+    }
+
+    setHasHydratedCreateDraft(true);
+  }, [isEditing, restoreDraft, setWorkoutExercises]);
+
+  useEffect(() => {
+    if (isEditing || !hasHydratedCreateDraft) {
+      return;
+    }
+
+    persistDraft({
+      name,
+      date,
+      workoutExercises,
+    });
+  }, [date, hasHydratedCreateDraft, isEditing, name, persistDraft, workoutExercises]);
+
   const validateForm = () => {
     const nextErrors = validateWorkoutForm(name, workoutExercises);
     setErrors(nextErrors);
@@ -92,9 +123,18 @@ export function WorkoutEditPage() {
       }
     } else {
       addWorkout(workoutData);
+      clearDraft();
     }
 
     navigate(finishWorkout ? '/workouts/completed' : '/workouts');
+  };
+
+  const handleCancel = () => {
+    if (!isEditing) {
+      clearDraft();
+    }
+
+    navigate('/workouts');
   };
 
   return (
@@ -180,7 +220,7 @@ export function WorkoutEditPage() {
             <Save className="w-4 h-4 mr-2" />
             Save and Finish Workout
           </Button>
-          <Button variant="outline" onClick={() => navigate('/workouts')} className="w-full sm:flex-1">
+          <Button variant="outline" onClick={handleCancel} className="w-full sm:flex-1">
             Cancel
           </Button>
         </div>
