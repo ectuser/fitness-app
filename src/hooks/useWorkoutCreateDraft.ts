@@ -15,7 +15,14 @@ export function useWorkoutCreateDraft() {
       return null;
     }
 
-    const rawDraft = localStorage.getItem(STORAGE_KEYS.WORKOUT_CREATE_DRAFT);
+    let rawDraft: string | null = null;
+
+    try {
+      rawDraft = localStorage.getItem(STORAGE_KEYS.WORKOUT_CREATE_DRAFT);
+    } catch {
+      return null;
+    }
+
     const parsedDraft = parseWorkoutCreateDraft(rawDraft);
 
     if (parsedDraft.status !== 'valid') {

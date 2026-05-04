@@ -12,7 +12,7 @@ import { WorkoutExerciseList } from '@/components/workout/WorkoutExerciseList';
 import { useWorkoutCreateDraft } from '@/hooks/useWorkoutCreateDraft';
 import { useWorkoutExerciseEditor } from '@/hooks/useWorkoutExerciseEditor';
 import { formatDefaultWorkoutName, validateWorkoutForm } from '@/lib/workout-editor';
-import type { Workout } from '@/types';
+import type { Exercise, Workout } from '@/types';
 
 export function WorkoutEditPage() {
   const { id } = useParams<{ id: string }>();
@@ -21,18 +21,19 @@ export function WorkoutEditPage() {
   const isEditing = !!id;
   const [loadedWorkoutId, setLoadedWorkoutId] = useState<string | null>(null);
   const [hasHydratedCreateDraft, setHasHydratedCreateDraft] = useState(false);
+  const [isCreateDraftDirty, setIsCreateDraftDirty] = useState(false);
   const { clearDraft, persistDraft, restoreDraft } = useWorkoutCreateDraft();
 
   const [name, setName] = useState(() => formatDefaultWorkoutName(new Date()));
   const [date, setDate] = useState(() => new Date().toISOString().split('T')[0]);
   const [errors, setErrors] = useState<{ name?: string; exercises?: string }>({});
   const {
-    handleAddExercise,
-    handleMoveExerciseDown,
-    handleMoveExerciseUp,
-    handleRemoveExercise,
-    handleReplaceExercise,
-    handleUpdateExercise,
+    handleAddExercise: addExercise,
+    handleMoveExerciseDown: moveExerciseDown,
+    handleMoveExerciseUp: moveExerciseUp,
+    handleRemoveExercise: removeExercise,
+    handleReplaceExercise: replaceExercise,
+    handleUpdateExercise: updateExercise,
     openAddExerciseSelector,
     selectedExerciseIds,
     selectorInitialFilterGroup,
@@ -78,7 +79,7 @@ export function WorkoutEditPage() {
   }, [isEditing, restoreDraft, setWorkoutExercises]);
 
   useEffect(() => {
-    if (isEditing || !hasHydratedCreateDraft) {
+    if (isEditing || !hasHydratedCreateDraft || !isCreateDraftDirty) {
       return;
     }
 
@@ -87,7 +88,53 @@ export function WorkoutEditPage() {
       date,
       workoutExercises,
     });
-  }, [date, hasHydratedCreateDraft, isEditing, name, persistDraft, workoutExercises]);
+  }, [date, hasHydratedCreateDraft, isCreateDraftDirty, isEditing, name, persistDraft, workoutExercises]);
+
+  const markCreateDraftDirty = () => {
+    if (!isEditing) {
+      setIsCreateDraftDirty(true);
+    }
+  };
+
+  const handleNameChange = (value: string) => {
+    markCreateDraftDirty();
+    setName(value);
+  };
+
+  const handleDateChange = (value: string) => {
+    markCreateDraftDirty();
+    setDate(value);
+  };
+
+  const handleAddExercise = (exercise: Exercise) => {
+    markCreateDraftDirty();
+    addExercise(exercise);
+  };
+
+  const handleMoveExerciseUp = (index: number) => {
+    markCreateDraftDirty();
+    moveExerciseUp(index);
+  };
+
+  const handleMoveExerciseDown = (index: number) => {
+    markCreateDraftDirty();
+    moveExerciseDown(index);
+  };
+
+  const handleRemoveExercise = (index: number) => {
+    markCreateDraftDirty();
+    removeExercise(index);
+  };
+
+  const handleReplaceExercise = (index: number) => {
+    markCreateDraftDirty();
+    replaceExercise(index);
+  };
+
+  const handleUpdateExercise = (index: number, updatedExercise: Workout['exercises'][number]) => {
+    markCreateDraftDirty();
+    updateExercise(index, updatedExercise);
+  };
 
   const validateForm = () => {
     const nextErrors = validateWorkoutForm(name, workoutExercises);
@@ -152,7 +199,7 @@ export function WorkoutEditPage() {
               <Input
                 id="name"
                 value={name}
-                onChange={(event) => setName(event.target.value)}
+                onChange={(event) => handleNameChange(event.target.value)}
                 placeholder="e.g., Upper Body Day"
                 className={errors.name ? 'border-red-500' : ''}
               />
@@ -167,7 +214,7 @@ export function WorkoutEditPage() {
                 id="date"
                 type="date"
                 value={date}
-                onChange={(event) => setDate(event.target.value)}
+                onChange={(event) => handleDateChange(event.target.value)}
               />
             </div>
           </div>
