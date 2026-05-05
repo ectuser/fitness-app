@@ -7,6 +7,8 @@ import { tanstackStart } from '@tanstack/react-start/plugin/vite'
 import viteReact from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
+const isPagesBuild = process.env.GITHUB_PAGES === 'true'
+
 const config = defineConfig({
   resolve: {
     alias: {
@@ -21,7 +23,18 @@ const config = defineConfig({
       strategy: ['url', 'baseLocale'],
     }),
     tailwindcss(),
-    tanstackStart(),
+    tanstackStart(
+      isPagesBuild
+        ? {
+            spa: {
+              enabled: true,
+              prerender: {
+                outputPath: '/index',
+              },
+            },
+          }
+        : undefined,
+    ),
     viteReact(),
   ],
 })
