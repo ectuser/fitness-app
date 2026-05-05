@@ -10,6 +10,7 @@ import {
 
 test('workout create with selector search and sets', async ({ page }) => {
   await clearAppStorage(page);
+  await page.setViewportSize({ width: 1280, height: 720 });
   await page.goto('workouts/new');
 
   const expectedDefaultName = await page.evaluate(() =>
@@ -20,6 +21,29 @@ test('workout create with selector search and sets', async ({ page }) => {
     })
   );
   await expect(page.getByLabel('Workout Name')).toHaveValue(expectedDefaultName);
+
+  const createWorkoutButton = page.getByRole('button', { name: 'Create Workout' });
+  const saveAndFinishWorkoutButton = page.getByRole('button', { name: 'Save and Finish Workout' });
+  const cancelButton = page.getByRole('button', { name: 'Cancel' });
+
+  await expect(createWorkoutButton).toHaveClass(/border-input/);
+  await expect(saveAndFinishWorkoutButton).toHaveClass(/border-input/);
+  await expect(cancelButton).not.toHaveClass(/border-input/);
+
+  const desktopCancelPosition = await cancelButton.boundingBox();
+  const desktopCreatePosition = await createWorkoutButton.boundingBox();
+  const desktopSaveAndFinishPosition = await saveAndFinishWorkoutButton.boundingBox();
+
+  expect(desktopCancelPosition?.x).toBeLessThan(desktopCreatePosition?.x ?? 0);
+  expect(desktopCreatePosition?.x).toBeLessThan(desktopSaveAndFinishPosition?.x ?? 0);
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  const mobileCreatePosition = await createWorkoutButton.boundingBox();
+  const mobileSaveAndFinishPosition = await saveAndFinishWorkoutButton.boundingBox();
+  const mobileCancelPosition = await cancelButton.boundingBox();
+
+  expect(mobileCreatePosition?.y).toBeLessThan(mobileCancelPosition?.y ?? 0);
+  expect(mobileSaveAndFinishPosition?.y).toBeLessThan(mobileCancelPosition?.y ?? 0);
 
   await page.getByLabel('Workout Name').fill('Push Day');
   await page.getByRole('button', { name: 'Add Exercise' }).click();
@@ -115,6 +139,7 @@ test('workout menu duplicate delete and complete/incomplete transitions', async 
 
   await workoutCard('Menu Day (Copy)').getByRole('button').first().click();
   await page.getByRole('menuitem', { name: 'Delete' }).click();
+  await expect(page.getByRole('button', { name: 'Cancel' })).not.toHaveClass(/border-input/);
   await page.getByRole('button', { name: 'Delete' }).click();
   await expect(page.getByRole('heading', { name: 'Menu Day (Copy)' })).toHaveCount(0);
 

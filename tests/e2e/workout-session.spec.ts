@@ -42,7 +42,9 @@ test('workout session add exercise finish and update stats', async ({ page }) =>
   await page.goto('/workouts/workout-session-1/session');
   await expect(page.getByRole('heading', { name: 'Session Day' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Bench Press' })).toBeVisible();
-  await page.getByPlaceholder('Weight').first().fill('50.257');
+  const firstWeightInput = page.getByPlaceholder('Weight').first();
+  await firstWeightInput.click();
+  await firstWeightInput.type('6,527');
   await page.getByPlaceholder('Reps').first().fill('8');
 
   await expect.poll(async () => {
@@ -51,7 +53,7 @@ test('workout session add exercise finish and update stats', async ({ page }) =>
       const workout = workouts.find((w: { id: string }) => w.id === 'workout-session-1');
       return workout?.exercises?.[0]?.sets?.[0]?.weight ?? null;
     });
-  }).toBe(50.25);
+  }).toBe(6.52);
 
   await page.getByRole('button', { name: 'Add Exercise' }).click();
   await expect(page.getByRole('heading', { name: 'Add Exercise' })).toBeVisible();
@@ -72,7 +74,7 @@ test('workout session add exercise finish and update stats', async ({ page }) =>
   await page.getByText('Bench Press').first().click();
 
   await expect(page.getByRole('heading', { level: 1, name: 'Bench Press' })).toBeVisible();
-  await expect(page.getByText('50.25 kg', { exact: true })).toBeVisible();
+  await expect(page.getByText('6.52 kg', { exact: true })).toBeVisible();
   await expect(page.getByText('Total Sets')).toBeVisible();
   await expect(page.getByText('1', { exact: true })).toBeVisible();
 });

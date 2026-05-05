@@ -6,6 +6,7 @@ interface WorkoutExerciseListProps {
   emptyState: ReactNode;
   exercises: Exercise[];
   onChangeExercise: (index: number, updatedExercise: WorkoutExercise) => void;
+  onEditExercise?: (exercise: Exercise) => void;
   onMoveExerciseDown: (index: number) => void;
   onMoveExerciseUp: (index: number) => void;
   onRemoveExercise: (index: number) => void;
@@ -17,6 +18,7 @@ export function WorkoutExerciseList({
   emptyState,
   exercises,
   onChangeExercise,
+  onEditExercise,
   onMoveExerciseDown,
   onMoveExerciseUp,
   onRemoveExercise,
@@ -44,6 +46,7 @@ export function WorkoutExerciseList({
             index={index}
             totalCount={workoutExercises.length}
             onChange={(updatedExercise) => onChangeExercise(index, updatedExercise)}
+            onEditExercise={onEditExercise}
             onRemove={() => onRemoveExercise(index)}
             onMoveUp={() => onMoveExerciseUp(index)}
             onMoveDown={() => onMoveExerciseDown(index)}

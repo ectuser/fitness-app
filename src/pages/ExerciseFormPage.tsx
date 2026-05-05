@@ -2,6 +2,7 @@ import { useNavigate, useParams } from '@/lib/router-compat';
 import { useData } from '@/context/DataContext';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { ExerciseForm } from '@/components/exercise/ExerciseForm';
+import { getReturnToWorkoutPathFromSearch } from '@/lib/exercise-return-path';
 import type { Exercise } from '@/types';
 
 export function ExerciseFormPage() {
@@ -11,6 +12,9 @@ export function ExerciseFormPage() {
 
   const exercise = id ? exercises.find((e) => e.id === id) : undefined;
   const isEditing = !!id;
+  const returnToWorkoutPath = typeof window === 'undefined'
+    ? null
+    : getReturnToWorkoutPathFromSearch(window.location.search);
 
   const handleSave = (exerciseData: Omit<Exercise, 'id' | 'createdAt'>) => {
     if (isEditing && id) {
@@ -18,10 +22,18 @@ export function ExerciseFormPage() {
     } else {
       addExercise(exerciseData);
     }
+    if (returnToWorkoutPath) {
+      navigate(returnToWorkoutPath, { replace: true });
+      return;
+    }
     navigate('/exercises');
   };
 
   const handleCancel = () => {
+    if (returnToWorkoutPath) {
+      navigate(returnToWorkoutPath, { replace: true });
+      return;
+    }
     navigate(-1);
   };
 
