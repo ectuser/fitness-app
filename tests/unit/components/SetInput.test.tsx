@@ -134,4 +134,45 @@ describe('SetInput', () => {
     fireEvent.click(screen.getByRole('button'));
     expect(onRemove).toHaveBeenCalled();
   });
+
+  it('preserves separator during incremental typing when parent sends normalized weight update', () => {
+    const onChange = vi.fn();
+    const onRemove = vi.fn();
+
+    const { rerender } = render(
+      <SetInput
+        onChange={onChange}
+        onRemove={onRemove}
+        set={{
+          id: 'set-1',
+          reps: 8,
+          weight: 0,
+          weightUnit: 'kg',
+        }}
+        setNumber={1}
+      />
+    );
+
+    const weightInput = screen.getByPlaceholderText('Weight');
+    fireEvent.focus(weightInput);
+    fireEvent.change(weightInput, { target: { value: '6' } });
+    fireEvent.change(weightInput, { target: { value: '6,' } });
+    expect(weightInput).toHaveValue('6,');
+
+    rerender(
+      <SetInput
+        onChange={onChange}
+        onRemove={onRemove}
+        set={{
+          id: 'set-1',
+          reps: 8,
+          weight: 6,
+          weightUnit: 'kg',
+        }}
+        setNumber={1}
+      />
+    );
+
+    expect(weightInput).toHaveValue('6,');
+  });
 });

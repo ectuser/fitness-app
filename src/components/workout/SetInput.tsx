@@ -34,10 +34,15 @@ export function SetInput({ set, setNumber, onChange, onRemove }: SetInputProps) 
   const [rawWeight, setRawWeight] = useState(
     set.weight === 0 ? '' : String(set.weight)
   );
+  const [isEditingWeight, setIsEditingWeight] = useState(false);
 
   useEffect(() => {
+    if (isEditingWeight) {
+      return;
+    }
+
     setRawWeight(set.weight === 0 ? '' : String(set.weight));
-  }, [set.id, set.weight]);
+  }, [isEditingWeight, set.id, set.weight]);
 
   return (
     <div className="flex items-center gap-2 p-3 bg-slate-50 rounded-lg">
@@ -51,6 +56,8 @@ export function SetInput({ set, setNumber, onChange, onRemove }: SetInputProps) 
             type="text"
             inputMode="decimal"
             value={rawWeight}
+            onFocus={() => setIsEditingWeight(true)}
+            onBlur={() => setIsEditingWeight(false)}
             onChange={(e) => {
               const { value } = e.target;
               setRawWeight(value);

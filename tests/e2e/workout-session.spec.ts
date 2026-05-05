@@ -42,7 +42,9 @@ test('workout session add exercise finish and update stats', async ({ page }) =>
   await page.goto('/workouts/workout-session-1/session');
   await expect(page.getByRole('heading', { name: 'Session Day' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Bench Press' })).toBeVisible();
-  await page.getByPlaceholder('Weight').first().fill('6,527');
+  const firstWeightInput = page.getByPlaceholder('Weight').first();
+  await firstWeightInput.click();
+  await firstWeightInput.type('6,527');
   await page.getByPlaceholder('Reps').first().fill('8');
 
   await expect.poll(async () => {
