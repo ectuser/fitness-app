@@ -125,11 +125,11 @@ export function ExerciseForm({ exercise, onSave, onCancel }: ExerciseFormProps) 
         />
       </div>
 
-      <div className="flex flex-col-reverse gap-3 sm:flex-row">
+      <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
         <Button type="button" variant="ghost" onClick={onCancel}>
           Cancel
         </Button>
-        <Button type="submit" variant="outline" className="flex-1">
+        <Button type="submit" variant="outline">
           Save Exercise
         </Button>
       </div>
