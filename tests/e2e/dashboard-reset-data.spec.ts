@@ -46,6 +46,11 @@ test('dashboard reset data clears workouts and restores seeded exercises', async
 
   await page.goto('');
   await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
+  await expect.poll(async () => {
+    return page.evaluate((draftKey) => {
+      return localStorage.getItem(draftKey);
+    }, STORAGE_KEYS.WORKOUT_CREATE_DRAFT);
+  }).not.toBeNull();
 
   await page.getByRole('button').first().click();
   await page.getByRole('menuitem', { name: 'Reset Data' }).click();
@@ -65,8 +70,8 @@ test('dashboard reset data clears workouts and restores seeded exercises', async
   }).toEqual({ workouts: 0, exercises: 15 });
 
   await expect.poll(async () => {
-    return page.evaluate(() => {
-      return localStorage.getItem('fitness-app-workout-create-draft');
-    });
+    return page.evaluate((draftKey) => {
+      return localStorage.getItem(draftKey);
+    }, STORAGE_KEYS.WORKOUT_CREATE_DRAFT);
   }).toBeNull();
 });
