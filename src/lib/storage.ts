@@ -4,6 +4,7 @@
 export const STORAGE_KEYS = {
   EXERCISES: 'fitness-app-exercises',
   WORKOUTS: 'fitness-app-workouts',
+  WORKOUT_CREATE_DRAFT: 'fitness-app-workout-create-draft',
   SETTINGS: 'fitness-app-settings',
   LAST_VISITED_PATH: 'fitness-app-last-visited-path',
 } as const;

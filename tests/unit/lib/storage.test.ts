@@ -15,10 +15,12 @@ describe('storage helpers', () => {
 
     saveToStorage(STORAGE_KEYS.EXERCISES, [{ id: 'exercise-1' }]);
     saveToStorage(STORAGE_KEYS.WORKOUTS, [{ id: 'workout-1' }]);
+    saveToStorage(STORAGE_KEYS.WORKOUT_CREATE_DRAFT, { name: 'draft workout' });
     clearAllStorage();
 
     expect(localStorage.getItem(STORAGE_KEYS.EXERCISES)).toBeNull();
     expect(localStorage.getItem(STORAGE_KEYS.WORKOUTS)).toBeNull();
+    expect(localStorage.getItem(STORAGE_KEYS.WORKOUT_CREATE_DRAFT)).toBeNull();
   });
 
   it('returns defaults when storage access throws', () => {

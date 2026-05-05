@@ -9,6 +9,7 @@ import { Card } from '@/components/ui/card';
 import { Plus, Save } from 'lucide-react';
 import { ExerciseSelector } from '@/components/workout/ExerciseSelector';
 import { WorkoutExerciseList } from '@/components/workout/WorkoutExerciseList';
+import { useWorkoutCreateDraft } from '@/hooks/useWorkoutCreateDraft';
 import { useWorkoutExerciseEditor } from '@/hooks/useWorkoutExerciseEditor';
 import { formatDefaultWorkoutName, validateWorkoutForm } from '@/lib/workout-editor';
 import { consumeWorkoutFormDraft, saveWorkoutFormDraft } from '@/lib/workout-form-draft';
@@ -21,6 +22,9 @@ export function WorkoutEditPage() {
   const { workouts, exercises, addWorkout, updateWorkout, settings } = useData();
   const isEditing = !!id;
   const [loadedWorkoutId, setLoadedWorkoutId] = useState<string | null>(null);
+  const [hasHydratedCreateDraft, setHasHydratedCreateDraft] = useState(false);
+  const [isCreateDraftDirty, setIsCreateDraftDirty] = useState(false);
+  const { clearDraft, persistDraft, restoreDraft } = useWorkoutCreateDraft();
   const shouldSkipStoredWorkoutInitializationRef = useRef(false);
   const hasRestoredDraftRef = useRef(false);
   const restoredPathnameRef = useRef<string | null>(null);
@@ -29,12 +33,12 @@ export function WorkoutEditPage() {
   const [date, setDate] = useState(() => new Date().toISOString().split('T')[0]);
   const [errors, setErrors] = useState<{ name?: string; exercises?: string }>({});
   const {
-    handleAddExercise,
-    handleMoveExerciseDown,
-    handleMoveExerciseUp,
-    handleRemoveExercise,
-    handleReplaceExercise,
-    handleUpdateExercise,
+    handleAddExercise: addExercise,
+    handleMoveExerciseDown: moveExerciseDown,
+    handleMoveExerciseUp: moveExerciseUp,
+    handleRemoveExercise: removeExercise,
+    handleReplaceExercise: replaceExercise,
+    handleUpdateExercise: updateExercise,
     openAddExerciseSelector,
     selectedExerciseIds,
     selectorInitialFilterGroup,
@@ -94,6 +98,85 @@ export function WorkoutEditPage() {
     }
   }, [id, isEditing, loadedWorkoutId, setWorkoutExercises, workouts]);
 
+  useEffect(() => {
+    if (isEditing) {
+      return;
+    }
+
+    if (hasRestoredDraftRef.current) {
+      setHasHydratedCreateDraft(true);
+      return;
+    }
+
+    const draft = restoreDraft();
+
+    if (draft) {
+      setName(draft.name);
+      setDate(draft.date);
+      setWorkoutExercises(draft.exercises);
+    }
+
+    setHasHydratedCreateDraft(true);
+  }, [isEditing, restoreDraft, setWorkoutExercises]);
+
+  useEffect(() => {
+    if (isEditing || !hasHydratedCreateDraft || !isCreateDraftDirty) {
+      return;
+    }
+
+    persistDraft({
+      name,
+      date,
+      workoutExercises,
+    });
+  }, [date, hasHydratedCreateDraft, isCreateDraftDirty, isEditing, name, persistDraft, workoutExercises]);
+
+  const markCreateDraftDirty = () => {
+    if (!isEditing) {
+      setIsCreateDraftDirty(true);
+    }
+  };
+
+  const handleNameChange = (value: string) => {
+    markCreateDraftDirty();
+    setName(value);
+  };
+
+  const handleDateChange = (value: string) => {
+    markCreateDraftDirty();
+    setDate(value);
+  };
+
+  const handleAddExercise = (exercise: Exercise) => {
+    markCreateDraftDirty();
+    addExercise(exercise);
+  };
+
+  const handleMoveExerciseUp = (index: number) => {
+    markCreateDraftDirty();
+    moveExerciseUp(index);
+  };
+
+  const handleMoveExerciseDown = (index: number) => {
+    markCreateDraftDirty();
+    moveExerciseDown(index);
+  };
+
+  const handleRemoveExercise = (index: number) => {
+    markCreateDraftDirty();
+    removeExercise(index);
+  };
+
+  const handleReplaceExercise = (index: number) => {
+    markCreateDraftDirty();
+    replaceExercise(index);
+  };
+
+  const handleUpdateExercise = (index: number, updatedExercise: Workout['exercises'][number]) => {
+    markCreateDraftDirty();
+    updateExercise(index, updatedExercise);
+  };
+
   const validateForm = () => {
     const nextErrors = validateWorkoutForm(name, workoutExercises);
     setErrors(nextErrors);
@@ -128,9 +211,18 @@ export function WorkoutEditPage() {
       }
     } else {
       addWorkout(workoutData);
+      clearDraft();
     }
 
     navigate(finishWorkout ? '/workouts/completed' : '/workouts');
+  };
+
+  const handleCancel = () => {
+    if (!isEditing) {
+      clearDraft();
+    }
+
+    navigate('/workouts');
   };
 
   const handleEditExerciseFromWorkout = (exercise: Exercise) => {
@@ -157,7 +249,7 @@ export function WorkoutEditPage() {
               <Input
                 id="name"
                 value={name}
-                onChange={(event) => setName(event.target.value)}
+                onChange={(event) => handleNameChange(event.target.value)}
                 placeholder="e.g., Upper Body Day"
                 className={errors.name ? 'border-red-500' : ''}
               />
@@ -172,7 +264,7 @@ export function WorkoutEditPage() {
                 id="date"
                 type="date"
                 value={date}
-                onChange={(event) => setDate(event.target.value)}
+                onChange={(event) => handleDateChange(event.target.value)}
               />
             </div>
           </div>
@@ -227,12 +319,12 @@ export function WorkoutEditPage() {
               <Save className="w-4 h-4 mr-2" />
               Save and Finish Workout
             </Button>
-            <Button variant="ghost" onClick={() => navigate('/workouts')} className="w-full">
+            <Button variant="ghost" onClick={handleCancel} className="w-full">
               Cancel
             </Button>
           </div>
           <div className="hidden gap-3 sm:flex">
-            <Button variant="ghost" onClick={() => navigate('/workouts')} className="flex-1">
+            <Button variant="ghost" onClick={handleCancel} className="flex-1">
               Cancel
             </Button>
             <Button variant="outline" onClick={() => saveWorkout(false)} className="flex-1">
