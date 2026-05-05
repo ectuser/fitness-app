@@ -1,6 +1,7 @@
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import type { Set as SetType } from '@/types';
 
 interface SetInputProps {
@@ -11,7 +12,16 @@ interface SetInputProps {
 }
 
 const normalizeWeight = (value: string): number => {
-  const parsed = Number.parseFloat(value);
+  const canonicalValue = value.replace(',', '.').trim();
+  const isValidNumericPattern = /^[+-]?(?:\d+\.?\d*|\.\d+)$/.test(
+    canonicalValue
+  );
+
+  if (!isValidNumericPattern) {
+    return 0;
+  }
+
+  const parsed = Number.parseFloat(canonicalValue);
 
   if (!Number.isFinite(parsed) || parsed < 0) {
     return 0;
@@ -21,6 +31,18 @@ const normalizeWeight = (value: string): number => {
 };
 
 export function SetInput({ set, setNumber, onChange, onRemove }: SetInputProps) {
+  const [rawWeight, setRawWeight] = useState(
+    set.weight === 0 ? '' : String(set.weight)
+  );
+  const [isEditingWeight, setIsEditingWeight] = useState(false);
+
+  useEffect(() => {
+    if (isEditingWeight) {
+      return;
+    }
+
+    setRawWeight(set.weight === 0 ? '' : String(set.weight));
+  }, [isEditingWeight, set.id, set.weight]);
 
   return (
     <div className="flex items-center gap-2 p-3 bg-slate-50 rounded-lg">
@@ -31,16 +53,18 @@ export function SetInput({ set, setNumber, onChange, onRemove }: SetInputProps) 
       <div className="flex items-center gap-2 flex-1">
         <div className="flex-1">
           <Input
-            type="number"
+            type="text"
             inputMode="decimal"
-            value={set.weight || ''}
-            onChange={(e) =>
-              onChange({ ...set, weight: normalizeWeight(e.target.value) })
-            }
+            value={rawWeight}
+            onFocus={() => setIsEditingWeight(true)}
+            onBlur={() => setIsEditingWeight(false)}
+            onChange={(e) => {
+              const { value } = e.target;
+              setRawWeight(value);
+              onChange({ ...set, weight: normalizeWeight(value) });
+            }}
             placeholder="Weight"
             className="text-base h-11"
-            min="0"
-            step="0.01"
           />
         </div>
 
