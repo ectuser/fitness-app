@@ -44,3 +44,8 @@ __unconfig*
 .playwright-mcp/
 
 todos.json
+
+# Local development documents
+.scratch/
+CONTEXT.md
+docs/**/*.md
