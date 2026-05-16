@@ -47,6 +47,7 @@ todos.json
 
 # Local development documents
 .agents/skills/
+skills-lock.json
 .scratch/
 CONTEXT.md
 docs/**/*.md
