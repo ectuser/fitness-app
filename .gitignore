@@ -46,6 +46,7 @@ __unconfig*
 todos.json
 
 # Local development documents
+.agents/skills/
 .scratch/
 CONTEXT.md
 docs/**/*.md
