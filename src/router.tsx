@@ -3,6 +3,11 @@ import { routeTree } from './routeTree.gen'
 
 import { setupRouterSsrQueryIntegration } from '@tanstack/react-router-ssr-query'
 import { getContext } from './integrations/tanstack-query/root-provider'
+import { loadAuthReadinessConfig } from '@/lib/auth-readiness'
+
+if (typeof window === 'undefined') {
+  loadAuthReadinessConfig()
+}
 
 export function getRouter() {
   const context = getContext()
