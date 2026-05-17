@@ -10,6 +10,8 @@ import {
 test('dashboard shows next workout, coming workouts, show all, and start workout entrypoints', async ({
   page,
 }) => {
+  await page.clock.setFixedTime(new Date('2026-05-04T12:00:00.000Z'));
+
   await seedAppStorage(page, {
     exercises: [
       buildExercise({
