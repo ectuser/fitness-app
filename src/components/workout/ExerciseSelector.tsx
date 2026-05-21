@@ -11,7 +11,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Search, Plus, Check, TrendingUp, Clock } from 'lucide-react';
-import { useData } from '@/context/DataContext';
+import { useExercises, useWorkouts } from '@/hooks/useFitnessDataQueries';
 import { getOrderedMuscleGroups } from '@/lib/exercises';
 import type { Exercise, MuscleGroup } from '@/types';
 import { ExerciseForm } from '@/components/exercise/ExerciseForm';
@@ -33,7 +33,7 @@ interface ExerciseCardProps {
 }
 
 function ExerciseCard({ exercise, isSelected, onClick }: ExerciseCardProps) {
-  const { workouts } = useData();
+  const { workouts } = useWorkouts();
   const stats = useExerciseStats(exercise.id, workouts);
 
   return (
@@ -94,7 +94,7 @@ export function ExerciseSelector({
   selectedExerciseIds = [],
   initialFilterGroup = null,
 }: ExerciseSelectorProps) {
-  const { exercises, addExercise } = useData();
+  const { exercises, addExercise } = useExercises();
   const [searchQuery, setSearchQuery] = useState('');
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [selectedFilterGroup, setSelectedFilterGroup] = useState<MuscleGroup | null>(null);

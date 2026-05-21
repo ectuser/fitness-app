@@ -2,12 +2,13 @@ import { PageHeader } from '@/components/layout/PageHeader';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { useNavigate } from '@/lib/router-compat';
-import { useData } from '@/context/DataContext';
+import { useExercises, useWorkouts } from '@/hooks/useFitnessDataQueries';
 import { WorkoutList } from '@/components/workout/WorkoutList';
 
 export function WorkoutsCompletedPage() {
   const navigate = useNavigate();
-  const { workouts, exercises, addWorkout, deleteWorkout, updateWorkout } = useData();
+  const { exercises } = useExercises();
+  const { workouts, addWorkout, deleteWorkout, updateWorkout } = useWorkouts();
 
   const completedWorkouts = workouts
     .filter((w) => w.isCompleted)

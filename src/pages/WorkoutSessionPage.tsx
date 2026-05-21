@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from '@/lib/router-compat';
-import { useData } from '@/context/DataContext';
+import { useExercises, useSettings, useWorkouts } from '@/hooks/useFitnessDataQueries';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Button } from '@/components/ui/button';
 import { CheckCircle2, Plus, X } from 'lucide-react';
@@ -13,7 +13,9 @@ import { SimpleModal } from '@/components/ui/simple-modal';
 export function WorkoutSessionPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { workouts, exercises, updateWorkout, settings } = useData();
+  const { exercises } = useExercises();
+  const { workouts, updateWorkout } = useWorkouts();
+  const { settings } = useSettings();
 
   const [workout, setWorkout] = useState<Workout | null>(null);
   const [loadedWorkoutId, setLoadedWorkoutId] = useState<string | null>(null);

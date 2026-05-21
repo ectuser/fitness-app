@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate, useLocation } from '@/lib/router-compat';
-import { useData } from '@/context/DataContext';
+import { useExercises, useSettings, useWorkouts } from '@/hooks/useFitnessDataQueries';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -19,7 +19,9 @@ export function WorkoutEditPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const location = useLocation();
-  const { workouts, exercises, addWorkout, updateWorkout, settings } = useData();
+  const { exercises } = useExercises();
+  const { workouts, addWorkout, updateWorkout } = useWorkouts();
+  const { settings } = useSettings();
   const isEditing = !!id;
   const [loadedWorkoutId, setLoadedWorkoutId] = useState<string | null>(null);
   const [hasHydratedCreateDraft, setHasHydratedCreateDraft] = useState(false);

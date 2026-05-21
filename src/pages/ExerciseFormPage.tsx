@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from '@/lib/router-compat';
-import { useData } from '@/context/DataContext';
+import { useExercises } from '@/hooks/useFitnessDataQueries';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { ExerciseForm } from '@/components/exercise/ExerciseForm';
 import { getReturnToWorkoutPathFromSearch } from '@/lib/exercise-return-path';
@@ -8,7 +8,7 @@ import type { Exercise } from '@/types';
 export function ExerciseFormPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { exercises, addExercise, updateExercise } = useData();
+  const { exercises, addExercise, updateExercise } = useExercises();
 
   const exercise = id ? exercises.find((e) => e.id === id) : undefined;
   const isEditing = !!id;

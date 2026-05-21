@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from '@/lib/router-compat';
-import { useData } from '@/context/DataContext';
+import { useExercises, useWorkouts } from '@/hooks/useFitnessDataQueries';
 import { useExerciseStats, useExerciseHistory } from '@/hooks/useExerciseStats';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Button } from '@/components/ui/button';
@@ -21,7 +21,8 @@ import {
 export function ExerciseDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { exercises, workouts, deleteExercise } = useData();
+  const { exercises, deleteExercise } = useExercises();
+  const { workouts } = useWorkouts();
 
   const exercise = exercises.find((e) => e.id === id);
   const stats = useExerciseStats(id || '', workouts);

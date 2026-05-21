@@ -101,11 +101,12 @@ describe('data store helpers', () => {
   });
 
   it('returns derived workout data and reset state', () => {
-    const derived = getDerivedWorkoutData([upcomingWorkout, completedBenchWorkout, completedRowWorkout]);
+    const futureWorkout = { ...upcomingWorkout, date: '2099-04-26' };
+    const derived = getDerivedWorkoutData([futureWorkout, completedBenchWorkout, completedRowWorkout]);
 
     expect(derived.upcomingWorkouts).toHaveLength(1);
     expect(derived.completedWorkouts[0].id).toBe(completedRowWorkout.id);
-    expect(derived.nextWorkout?.id).toBe(upcomingWorkout.id);
+    expect(derived.nextWorkout?.id).toBe(futureWorkout.id);
 
     expect(resetFitnessData()).toEqual({
       exercises: expect.any(Array),

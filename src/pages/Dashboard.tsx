@@ -1,8 +1,13 @@
 import { PageHeader } from '@/components/layout/PageHeader';
 import { useNavigate } from '@/lib/router-compat';
-import { useData } from '@/context/DataContext';
 import { getWorkoutTotalSets } from '@/lib/workouts';
 import { useDashboardDataManagement } from '@/hooks/useDashboardDataManagement';
+import {
+  useExercises,
+  useFitnessDataReset,
+  useSettings,
+  useWorkouts,
+} from '@/hooks/useFitnessDataQueries';
 import { DashboardDialogs } from '@/components/dashboard/DashboardDialogs';
 import { DashboardHeaderActions } from '@/components/dashboard/DashboardHeaderActions';
 import { NextWorkoutSection } from '@/components/dashboard/NextWorkoutSection';
@@ -11,7 +16,10 @@ import { UpcomingWorkoutsSection } from '@/components/dashboard/UpcomingWorkouts
 
 export function Dashboard() {
   const navigate = useNavigate();
-  const { nextWorkout, upcomingWorkouts, exercises, workouts, settings, resetAllData } = useData();
+  const { exercises } = useExercises();
+  const { nextWorkout, upcomingWorkouts, workouts } = useWorkouts();
+  const { settings } = useSettings();
+  const { resetAllData } = useFitnessDataReset();
   const {
     closeImportDialog,
     fileInputRef,

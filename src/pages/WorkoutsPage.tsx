@@ -3,13 +3,14 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Plus } from 'lucide-react';
 import { useNavigate } from '@/lib/router-compat';
-import { useData } from '@/context/DataContext';
+import { useExercises, useWorkouts } from '@/hooks/useFitnessDataQueries';
 import { WorkoutList } from '@/components/workout/WorkoutList';
 import { getUpcomingWorkouts } from '@/lib/workouts';
 
 export function WorkoutsPage() {
   const navigate = useNavigate();
-  const { workouts, exercises, deleteWorkout, duplicateWorkout, updateWorkout } = useData();
+  const { exercises } = useExercises();
+  const { workouts, deleteWorkout, duplicateWorkout, updateWorkout } = useWorkouts();
 
   const upcomingWorkouts = getUpcomingWorkouts(workouts);
 

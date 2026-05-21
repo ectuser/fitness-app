@@ -11,7 +11,7 @@ import {
 import { Plus, Trash2, ChevronUp, ChevronDown, MoreVertical, Repeat, Pencil, TrendingUp, Clock } from 'lucide-react';
 import type { WorkoutExercise, Exercise } from '@/types';
 import { SetInput } from './SetInput';
-import { useData } from '@/context/DataContext';
+import { useSettings, useWorkouts } from '@/hooks/useFitnessDataQueries';
 import { useExerciseStats } from '@/hooks/useExerciseStats';
 import { useNavigate } from '@/lib/router-compat';
 
@@ -40,7 +40,8 @@ export function WorkoutExerciseCard({
   onMoveDown,
   onReplace,
 }: WorkoutExerciseCardProps) {
-  const { settings, workouts } = useData();
+  const { settings } = useSettings();
+  const { workouts } = useWorkouts();
   const stats = useExerciseStats(exercise.id, workouts);
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
