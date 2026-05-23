@@ -14,14 +14,15 @@ import {
   updateWorkoutRecords,
 } from '@/lib/data-store';
 import { createQuery } from '@/lib/query-factory';
-import { DEFAULT_SETTINGS } from '@/lib/settings';
 import { STORAGE_KEYS, getFromStorage, saveToStorage } from '@/lib/storage';
-import type { Exercise, Settings, Workout } from '@/types';
+import { settingsQueryKeys } from '@/features/settings/settings-queries';
+import { useSettings as useFeatureSettings } from '@/features/settings/use-settings';
+import type { Exercise, Workout } from '@/types';
 
 export const fitnessQueryKeys = {
   all: ['fitness-data'] as const,
   exercises: () => [...fitnessQueryKeys.all, 'exercises'] as const,
-  settings: () => [...fitnessQueryKeys.all, 'settings'] as const,
+  settings: settingsQueryKeys.detail,
   workouts: () => [...fitnessQueryKeys.all, 'workouts'] as const,
 };
 
@@ -29,12 +30,6 @@ function readExercises() {
   const exercises = loadFitnessData().exercises;
   saveToStorage(STORAGE_KEYS.EXERCISES, exercises);
   return exercises;
-}
-
-function readSettings() {
-  const settings = getFromStorage<Settings>(STORAGE_KEYS.SETTINGS, DEFAULT_SETTINGS);
-  saveToStorage(STORAGE_KEYS.SETTINGS, settings);
-  return settings;
 }
 
 function readWorkouts() {
@@ -46,8 +41,6 @@ function readWorkouts() {
 const fitnessQueries = {
   exercises: () =>
     createQuery(fitnessQueryKeys.exercises(), readExercises),
-  settings: () =>
-    createQuery(fitnessQueryKeys.settings(), readSettings),
   workouts: () =>
     createQuery(fitnessQueryKeys.workouts(), readWorkouts),
 };
@@ -155,20 +148,7 @@ export function useWorkouts() {
 }
 
 export function useSettings() {
-  const { data } = useQuery(fitnessQueries.settings());
-  const settings = data ?? DEFAULT_SETTINGS;
-  const updateStoredSettings = useStoredQueryData(
-    fitnessQueryKeys.settings(),
-    readSettings,
-    (nextSettings) => saveToStorage(STORAGE_KEYS.SETTINGS, nextSettings)
-  );
-
-  return {
-    settings,
-    updateSettings: (updates: Partial<Settings>) => {
-      updateStoredSettings((currentSettings) => ({ ...currentSettings, ...updates }));
-    },
-  };
+  return useFeatureSettings();
 }
 
 export function useFitnessDataReset() {

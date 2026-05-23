@@ -134,6 +134,31 @@ describe('fitness data query hooks', () => {
     expect(JSON.parse(localStorage.getItem(STORAGE_KEYS.WORKOUTS) ?? '[]')).toHaveLength(2);
   });
 
+  it('persists settings updates through a mutation and refreshes the settings query', async () => {
+    localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(DEFAULT_SETTINGS));
+
+    const queryClient = new QueryClient();
+    const invalidateQueries = vi.spyOn(queryClient, 'invalidateQueries');
+    const { result } = renderHook(() => useSettings(), {
+      wrapper: createWrapper(queryClient),
+    });
+
+    act(() => {
+      result.current.updateSettings({ defaultWeightUnit: 'lb' });
+    });
+
+    await waitFor(() => {
+      expect(result.current.settings).toEqual({ defaultWeightUnit: 'lb' });
+    });
+
+    expect(JSON.parse(localStorage.getItem(STORAGE_KEYS.SETTINGS) ?? 'null')).toEqual({
+      defaultWeightUnit: 'lb',
+    });
+    expect(invalidateQueries).toHaveBeenCalledWith({
+      queryKey: fitnessQueryKeys.settings(),
+    });
+  });
+
   it('resets all localStorage-backed query state together', () => {
     localStorage.setItem(STORAGE_KEYS.EXERCISES, JSON.stringify(exercises));
     localStorage.setItem(STORAGE_KEYS.WORKOUTS, JSON.stringify([completedBenchWorkout]));
