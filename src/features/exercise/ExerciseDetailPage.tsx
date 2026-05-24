@@ -1,6 +1,9 @@
 import { useParams, useNavigate } from '@/lib/router-compat';
 import { useWorkouts } from '@/hooks/useFitnessDataQueries';
-import { useExerciseStats, useExerciseHistory } from '@/hooks/useExerciseStats';
+import {
+  useExerciseHistory,
+  useExerciseStats,
+} from '../training-history/use-training-history';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';

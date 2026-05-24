@@ -1,4 +1,4 @@
-import { findLastWorkoutExercise } from '@/lib/exercise-stats';
+import { findLastWorkoutExercise } from '../features/training-history/training-history-projections';
 import type { Exercise, MuscleGroup, WeightUnit, Workout, WorkoutExercise } from '@/types';
 
 export function formatDefaultWorkoutName(date: Date): string {

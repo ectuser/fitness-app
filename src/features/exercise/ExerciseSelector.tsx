@@ -13,7 +13,7 @@ import {
 import { Search, Plus, Check, TrendingUp, Clock } from 'lucide-react';
 import { useWorkouts } from '@/hooks/useFitnessDataQueries';
 import type { Exercise, MuscleGroup } from '@/types';
-import { useExerciseStats } from '@/hooks/useExerciseStats';
+import { useExerciseStats } from '../training-history/use-training-history';
 import { SimpleModal } from '@/components/ui/simple-modal';
 import { ExerciseForm } from './ExerciseForm';
 import { getOrderedMuscleGroups } from './exercise-helpers';

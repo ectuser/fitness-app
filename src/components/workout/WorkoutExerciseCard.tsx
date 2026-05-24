@@ -12,7 +12,7 @@ import { Plus, Trash2, ChevronUp, ChevronDown, MoreVertical, Repeat, Pencil, Tre
 import type { WorkoutExercise, Exercise } from '@/types';
 import { SetInput } from './SetInput';
 import { useSettings, useWorkouts } from '@/hooks/useFitnessDataQueries';
-import { useExerciseStats } from '@/hooks/useExerciseStats';
+import { useExerciseStats } from '../../features/training-history/use-training-history';
 import { useNavigate } from '@/lib/router-compat';
 
 interface WorkoutExerciseCardProps {

@@ -1,6 +1,14 @@
-import { describe, expect, it } from 'vitest';
-import { buildExerciseHistory, calculateExerciseStats, findLastWorkoutExercise } from '@/lib/exercise-stats';
-import { completedBenchWorkout, completedRowWorkout, upcomingWorkout } from '../fixtures';
+import { describe, expect, it } from 'vitest'
+import {
+  buildExerciseHistory,
+  calculateExerciseStats,
+  findLastWorkoutExercise,
+} from '@/features/training-history/training-history-projections'
+import {
+  completedBenchWorkout,
+  completedRowWorkout,
+  upcomingWorkout,
+} from '../../fixtures'
 
 describe('exercise stats helpers', () => {
   it('calculates stats from completed workouts only', () => {
@@ -8,7 +16,7 @@ describe('exercise stats helpers', () => {
       completedBenchWorkout,
       completedRowWorkout,
       upcomingWorkout,
-    ]);
+    ])
 
     expect(stats).toEqual({
       exerciseId: 'exercise-bench',
@@ -20,15 +28,22 @@ describe('exercise stats helpers', () => {
       lastWeightUnit: 'kg',
       totalSets: 3,
       lastPerformed: '2026-04-22',
-    });
-  });
+    })
+  })
 
   it('returns null when no completed sets exist', () => {
-    expect(calculateExerciseStats('exercise-plank', [upcomingWorkout])).toBeNull();
-  });
+    expect(
+      calculateExerciseStats('exercise-plank', [upcomingWorkout]),
+    ).toBeNull()
+  })
 
   it('builds descending history and returns the latest workout exercise', () => {
-    expect(buildExerciseHistory('exercise-bench', [completedBenchWorkout, completedRowWorkout])).toEqual([
+    expect(
+      buildExerciseHistory('exercise-bench', [
+        completedBenchWorkout,
+        completedRowWorkout,
+      ]),
+    ).toEqual([
       {
         workoutId: 'workout-completed-2',
         workoutName: 'Pull Day',
@@ -41,10 +56,13 @@ describe('exercise stats helpers', () => {
         date: '2026-04-20',
         setData: completedBenchWorkout.exercises[0].sets,
       },
-    ]);
+    ])
 
-    expect(findLastWorkoutExercise('exercise-row', [completedBenchWorkout, completedRowWorkout])).toEqual(
-      completedRowWorkout.exercises[0]
-    );
-  });
-});
+    expect(
+      findLastWorkoutExercise('exercise-row', [
+        completedBenchWorkout,
+        completedRowWorkout,
+      ]),
+    ).toEqual(completedRowWorkout.exercises[0])
+  })
+})
