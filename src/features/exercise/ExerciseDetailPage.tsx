@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from '@/lib/router-compat';
-import { useWorkouts } from '@/hooks/useFitnessDataQueries';
+import { useWorkouts } from '../workout/use-workouts';
 import {
   useExerciseHistory,
   useExerciseStats,

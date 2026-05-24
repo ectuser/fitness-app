@@ -11,7 +11,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Search, Plus, Check, TrendingUp, Clock } from 'lucide-react';
-import { useWorkouts } from '@/hooks/useFitnessDataQueries';
+import { useWorkouts } from '../workout/use-workouts';
 import type { Exercise, MuscleGroup } from '@/types';
 import { useExerciseStats } from '../training-history/use-training-history';
 import { SimpleModal } from '@/components/ui/simple-modal';

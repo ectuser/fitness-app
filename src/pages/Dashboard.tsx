@@ -1,6 +1,6 @@
 import { PageHeader } from '@/components/layout/PageHeader';
 import { useNavigate } from '@/lib/router-compat';
-import { getWorkoutTotalSets } from '@/lib/workouts';
+import { getWorkoutTotalSets } from '@/features/workout/workout-helpers';
 import { useDashboardDataManagement } from '@/hooks/useDashboardDataManagement';
 import {
   useExercises,

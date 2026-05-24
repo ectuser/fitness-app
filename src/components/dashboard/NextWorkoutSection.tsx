@@ -2,7 +2,7 @@ import { Calendar, Play, Plus } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { formatWorkoutDate, getWorkoutMuscleGroups, getWorkoutTotalSets } from '@/lib/workouts';
+import { formatWorkoutDate, getWorkoutMuscleGroups, getWorkoutTotalSets } from '@/features/workout/workout-helpers';
 import type { Exercise, Workout } from '@/types';
 
 interface NextWorkoutSectionProps {

@@ -1,112 +1,26 @@
-import { useMemo } from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import {
-  createWorkoutRecord,
-  deleteWorkoutRecord,
-  duplicateWorkoutRecord,
-  getDerivedWorkoutData,
-  resetFitnessData,
-  toggleWorkoutCompleteRecord,
-  updateWorkoutRecords,
-} from '@/lib/data-store';
-import { createQuery } from '@/lib/query-factory';
-import { STORAGE_KEYS, getFromStorage, saveToStorage } from '@/lib/storage';
+import { useQueryClient } from '@tanstack/react-query';
+import { resetFitnessData } from '@/lib/data-store';
+import { STORAGE_KEYS, saveToStorage } from '@/lib/storage';
 import { exerciseQueryKeys } from '@/features/exercise/exercise-queries';
 import { useExercises as useFeatureExercises } from '@/features/exercise/use-exercises';
 import { settingsQueryKeys } from '@/features/settings/settings-queries';
 import { useSettings as useFeatureSettings } from '@/features/settings/use-settings';
-import type { Workout } from '@/types';
+import { workoutQueryKeys } from '@/features/workout/workout-queries';
+import { useWorkouts as useFeatureWorkouts } from '@/features/workout/use-workouts';
 
 export const fitnessQueryKeys = {
   all: ['fitness-data'] as const,
   exercises: exerciseQueryKeys.list,
   settings: settingsQueryKeys.detail,
-  workouts: () => [...fitnessQueryKeys.all, 'workouts'] as const,
+  workouts: workoutQueryKeys.list,
 };
-
-function readWorkouts() {
-  const workouts = getFromStorage<Workout[]>(STORAGE_KEYS.WORKOUTS, []);
-  saveToStorage(STORAGE_KEYS.WORKOUTS, workouts);
-  return workouts;
-}
-
-const fitnessQueries = {
-  workouts: () =>
-    createQuery(fitnessQueryKeys.workouts(), readWorkouts),
-};
-
-function useStoredQueryData<TData>(
-  queryKey: readonly unknown[],
-  readData: () => TData,
-  writeData: (data: TData) => void
-) {
-  const queryClient = useQueryClient();
-
-  return (updater: (data: TData) => TData) => {
-    const currentData = queryClient.getQueryData<TData>(queryKey) ?? readData();
-    const nextData = updater(currentData);
-
-    writeData(nextData);
-    queryClient.setQueryData(queryKey, nextData);
-
-    return nextData;
-  };
-}
 
 export function useExercises() {
   return useFeatureExercises();
 }
 
 export function useWorkouts() {
-  const { data } = useQuery(fitnessQueries.workouts());
-  const workouts = data ?? [];
-  const updateStoredWorkouts = useStoredQueryData(
-    fitnessQueryKeys.workouts(),
-    readWorkouts,
-    (nextWorkouts) => saveToStorage(STORAGE_KEYS.WORKOUTS, nextWorkouts)
-  );
-  const derivedWorkouts = useMemo(() => getDerivedWorkoutData(workouts), [workouts]);
-
-  return {
-    workouts,
-    addWorkout: (workout: Omit<Workout, 'id' | 'createdAt' | 'updatedAt'>) => {
-      const nextWorkout = createWorkoutRecord(workout);
-      updateStoredWorkouts((currentWorkouts) => [...currentWorkouts, nextWorkout]);
-      return nextWorkout;
-    },
-    updateWorkout: (id: string, updates: Partial<Workout>) => {
-      updateStoredWorkouts((currentWorkouts) =>
-        updateWorkoutRecords(currentWorkouts, id, updates)
-      );
-    },
-    deleteWorkout: (id: string) => {
-      updateStoredWorkouts((currentWorkouts) =>
-        deleteWorkoutRecord(currentWorkouts, id)
-      );
-    },
-    duplicateWorkout: (
-      id: string,
-      options?: { date?: string; nameSuffix?: string }
-    ) => {
-      const duplicatedWorkout = duplicateWorkoutRecord(workouts, id, options);
-
-      if (duplicatedWorkout) {
-        updateStoredWorkouts((currentWorkouts) => [
-          ...currentWorkouts,
-          duplicatedWorkout,
-        ]);
-      }
-
-      return duplicatedWorkout;
-    },
-    toggleWorkoutComplete: (id: string) => {
-      updateStoredWorkouts((currentWorkouts) =>
-        toggleWorkoutCompleteRecord(currentWorkouts, id)
-      );
-    },
-    getWorkoutById: (id: string) => workouts.find((workout) => workout.id === id),
-    ...derivedWorkouts,
-  };
+  return useFeatureWorkouts();
 }
 
 export function useSettings() {

@@ -5,7 +5,7 @@ import type {
   WorkoutHistory,
   WeightUnit,
 } from '@/types'
-import { getCompletedWorkouts, sortWorkoutsByDateDesc } from '@/lib/workouts'
+import { getCompletedWorkouts, sortWorkoutsByDateDesc } from '../workout/workout-helpers'
 
 type ExerciseSetSnapshot = {
   reps: number

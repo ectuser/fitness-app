@@ -1,7 +1,7 @@
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { formatWorkoutDate, getWorkoutMuscleGroups, getWorkoutTotalSets } from '@/features/workout/workout-helpers';
+import { formatWorkoutDate, getWorkoutMuscleGroups, getWorkoutTotalSets } from './workout-helpers';
 import { Calendar, Play } from 'lucide-react';
 import type { Workout, Exercise } from '@/types';
 import { WorkoutMenu } from './WorkoutMenu';
