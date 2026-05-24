@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { ALL_MUSCLE_GROUPS, getOrderedMuscleGroups, MUSCLE_GROUP_ORDER } from '@/lib/exercises';
-import { exercises } from '../fixtures';
+import { ALL_MUSCLE_GROUPS, getOrderedMuscleGroups, MUSCLE_GROUP_ORDER } from '@/features/exercise/exercise-helpers';
+import { exercises } from '../../fixtures';
 
 describe('exercise helpers', () => {
   it('exports the supported muscle group lists', () => {

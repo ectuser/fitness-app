@@ -2,8 +2,8 @@ import { PageHeader } from '@/components/layout/PageHeader';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import { useNavigate } from '@/lib/router-compat';
-import { useExercises } from '@/hooks/useFitnessDataQueries';
 import { Badge } from '@/components/ui/badge';
+import { useExercises } from './use-exercises';
 
 export function ExercisesPage() {
   const navigate = useNavigate();

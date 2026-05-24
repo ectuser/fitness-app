@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from '@/lib/router-compat';
-import { useExercises, useWorkouts } from '@/hooks/useFitnessDataQueries';
+import { useWorkouts } from '@/hooks/useFitnessDataQueries';
 import { useExerciseStats, useExerciseHistory } from '@/hooks/useExerciseStats';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Button } from '@/components/ui/button';
@@ -17,6 +17,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import { useExercises } from './use-exercises';
 
 export function ExerciseDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -40,9 +41,9 @@ export function ExerciseDetailPage() {
     );
   }
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     try {
-      deleteExercise(exercise.id);
+      await deleteExercise(exercise.id);
       navigate('/exercises');
     } catch (error) {
       alert(error instanceof Error ? error.message : 'Failed to delete exercise');

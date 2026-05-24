@@ -1,5 +1,7 @@
-import { migrateExercises } from '@/lib/migrations';
-import { initializeSeedExercises } from '@/lib/seed-data';
+import {
+  createDefaultExerciseCatalog,
+  readExerciseCatalogSnapshot,
+} from '@/features/exercise/exercise-source';
 import { STORAGE_KEYS, getFromStorage } from '@/lib/storage';
 import { DEFAULT_SETTINGS } from '@/lib/settings';
 import { duplicateWorkoutTemplate, getCompletedWorkouts, getNextWorkout, getUpcomingWorkouts } from '@/lib/workouts';
@@ -12,50 +14,14 @@ export interface FitnessDataState {
 }
 
 export function loadFitnessData(): FitnessDataState {
-  const storedExercises = getFromStorage<Exercise[]>(STORAGE_KEYS.EXERCISES, []);
   const storedWorkouts = getFromStorage<Workout[]>(STORAGE_KEYS.WORKOUTS, []);
   const storedSettings = getFromStorage<Settings>(STORAGE_KEYS.SETTINGS, DEFAULT_SETTINGS);
 
   return {
-    exercises:
-      storedExercises.length === 0
-        ? migrateExercises(initializeSeedExercises())
-        : migrateExercises(storedExercises),
+    exercises: readExerciseCatalogSnapshot(),
     workouts: storedWorkouts,
     settings: storedSettings,
   };
-}
-
-export function createExerciseRecord(
-  exercise: Omit<Exercise, 'id' | 'createdAt'>,
-  createId = () => crypto.randomUUID(),
-  now = new Date().toISOString()
-): Exercise {
-  return {
-    ...exercise,
-    id: createId(),
-    createdAt: now,
-  };
-}
-
-export function updateExerciseRecords(
-  exercises: Exercise[],
-  id: string,
-  updates: Partial<Exercise>
-): Exercise[] {
-  return exercises.map((exercise) => (exercise.id === id ? { ...exercise, ...updates } : exercise));
-}
-
-export function deleteExerciseRecord(exercises: Exercise[], workouts: Workout[], id: string): Exercise[] {
-  const isUsed = workouts.some((workout) =>
-    workout.exercises.some((workoutExercise) => workoutExercise.exerciseId === id)
-  );
-
-  if (isUsed) {
-    throw new Error('Cannot delete exercise that is used in workouts');
-  }
-
-  return exercises.filter((exercise) => exercise.id !== id);
 }
 
 export function createWorkoutRecord(
@@ -127,7 +93,7 @@ export function toggleWorkoutCompleteRecord(
 
 export function resetFitnessData(): FitnessDataState {
   return {
-    exercises: migrateExercises(initializeSeedExercises()),
+    exercises: createDefaultExerciseCatalog(),
     workouts: [],
     settings: DEFAULT_SETTINGS,
   };

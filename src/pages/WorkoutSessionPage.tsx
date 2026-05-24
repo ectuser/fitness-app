@@ -4,7 +4,7 @@ import { useExercises, useSettings, useWorkouts } from '@/hooks/useFitnessDataQu
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Button } from '@/components/ui/button';
 import { CheckCircle2, Plus, X } from 'lucide-react';
-import { ExerciseSelector } from '@/components/workout/ExerciseSelector';
+import { ExerciseSelector } from '@/features/exercise/ExerciseSelector';
 import { WorkoutExerciseList } from '@/components/workout/WorkoutExerciseList';
 import { useWorkoutExerciseEditor } from '@/hooks/useWorkoutExerciseEditor';
 import type { Workout } from '@/types';

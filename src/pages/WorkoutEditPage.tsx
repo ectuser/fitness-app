@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card } from '@/components/ui/card';
 import { Plus, Save } from 'lucide-react';
-import { ExerciseSelector } from '@/components/workout/ExerciseSelector';
+import { ExerciseSelector } from '@/features/exercise/ExerciseSelector';
 import { WorkoutExerciseList } from '@/components/workout/WorkoutExerciseList';
 import { useWorkoutCreateDraft } from '@/hooks/useWorkoutCreateDraft';
 import { useWorkoutExerciseEditor } from '@/hooks/useWorkoutExerciseEditor';

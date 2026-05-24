@@ -1,9 +1,9 @@
 import { useNavigate, useParams } from '@/lib/router-compat';
-import { useExercises } from '@/hooks/useFitnessDataQueries';
 import { PageHeader } from '@/components/layout/PageHeader';
-import { ExerciseForm } from '@/components/exercise/ExerciseForm';
 import { getReturnToWorkoutPathFromSearch } from '@/lib/exercise-return-path';
 import type { Exercise } from '@/types';
+import { ExerciseForm } from './ExerciseForm';
+import { useExercises } from './use-exercises';
 
 export function ExerciseFormPage() {
   const { id } = useParams<{ id: string }>();
@@ -16,11 +16,11 @@ export function ExerciseFormPage() {
     ? null
     : getReturnToWorkoutPathFromSearch(window.location.search);
 
-  const handleSave = (exerciseData: Omit<Exercise, 'id' | 'createdAt'>) => {
+  const handleSave = async (exerciseData: Omit<Exercise, 'id' | 'createdAt'>) => {
     if (isEditing && id) {
-      updateExercise(id, exerciseData);
+      await updateExercise(id, exerciseData);
     } else {
-      addExercise(exerciseData);
+      await addExercise(exerciseData);
     }
     if (returnToWorkoutPath) {
       navigate(returnToWorkoutPath, { replace: true });

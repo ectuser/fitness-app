@@ -1,15 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
-  createExerciseRecord,
   createWorkoutRecord,
-  deleteExerciseRecord,
   deleteWorkoutRecord,
   duplicateWorkoutRecord,
   getDerivedWorkoutData,
   loadFitnessData,
   resetFitnessData,
   toggleWorkoutCompleteRecord,
-  updateExerciseRecords,
   updateWorkoutRecords,
 } from '@/lib/data-store';
 import { STORAGE_KEYS } from '@/lib/storage';
@@ -37,33 +34,7 @@ describe('data store helpers', () => {
     expect(loadFitnessData().settings).toEqual(DEFAULT_SETTINGS);
   });
 
-  it('creates, updates, deletes, duplicates, and toggles records', () => {
-    expect(
-      createExerciseRecord(
-        {
-          name: 'Pull-up',
-          muscleGroups: ['Back'],
-          isCustom: true,
-        },
-        () => '44444444-4444-4444-4444-444444444444',
-        '2026-04-25T10:00:00.000Z'
-      )
-    ).toEqual({
-      id: '44444444-4444-4444-4444-444444444444',
-      createdAt: '2026-04-25T10:00:00.000Z',
-      name: 'Pull-up',
-      muscleGroups: ['Back'],
-      isCustom: true,
-    });
-
-    expect(updateExerciseRecords(exercises, 'exercise-row', { name: 'Chest Supported Row' })[1].name).toBe(
-      'Chest Supported Row'
-    );
-    expect(deleteExerciseRecord(exercises, [], 'exercise-row')).toHaveLength(2);
-    expect(() => deleteExerciseRecord(exercises, [completedRowWorkout], 'exercise-row')).toThrow(
-      'Cannot delete exercise that is used in workouts'
-    );
-
+  it('creates, updates, deletes, duplicates, and toggles workout records', () => {
     const workout = createWorkoutRecord(
       {
         name: 'New Workout',

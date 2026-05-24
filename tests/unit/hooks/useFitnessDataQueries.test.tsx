@@ -79,8 +79,8 @@ describe('fitness data query hooks', () => {
       wrapper: createWrapper(queryClient),
     });
 
-    act(() => {
-      result.current.addExercise({
+    await act(async () => {
+      await result.current.addExercise({
         name: 'Pull-up',
         muscleGroups: ['Back'],
         isCustom: true,
@@ -94,8 +94,8 @@ describe('fitness data query hooks', () => {
     });
     expect(queryClient.getQueryData(fitnessQueryKeys.exercises())).toEqual(storedExercises);
 
-    act(() => {
-      result.current.updateExercise('77777777-7777-7777-7777-777777777777', {
+    await act(async () => {
+      await result.current.updateExercise('77777777-7777-7777-7777-777777777777', {
         name: 'Weighted Pull-up',
       });
     });

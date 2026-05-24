@@ -4,12 +4,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { ALL_MUSCLE_GROUPS } from '@/lib/exercises';
 import { X } from 'lucide-react';
+import { ALL_MUSCLE_GROUPS } from './exercise-helpers';
 
 interface ExerciseFormProps {
   exercise?: Exercise;
-  onSave: (exercise: Omit<Exercise, 'id' | 'createdAt'>) => void;
+  onSave: (exercise: Omit<Exercise, 'id' | 'createdAt'>) => void | Promise<void>;
   onCancel: () => void;
 }
 

@@ -11,12 +11,13 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Search, Plus, Check, TrendingUp, Clock } from 'lucide-react';
-import { useExercises, useWorkouts } from '@/hooks/useFitnessDataQueries';
-import { getOrderedMuscleGroups } from '@/lib/exercises';
+import { useWorkouts } from '@/hooks/useFitnessDataQueries';
 import type { Exercise, MuscleGroup } from '@/types';
-import { ExerciseForm } from '@/components/exercise/ExerciseForm';
 import { useExerciseStats } from '@/hooks/useExerciseStats';
 import { SimpleModal } from '@/components/ui/simple-modal';
+import { ExerciseForm } from './ExerciseForm';
+import { getOrderedMuscleGroups } from './exercise-helpers';
+import { useExercises } from './use-exercises';
 
 interface ExerciseSelectorProps {
   open: boolean;
@@ -116,11 +117,10 @@ export function ExerciseSelector({
     return matchesSearch && matchesFilter;
   });
 
-  const handleExerciseSave = (exerciseData: Omit<Exercise, 'id' | 'createdAt'>) => {
-    const newExercise = addExercise(exerciseData);
+  const handleExerciseSave = async (exerciseData: Omit<Exercise, 'id' | 'createdAt'>) => {
+    const newExercise = await addExercise(exerciseData);
     setShowCreateForm(false);
     setSearchQuery('');
-    // Auto-select the newly created exercise
     onSelect(newExercise);
   };
 
