@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { ExerciseForm } from '@/components/exercise/ExerciseForm';
+import { ExerciseForm } from '@/features/exercise/ExerciseForm';
 import { exercises } from '../fixtures';
 
 describe('ExerciseForm', () => {

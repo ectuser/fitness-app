@@ -6,7 +6,6 @@ import {
 } from '@tanstack/react-router'
 import { useEffect, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
-import { DataProvider } from '@/context/DataContext'
 import { MainLayout } from '@/components/layout/MainLayout'
 import { STORAGE_KEYS, getFromStorage, saveToStorage } from '@/lib/storage'
 import { useLocation, useNavigate } from '@/lib/router-compat'
@@ -137,7 +136,7 @@ function RootApp() {
   }, [])
 
   return (
-    <DataProvider>
+    <>
       <LastVisitedRouteHandler />
       <MainLayout>
         {hasMounted ? (
@@ -148,7 +147,7 @@ function RootApp() {
           </div>
         )}
       </MainLayout>
-    </DataProvider>
+    </>
   )
 }
 

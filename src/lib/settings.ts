@@ -1,5 +1,1 @@
-import type { Settings } from '@/types';
-
-export const DEFAULT_SETTINGS: Settings = {
-  defaultWeightUnit: 'kg',
-};
+export { DEFAULT_SETTINGS } from '@/features/settings/settings-source';

@@ -8,7 +8,7 @@ import {
   removeWorkoutExerciseAtIndex,
   updateWorkoutExerciseAtIndex,
   validateWorkoutForm,
-} from '@/lib/workout-editor';
+} from '@/features/workout/workout-editor';
 import { clone, completedBenchWorkout, completedRowWorkout, createWorkoutExercise, exercises } from '../fixtures';
 
 describe('workout editor helpers', () => {

@@ -1,9 +1,9 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { WorkoutList } from '@/components/workout/WorkoutList';
+import { WorkoutList } from '@/features/workout/WorkoutList';
 import { completedBenchWorkout, exercises, upcomingWorkout } from '../fixtures';
 
-vi.mock('@/components/workout/WorkoutCard', () => ({
+vi.mock('@/features/workout/WorkoutCard', () => ({
   WorkoutCard: ({
     onDelete,
     onDuplicate,

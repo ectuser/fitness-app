@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { SetInput } from '@/components/workout/SetInput';
+import { SetInput } from '@/features/workout/SetInput';
 
 describe('SetInput', () => {
   it('syncs displayed weight when external weight changes for same set id', () => {
