@@ -1,10 +1,10 @@
-import { Card } from '@/components/ui/card';
+import { Card } from '@/components/ui/card'
 
 interface QuickStatsSectionProps {
-  completedWorkoutsCount: number;
-  exercisesCount: number;
-  totalSets: number;
-  upcomingWorkoutsCount: number;
+  completedWorkoutsCount: number
+  exercisesCount: number
+  totalSets: number
+  upcomingWorkoutsCount: number
 }
 
 export function QuickStatsSection({
@@ -35,5 +35,5 @@ export function QuickStatsSection({
         </Card>
       </div>
     </section>
-  );
+  )
 }

@@ -7,16 +7,16 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
+} from '@/components/ui/alert-dialog'
 
 interface DashboardDialogsProps {
-  importError: string | null;
-  onCloseImportDialog: () => void;
-  onConfirmImport: () => void;
-  onConfirmReset: () => void;
-  openImportDialog: boolean;
-  openResetDialog: boolean;
-  setOpenResetDialog: (open: boolean) => void;
+  importError: string | null
+  onCloseImportDialog: () => void
+  onConfirmImport: () => void
+  onConfirmReset: () => void
+  openImportDialog: boolean
+  openResetDialog: boolean
+  setOpenResetDialog: (open: boolean) => void
 }
 
 export function DashboardDialogs({
@@ -35,8 +35,8 @@ export function DashboardDialogs({
           <AlertDialogHeader>
             <AlertDialogTitle>Reset All Data?</AlertDialogTitle>
             <AlertDialogDescription>
-              This will permanently delete all your workouts, custom exercises, and
-              settings. This action cannot be undone.
+              This will permanently delete all your workouts, custom exercises,
+              and settings. This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -51,7 +51,10 @@ export function DashboardDialogs({
         </AlertDialogContent>
       </AlertDialog>
 
-      <AlertDialog open={openImportDialog} onOpenChange={(open) => !open && onCloseImportDialog()}>
+      <AlertDialog
+        open={openImportDialog}
+        onOpenChange={(open) => !open && onCloseImportDialog()}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
@@ -66,7 +69,9 @@ export function DashboardDialogs({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={onCloseImportDialog}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel onClick={onCloseImportDialog}>
+              Cancel
+            </AlertDialogCancel>
             {!importError && (
               <AlertDialogAction onClick={onConfirmImport}>
                 Import Data
@@ -76,5 +81,5 @@ export function DashboardDialogs({
         </AlertDialogContent>
       </AlertDialog>
     </>
-  );
+  )
 }

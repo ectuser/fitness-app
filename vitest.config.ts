@@ -1,5 +1,5 @@
-import { fileURLToPath, URL } from 'node:url';
-import { defineConfig } from 'vitest/config';
+import { fileURLToPath, URL } from 'node:url'
+import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
   resolve: {
@@ -16,7 +16,7 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'json-summary'],
       include: [
-        'src/components/dashboard/**/*.tsx',
+        'src/features/dashboard/**/*.{ts,tsx}',
         'src/components/exercise/ExerciseForm.tsx',
         'src/components/workout/SetInput.tsx',
         'src/components/workout/WorkoutCard.tsx',
@@ -46,4 +46,4 @@ export default defineConfig({
       },
     },
   },
-});
+})

@@ -1,20 +1,20 @@
-import { Download, Plus, Settings, Upload } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Download, Plus, Settings, Upload } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from '@/components/ui/dropdown-menu'
 
 interface DashboardHeaderActionsProps {
-  fileInputRef: React.RefObject<HTMLInputElement | null>;
-  onCreateWorkout: () => void;
-  onExportData: () => void;
-  onFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onImportClick: () => void;
-  onOpenResetDialog: () => void;
+  fileInputRef: React.RefObject<HTMLInputElement | null>
+  onCreateWorkout: () => void
+  onExportData: () => void
+  onFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+  onImportClick: () => void
+  onOpenResetDialog: () => void
 }
 
 export function DashboardHeaderActions({
@@ -63,5 +63,5 @@ export function DashboardHeaderActions({
         New Workout
       </Button>
     </div>
-  );
+  )
 }

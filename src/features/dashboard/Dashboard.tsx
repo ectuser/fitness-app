@@ -1,25 +1,21 @@
-import { PageHeader } from '@/components/layout/PageHeader';
-import { useNavigate } from '@/lib/router-compat';
-import { getWorkoutTotalSets } from '@/features/workout/workout-helpers';
-import { useDashboardDataManagement } from '@/hooks/useDashboardDataManagement';
-import {
-  useExercises,
-  useFitnessDataReset,
-  useSettings,
-  useWorkouts,
-} from '@/hooks/useFitnessDataQueries';
-import { DashboardDialogs } from '@/components/dashboard/DashboardDialogs';
-import { DashboardHeaderActions } from '@/components/dashboard/DashboardHeaderActions';
-import { NextWorkoutSection } from '@/components/dashboard/NextWorkoutSection';
-import { QuickStatsSection } from '@/components/dashboard/QuickStatsSection';
-import { UpcomingWorkoutsSection } from '@/components/dashboard/UpcomingWorkoutsSection';
+import { PageHeader } from '@/components/layout/PageHeader'
+import { useNavigate } from '@/lib/router-compat'
+import { useExercises } from '@/features/exercise/use-exercises'
+import { getWorkoutTotalSets } from '@/features/workout/workout-helpers'
+import { useWorkouts } from '@/features/workout/use-workouts'
+import { useSettings } from '@/features/settings/use-settings'
+import { DashboardDialogs } from './DashboardDialogs'
+import { DashboardHeaderActions } from './DashboardHeaderActions'
+import { NextWorkoutSection } from './NextWorkoutSection'
+import { QuickStatsSection } from './QuickStatsSection'
+import { UpcomingWorkoutsSection } from './UpcomingWorkoutsSection'
+import { useDashboardDataManagement } from './use-dashboard-data-management'
 
 export function Dashboard() {
-  const navigate = useNavigate();
-  const { exercises } = useExercises();
-  const { nextWorkout, upcomingWorkouts, workouts } = useWorkouts();
-  const { settings } = useSettings();
-  const { resetAllData } = useFitnessDataReset();
+  const navigate = useNavigate()
+  const { exercises } = useExercises()
+  const { nextWorkout, upcomingWorkouts, workouts } = useWorkouts()
+  const { settings } = useSettings()
   const {
     closeImportDialog,
     fileInputRef,
@@ -36,10 +32,9 @@ export function Dashboard() {
     exercises,
     workouts,
     settings,
-    resetAllData,
-  });
+  })
 
-  const completedWorkouts = workouts.filter((workout) => workout.isCompleted);
+  const completedWorkouts = workouts.filter((workout) => workout.isCompleted)
 
   return (
     <div>
@@ -62,13 +57,17 @@ export function Dashboard() {
           exercises={exercises}
           nextWorkout={nextWorkout}
           onCreateWorkout={() => navigate('/workouts/new')}
-          onStartWorkout={(workoutId) => navigate(`/workouts/${workoutId}/session`)}
+          onStartWorkout={(workoutId) =>
+            navigate(`/workouts/${workoutId}/session`)
+          }
         />
         <UpcomingWorkoutsSection
           exercises={exercises}
           workouts={upcomingWorkouts}
           onShowAll={() => navigate('/workouts')}
-          onStartWorkout={(workoutId) => navigate(`/workouts/${workoutId}/session`)}
+          onStartWorkout={(workoutId) =>
+            navigate(`/workouts/${workoutId}/session`)
+          }
         />
         <QuickStatsSection
           exercisesCount={exercises.length}
@@ -76,7 +75,7 @@ export function Dashboard() {
           completedWorkoutsCount={completedWorkouts.length}
           totalSets={completedWorkouts.reduce(
             (sum, workout) => sum + getWorkoutTotalSets(workout),
-            0
+            0,
           )}
         />
       </div>
@@ -91,5 +90,5 @@ export function Dashboard() {
         setOpenResetDialog={setShowResetDialog}
       />
     </div>
-  );
+  )
 }

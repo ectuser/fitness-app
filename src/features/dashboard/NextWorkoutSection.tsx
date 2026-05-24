@@ -1,15 +1,19 @@
-import { Calendar, Play, Plus } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { formatWorkoutDate, getWorkoutMuscleGroups, getWorkoutTotalSets } from '@/features/workout/workout-helpers';
-import type { Exercise, Workout } from '@/types';
+import { Calendar, Play, Plus } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
+import {
+  formatWorkoutDate,
+  getWorkoutMuscleGroups,
+  getWorkoutTotalSets,
+} from '@/features/workout/workout-helpers'
+import type { Exercise, Workout } from '@/types'
 
 interface NextWorkoutSectionProps {
-  exercises: Exercise[];
-  nextWorkout: Workout | null;
-  onCreateWorkout: () => void;
-  onStartWorkout: (workoutId: string) => void;
+  exercises: Exercise[]
+  nextWorkout: Workout | null
+  onCreateWorkout: () => void
+  onStartWorkout: (workoutId: string) => void
 }
 
 export function NextWorkoutSection({
@@ -37,8 +41,9 @@ export function NextWorkoutSection({
               ))}
             </div>
             <p className="text-sm text-slate-600">
-              {nextWorkout.exercises.length} exercise{nextWorkout.exercises.length !== 1 ? 's' : ''}{' '}
-              • {getWorkoutTotalSets(nextWorkout)} set
+              {nextWorkout.exercises.length} exercise
+              {nextWorkout.exercises.length !== 1 ? 's' : ''} •{' '}
+              {getWorkoutTotalSets(nextWorkout)} set
               {getWorkoutTotalSets(nextWorkout) !== 1 ? 's' : ''}
             </p>
           </div>
@@ -53,7 +58,9 @@ export function NextWorkoutSection({
       ) : (
         <Card className="p-12 text-center">
           <p className="text-slate-500 mb-4">No upcoming workouts.</p>
-          <p className="text-sm text-slate-500 mb-4">Create one to get started!</p>
+          <p className="text-sm text-slate-500 mb-4">
+            Create one to get started!
+          </p>
           <Button onClick={onCreateWorkout}>
             <Plus className="w-4 h-4 mr-2" />
             Create Workout
@@ -61,5 +68,5 @@ export function NextWorkoutSection({
         </Card>
       )}
     </section>
-  );
+  )
 }
