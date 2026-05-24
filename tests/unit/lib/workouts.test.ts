@@ -7,7 +7,7 @@ import {
   getUpcomingWorkouts,
   getWorkoutMuscleGroups,
   getWorkoutTotalSets,
-} from '@/lib/workouts';
+} from '@/features/workout/workout-helpers';
 import { clone, completedBenchWorkout, completedRowWorkout, exercises, upcomingWorkout } from '../fixtures';
 
 describe('workouts helpers', () => {

@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from '@/lib/router-compat';
-import { useExercises } from '@/features/exercise/use-exercises';
-import { useSettings } from '@/features/settings/use-settings';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Button } from '@/components/ui/button';
 import { CheckCircle2, Plus, X } from 'lucide-react';
 import { ExerciseSelector } from '../exercise/ExerciseSelector';
+import { useExercises } from '../exercise/use-exercises';
+import { useSettings } from '../settings/use-settings';
 import { WorkoutExerciseList } from './WorkoutExerciseList';
 import { useWorkouts } from './use-workouts';
 import { useWorkoutExerciseEditor } from './use-workout-exercise-editor';

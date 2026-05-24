@@ -1,5 +1,5 @@
-import { createDefaultExerciseCatalog } from '@/features/exercise/exercise-source'
-import { DEFAULT_SETTINGS } from '@/features/settings/settings-source'
+import { createDefaultExerciseCatalog } from '../exercise/exercise-source'
+import { DEFAULT_SETTINGS } from '../settings/settings-source'
 import { migrateExercises } from '@/lib/migrations'
 import { STORAGE_KEYS, removeFromStorage, saveToStorage } from '@/lib/storage'
 import type { Exercise, Settings, Workout } from '@/types'

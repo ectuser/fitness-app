@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Plus } from 'lucide-react';
 import { useNavigate } from '@/lib/router-compat';
-import { useExercises } from '@/features/exercise/use-exercises';
+import { useExercises } from '../exercise/use-exercises';
 import { useWorkouts } from './use-workouts';
 import { WorkoutList } from './WorkoutList';
 import { getUpcomingWorkouts } from './workout-helpers';

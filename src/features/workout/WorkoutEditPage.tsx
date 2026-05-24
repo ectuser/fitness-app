@@ -1,7 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate, useLocation } from '@/lib/router-compat';
-import { useExercises } from '@/features/exercise/use-exercises';
-import { useSettings } from '@/features/settings/use-settings';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,6 +7,8 @@ import { Label } from '@/components/ui/label';
 import { Card } from '@/components/ui/card';
 import { Plus, Save } from 'lucide-react';
 import { ExerciseSelector } from '../exercise/ExerciseSelector';
+import { useExercises } from '../exercise/use-exercises';
+import { useSettings } from '../settings/use-settings';
 import { WorkoutExerciseList } from './WorkoutExerciseList';
 import { useWorkouts } from './use-workouts';
 import { useWorkoutCreateDraft } from './use-workout-create-draft';

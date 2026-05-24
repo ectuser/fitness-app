@@ -5,7 +5,7 @@ import { Card } from '@/components/ui/card'
 import {
   formatWorkoutDate,
   getWorkoutMuscleGroups,
-} from '@/features/workout/workout-helpers'
+} from '../workout/workout-helpers'
 import type { Exercise, Workout } from '@/types'
 
 interface UpcomingWorkoutsSectionProps {

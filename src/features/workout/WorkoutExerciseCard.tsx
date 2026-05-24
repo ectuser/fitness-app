@@ -11,7 +11,7 @@ import {
 import { Plus, Trash2, ChevronUp, ChevronDown, MoreVertical, Repeat, Pencil, TrendingUp, Clock } from 'lucide-react';
 import type { WorkoutExercise, Exercise } from '@/types';
 import { SetInput } from './SetInput';
-import { useSettings } from '@/features/settings/use-settings';
+import { useSettings } from '../settings/use-settings';
 import { useWorkouts } from './use-workouts';
 import { useExerciseStats } from '../training-history/use-training-history';
 import { useNavigate } from '@/lib/router-compat';

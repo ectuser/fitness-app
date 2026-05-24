@@ -1,8 +1,8 @@
 import { useRef, useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
-import { exerciseQueryKeys } from '@/features/exercise/exercise-queries'
-import { settingsQueryKeys } from '@/features/settings/settings-queries'
-import { workoutQueryKeys } from '@/features/workout/workout-queries'
+import { exerciseQueryKeys } from '../exercise/exercise-queries'
+import { settingsQueryKeys } from '../settings/settings-queries'
+import { workoutQueryKeys } from '../workout/workout-queries'
 import {
   buildExportPayload,
   importDashboardData,

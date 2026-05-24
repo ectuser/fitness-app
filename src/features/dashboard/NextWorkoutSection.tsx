@@ -6,7 +6,7 @@ import {
   formatWorkoutDate,
   getWorkoutMuscleGroups,
   getWorkoutTotalSets,
-} from '@/features/workout/workout-helpers'
+} from '../workout/workout-helpers'
 import type { Exercise, Workout } from '@/types'
 
 interface NextWorkoutSectionProps {

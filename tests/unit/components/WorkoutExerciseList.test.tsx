@@ -1,9 +1,9 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { WorkoutExerciseList } from '@/components/workout/WorkoutExerciseList';
+import { WorkoutExerciseList } from '@/features/workout/WorkoutExerciseList';
 import { createWorkoutExercise, exercises } from '../fixtures';
 
-vi.mock('@/components/workout/WorkoutExerciseCard', () => ({
+vi.mock('@/features/workout/WorkoutExerciseCard', () => ({
   WorkoutExerciseCard: ({
     exercise,
     onChange,
