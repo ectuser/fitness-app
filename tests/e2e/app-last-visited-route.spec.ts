@@ -9,8 +9,8 @@ test('app restores last visited page and falls back safely for invalid saved rou
   });
 
   await page.goto('');
+  await expect(page).toHaveURL(/\/workouts$/, { timeout: 10000 });
   await expect(page.getByRole('heading', { name: 'Workouts' })).toBeVisible();
-  await expect(page).toHaveURL(/\/workouts$/);
 
   await page.getByRole('link', { name: 'Exercises' }).click();
   await expect(page.getByRole('heading', { name: 'Exercises' })).toBeVisible();

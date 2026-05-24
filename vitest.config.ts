@@ -10,7 +10,9 @@ export default defineConfig({
   },
   test: {
     environment: 'jsdom',
+    fileParallelism: false,
     include: ['tests/unit/**/*.test.ts', 'tests/unit/**/*.test.tsx'],
+    maxWorkers: 1,
     setupFiles: './src/test/setup.ts',
     coverage: {
       provider: 'v8',
