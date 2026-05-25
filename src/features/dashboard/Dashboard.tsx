@@ -1,4 +1,5 @@
 import { PageHeader } from '@/components/layout/PageHeader'
+import { usePwaUpdateStatus } from '@/features/app-update/pwa-update-status'
 import { useNavigate } from '@/lib/router-compat'
 import { useExercises } from '../exercise/use-exercises'
 import { useSettings } from '../settings/use-settings'
@@ -13,7 +14,9 @@ import { useDashboardDataManagement } from './use-dashboard-data-management'
 
 export function Dashboard() {
   const navigate = useNavigate()
+  const updateStatus = usePwaUpdateStatus()
   const { exercises } = useExercises()
+  const hasAvailableUpdate = updateStatus.state === 'available-update'
   const { nextWorkout, upcomingWorkouts, workouts } = useWorkouts()
   const { settings } = useSettings()
   const {
@@ -43,10 +46,12 @@ export function Dashboard() {
         action={
           <DashboardHeaderActions
             fileInputRef={fileInputRef}
+            hasAvailableUpdate={hasAvailableUpdate}
             onCreateWorkout={() => navigate('/workouts/new')}
             onExportData={handleExportData}
             onFileChange={handleFileChange}
             onImportClick={handleImportClick}
+            onOpenAppUpdate={() => navigate('/app-update')}
             onOpenResetDialog={() => setShowResetDialog(true)}
           />
         }

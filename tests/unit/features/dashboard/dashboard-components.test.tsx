@@ -83,6 +83,7 @@ describe('dashboard components', () => {
     const onExportData = vi.fn()
     const onFileChange = vi.fn()
     const onImportClick = vi.fn()
+    const onOpenAppUpdate = vi.fn()
     const onOpenResetDialog = vi.fn()
 
     render(
@@ -92,16 +93,19 @@ describe('dashboard components', () => {
         onExportData={onExportData}
         onFileChange={onFileChange}
         onImportClick={onImportClick}
+        onOpenAppUpdate={onOpenAppUpdate}
         onOpenResetDialog={onOpenResetDialog}
       />,
     )
 
     fireEvent.click(screen.getByRole('button', { name: /new workout/i }))
+    fireEvent.click(screen.getByRole('button', { name: /app update/i }))
     fireEvent.click(screen.getByRole('button', { name: /export/i }))
     fireEvent.click(screen.getByRole('button', { name: /import/i }))
     fireEvent.click(screen.getByRole('button', { name: /reset/i }))
 
     expect(onCreateWorkout).toHaveBeenCalled()
+    expect(onOpenAppUpdate).toHaveBeenCalled()
     expect(onExportData).toHaveBeenCalled()
     expect(onImportClick).toHaveBeenCalled()
     expect(onOpenResetDialog).toHaveBeenCalled()

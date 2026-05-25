@@ -1,6 +1,7 @@
 import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import { paraglideVitePlugin } from '@inlang/paraglide-js'
+import { VitePWA } from 'vite-plugin-pwa'
 
 import { tanstackStart } from '@tanstack/react-start/plugin/vite'
 
@@ -35,6 +36,39 @@ const config = defineConfig({
           }
         : undefined,
     ),
+    VitePWA({
+      registerType: 'prompt',
+      includeAssets: ['favicon.ico', 'logo192.png', 'logo512.png'],
+      manifest: {
+        short_name: 'Fitness',
+        name: 'Fitness Tracker',
+        icons: [
+          {
+            src: 'favicon.ico',
+            sizes: '64x64 32x32 24x24 16x16',
+            type: 'image/x-icon',
+          },
+          {
+            src: 'logo192.png',
+            type: 'image/png',
+            sizes: '192x192',
+          },
+          {
+            src: 'logo512.png',
+            type: 'image/png',
+            sizes: '512x512',
+          },
+        ],
+        start_url: '.',
+        display: 'standalone',
+        theme_color: '#ffffff',
+        background_color: '#ffffff',
+      },
+      workbox: {
+        clientsClaim: false,
+        skipWaiting: false,
+      },
+    }),
     viteReact(),
   ],
 })

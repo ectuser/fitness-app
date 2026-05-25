@@ -5,6 +5,12 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
+      'virtual:pwa-register/react': fileURLToPath(
+        new URL(
+          './node_modules/vite-plugin-pwa/dist/client/dev/react.js',
+          import.meta.url,
+        ),
+      ),
     },
     dedupe: ['react', 'react-dom'],
   },

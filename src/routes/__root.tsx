@@ -7,6 +7,7 @@ import {
 import { useEffect, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 import { MainLayout } from '@/components/layout/MainLayout'
+import { PwaUpdateStatusProvider } from '@/features/app-update/pwa-update-status'
 import { STORAGE_KEYS, getFromStorage, saveToStorage } from '@/lib/storage'
 import { useLocation, useNavigate } from '@/lib/router-compat'
 
@@ -33,7 +34,7 @@ const RESTORABLE_ROUTE_REGEXES = [
   /^\/exercises\/[^/]+\/edit$/,
 ]
 
-function isRestorableRoute(pathname: string): boolean {
+export function isRestorableRoute(pathname: string): boolean {
   return RESTORABLE_ROUTE_REGEXES.some((routePattern) =>
     routePattern.test(pathname),
   )
@@ -65,6 +66,10 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
       {
         rel: 'stylesheet',
         href: appCss,
+      },
+      {
+        rel: 'manifest',
+        href: '/manifest.json',
       },
     ],
   }),
@@ -136,7 +141,7 @@ function RootApp() {
   }, [])
 
   return (
-    <>
+    <PwaUpdateStatusProvider>
       <LastVisitedRouteHandler />
       <MainLayout>
         {hasMounted ? (
@@ -147,7 +152,7 @@ function RootApp() {
           </div>
         )}
       </MainLayout>
-    </>
+    </PwaUpdateStatusProvider>
   )
 }
 
