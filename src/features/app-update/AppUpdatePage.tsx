@@ -1,6 +1,7 @@
 import { CheckCircle2, Info, RefreshCw, WifiOff } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { getCurrentDeploymentVersion } from './deployment-version'
 import { usePwaUpdateStatus } from './pwa-update-status'
 import type { PwaUpdateStatus } from './pwa-update-status'
 
@@ -52,6 +53,10 @@ export function AppUpdatePage() {
               </p>
             </div>
           </div>
+
+          <p className="text-xs text-slate-500">
+            Current version: {getCurrentDeploymentVersion()}
+          </p>
 
           <div className="flex flex-col gap-3 pt-1 sm:flex-row">
             {(canApplyUpdate || isApplying) && (

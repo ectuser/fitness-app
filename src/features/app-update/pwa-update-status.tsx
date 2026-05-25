@@ -1,6 +1,7 @@
-import { createContext, useContext, useMemo, useState } from 'react'
+import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
 import { useRegisterSW } from 'virtual:pwa-register/react'
+import { startBackgroundSwUpdateChecks } from './background-sw-update-checks'
 
 type AvailableUpdateStatus = {
   state: 'available-update'
@@ -52,23 +53,40 @@ function RuntimePwaUpdateStatusProvider({ children }: { children: ReactNode }) {
     return 'ready'
   })
   const [isApplying, setIsApplying] = useState(false)
+  const [swScriptUrl, setSwScriptUrl] = useState<string | null>(null)
+  const [swRegistration, setSwRegistration] =
+    useState<ServiceWorkerRegistration | null>(null)
   const {
     needRefresh: [needsRefresh],
     updateServiceWorker,
   } = useRegisterSW({
     immediate: true,
-    onRegisteredSW: (_swScriptUrl, registration) => {
+    onRegisteredSW: (scriptUrl, registration) => {
       if (!registration) {
         setRegistrationState('unavailable')
+        setSwScriptUrl(null)
+        setSwRegistration(null)
         return
       }
 
       setRegistrationState('ready')
+      setSwScriptUrl(scriptUrl)
+      setSwRegistration(registration)
     },
     onRegisterError: () => {
       setRegistrationState('unavailable')
+      setSwScriptUrl(null)
+      setSwRegistration(null)
     },
   })
+
+  useEffect(() => {
+    if (!swScriptUrl || !swRegistration) {
+      return
+    }
+
+    return startBackgroundSwUpdateChecks(swScriptUrl, swRegistration)
+  }, [swRegistration, swScriptUrl])
 
   const status = useMemo<PwaUpdateStatus>(() => {
     if (registrationState === 'unavailable') {

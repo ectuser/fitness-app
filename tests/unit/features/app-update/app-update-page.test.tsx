@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { AppUpdatePage } from '@/features/app-update/AppUpdatePage'
 import { PwaUpdateStatusProvider } from '@/features/app-update/pwa-update-status'
 
@@ -16,6 +16,7 @@ describe('AppUpdatePage', () => {
     )
 
     expect(screen.getByRole('heading', { name: 'App Update' })).toBeVisible()
+    expect(screen.getByText('Current version: local')).toBeVisible()
     expect(screen.getByText('Available Update')).toBeVisible()
     expect(
       screen.getByText(/save or finish important changes before updating/i),
@@ -34,6 +35,7 @@ describe('AppUpdatePage', () => {
     )
 
     expect(screen.getByText("You're up to date")).toBeVisible()
+    expect(screen.getByText('Current version: local')).toBeVisible()
     expect(screen.queryByRole('button', { name: 'Update now' })).toBeNull()
   })
 
@@ -49,6 +51,26 @@ describe('AppUpdatePage', () => {
       screen.getByText(/this browser environment cannot check for app updates/i),
     ).toBeVisible()
     expect(screen.queryByRole('button', { name: 'Update now' })).toBeNull()
+    expect(screen.getByText('Current version: local')).toBeVisible()
+  })
+
+  it('shows a CI deployment version when build identity is present', () => {
+    vi.stubEnv('VITE_DEPLOYMENT_RUN_NUMBER', '42')
+    vi.stubEnv('VITE_DEPLOYMENT_SHORT_SHA', 'a1b2c3d4e5f6')
+
+    render(
+      <PwaUpdateStatusProvider value={{ state: 'up-to-date' }}>
+        <AppUpdatePage />
+      </PwaUpdateStatusProvider>,
+    )
+
+    expect(screen.getByText('Current version: 42-a1b2c3d')).toBeVisible()
+
+    vi.unstubAllEnvs()
+  })
+
+  afterEach(() => {
+    vi.unstubAllEnvs()
   })
 
   it('disables the update action while applying', () => {

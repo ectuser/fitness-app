@@ -38,6 +38,8 @@ jobs:
       - name: Build (GitHub Pages base path)
         env:
           GITHUB_PAGES: 'true'
+          VITE_DEPLOYMENT_RUN_NUMBER: ${{ github.run_number }}
+          VITE_DEPLOYMENT_SHORT_SHA: ${{ github.sha }}
         run: |
           REPO_NAME="${GITHUB_REPOSITORY#*/}"
           npm run build -- --base "/${REPO_NAME}/"
