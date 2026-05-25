@@ -1,6 +1,7 @@
 import { Link, useLocation } from '@/lib/router-compat';
 import { BottomNav } from './BottomNav';
 import { cn } from '@/lib/utils';
+import { UpdateNotice } from '@/features/app-update/UpdateNotice';
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -56,6 +57,8 @@ export function MainLayout({ children }: MainLayoutProps) {
 
       {/* Main content */}
       <main className="flex-1 pb-20 md:pb-0">{children}</main>
+
+      <UpdateNotice />
 
       {/* Mobile bottom navigation */}
       <BottomNav />
