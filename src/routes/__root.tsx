@@ -68,8 +68,12 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         href: appCss,
       },
       {
+        rel: 'icon',
+        href: `${import.meta.env.BASE_URL}favicon.ico`,
+      },
+      {
         rel: 'manifest',
-        href: '/manifest.json',
+        href: `${import.meta.env.BASE_URL}manifest.json`,
       },
     ],
   }),
