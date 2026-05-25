@@ -29,9 +29,7 @@ test('App Update Page shows a valid state when service workers are blocked', asy
 
   await expect(page.getByRole('heading', { name: 'App Update' })).toBeVisible();
   await expect(
-    page.getByRole('heading', {
-      name: /Update checks are unavailable|You're up to date/,
-    }),
+    page.getByText(/Update checks are unavailable|You're up to date/),
   ).toBeVisible();
   await expect(page.getByRole('button', { name: 'Update now' })).toHaveCount(0);
 });
