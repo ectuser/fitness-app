@@ -30,7 +30,9 @@ export const MUSCLE_GROUP_ORDER: Array<MuscleGroup> = [
   'None',
 ]
 
-export function getOrderedMuscleGroups(exercises: Array<Exercise>): Array<MuscleGroup> {
+export function getOrderedMuscleGroups(
+  exercises: Array<Exercise>,
+): Array<MuscleGroup> {
   const uniqueGroups = new Set<MuscleGroup>()
 
   exercises.forEach((exercise) => {

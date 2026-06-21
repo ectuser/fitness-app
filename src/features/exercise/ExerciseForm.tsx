@@ -129,7 +129,11 @@ export function ExerciseForm({
         />
       </div>
 
-      <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+      <div
+        role="group"
+        aria-label="Exercise form actions"
+        className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end"
+      >
         <Button type="button" variant="ghost" onClick={onCancel}>
           Cancel
         </Button>

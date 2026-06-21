@@ -19,7 +19,10 @@ export function createDefaultExerciseCatalog(): Array<Exercise> {
 }
 
 export function readExerciseCatalogSnapshot(): Array<Exercise> {
-  const storedExercises = getFromStorage<Array<Exercise>>(STORAGE_KEYS.EXERCISES, [])
+  const storedExercises = getFromStorage<Array<Exercise>>(
+    STORAGE_KEYS.EXERCISES,
+    [],
+  )
   const exercises =
     storedExercises.length === 0
       ? createDefaultExerciseCatalog()

@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, render, screen, within } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { exercises } from '../fixtures'
 import { ExerciseForm } from '@/features/exercise/ExerciseForm'
@@ -69,11 +69,12 @@ describe('ExerciseForm', () => {
 
     const cancelButton = screen.getByRole('button', { name: /^cancel$/i })
     const saveButton = screen.getByRole('button', { name: /save exercise/i })
-    const actions = saveButton.parentElement
+    const actions = screen.getByRole('group', {
+      name: /exercise form actions/i,
+    })
 
-    expect(actions).not.toBeNull()
-    expect(actions?.className).toContain('flex-col-reverse')
-    expect(actions?.className).toContain('sm:flex-row')
+    expect(actions.className).toContain('flex-col-reverse')
+    expect(actions.className).toContain('sm:flex-row')
 
     expect(saveButton.className).toContain('border')
     expect(saveButton.className).toContain('border-input')
@@ -82,7 +83,7 @@ describe('ExerciseForm', () => {
     expect(cancelButton.className).not.toContain('border-input')
     expect(cancelButton.className).not.toContain('bg-background')
 
-    const actionButtons = Array.from(actions?.querySelectorAll('button') ?? [])
+    const actionButtons = within(actions).getAllByRole('button')
     expect(actionButtons).toHaveLength(2)
     expect(actionButtons[0]).toBe(cancelButton)
     expect(actionButtons[1]).toBe(saveButton)

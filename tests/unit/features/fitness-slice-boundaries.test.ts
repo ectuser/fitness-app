@@ -92,6 +92,8 @@ describe('fitness slice boundaries', () => {
   })
 
   it('keeps feature-to-feature and feature-internal imports relative', () => {
+    const invalidImports: Array<{ actual: string; expected: string }> = []
+
     for (const file of featureFiles) {
       const source = readFileSync(projectPath(file), 'utf8')
 
@@ -105,9 +107,14 @@ describe('fitness slice boundaries', () => {
           .replace(/\.(ts|tsx)$/, '')
 
         if (source.includes(`from '${aliasImport}'`)) {
-          expect(source).toContain(`from '${relativeImport(file, target)}'`)
+          invalidImports.push({
+            actual: aliasImport,
+            expected: relativeImport(file, target),
+          })
         }
       }
     }
+
+    expect(invalidImports).toEqual([])
   })
 })

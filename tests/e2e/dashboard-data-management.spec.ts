@@ -1,3 +1,4 @@
+import assert from 'node:assert/strict'
 import { readFile } from 'node:fs/promises'
 import { expect, test } from '@playwright/test'
 import {
@@ -54,10 +55,7 @@ test('dashboard export downloads the current app data', async ({ page }) => {
   )
 
   const downloadPath = await download.path()
-  expect(downloadPath).not.toBeNull()
-  if (!downloadPath) {
-    throw new Error('Expected Playwright to provide a download path')
-  }
+  assert(downloadPath, 'Expected Playwright to provide a download path')
 
   const exportPayload: {
     version: string

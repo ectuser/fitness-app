@@ -13,7 +13,10 @@ export function useExerciseStats(exerciseId: string, workouts: Array<Workout>) {
   )
 }
 
-export function useExerciseHistory(exerciseId: string, workouts: Array<Workout>) {
+export function useExerciseHistory(
+  exerciseId: string,
+  workouts: Array<Workout>,
+) {
   return useMemo(
     () => buildExerciseHistory(exerciseId, workouts),
     [exerciseId, workouts],
