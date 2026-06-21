@@ -1,41 +1,46 @@
-import { useEffect, useRef, useState } from 'react';
-import { useParams, useNavigate, useLocation } from '@/lib/router-compat';
-import { PageHeader } from '@/components/layout/PageHeader';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card } from '@/components/ui/card';
-import { Plus, Save } from 'lucide-react';
-import { ExerciseSelector } from '../exercise/ExerciseSelector';
-import { useExercises } from '../exercise/use-exercises';
-import { useSettings } from '../settings/use-settings';
-import { WorkoutExerciseList } from './WorkoutExerciseList';
-import { useWorkouts } from './use-workouts';
-import { useWorkoutCreateDraft } from './use-workout-create-draft';
-import { useWorkoutExerciseEditor } from './use-workout-exercise-editor';
-import { formatDefaultWorkoutName, validateWorkoutForm } from './workout-editor';
-import { consumeWorkoutFormDraft, saveWorkoutFormDraft } from '@/lib/workout-form-draft';
-import type { Exercise, Workout } from '@/types';
+import { useEffect, useRef, useState } from 'react'
+import { Plus, Save } from 'lucide-react'
+import { ExerciseSelector } from '../exercise/ExerciseSelector'
+import { useExercises } from '../exercise/use-exercises'
+import { useSettings } from '../settings/use-settings'
+import { WorkoutExerciseList } from './WorkoutExerciseList'
+import { useWorkouts } from './use-workouts'
+import { useWorkoutCreateDraft } from './use-workout-create-draft'
+import { useWorkoutExerciseEditor } from './use-workout-exercise-editor'
+import { formatDefaultWorkoutName, validateWorkoutForm } from './workout-editor'
+import type { Exercise, Workout } from '@/types'
+import {
+  consumeWorkoutFormDraft,
+  saveWorkoutFormDraft,
+} from '@/lib/workout-form-draft'
+import { Card } from '@/components/ui/card'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { PageHeader } from '@/components/layout/PageHeader'
+import { useLocation, useNavigate, useParams } from '@/lib/router-compat'
 
 export function WorkoutEditPage() {
-  const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
-  const location = useLocation();
-  const { exercises } = useExercises();
-  const { workouts, addWorkout, updateWorkout } = useWorkouts();
-  const { settings } = useSettings();
-  const isEditing = !!id;
-  const [loadedWorkoutId, setLoadedWorkoutId] = useState<string | null>(null);
-  const [hasHydratedCreateDraft, setHasHydratedCreateDraft] = useState(false);
-  const [isCreateDraftDirty, setIsCreateDraftDirty] = useState(false);
-  const { clearDraft, persistDraft, restoreDraft } = useWorkoutCreateDraft();
-  const shouldSkipStoredWorkoutInitializationRef = useRef(false);
-  const hasRestoredDraftRef = useRef(false);
-  const restoredPathnameRef = useRef<string | null>(null);
+  const { id } = useParams<{ id: string }>()
+  const navigate = useNavigate()
+  const location = useLocation()
+  const { exercises } = useExercises()
+  const { workouts, addWorkout, updateWorkout } = useWorkouts()
+  const { settings } = useSettings()
+  const isEditing = !!id
+  const [loadedWorkoutId, setLoadedWorkoutId] = useState<string | null>(null)
+  const [hasHydratedCreateDraft, setHasHydratedCreateDraft] = useState(false)
+  const [isCreateDraftDirty, setIsCreateDraftDirty] = useState(false)
+  const { clearDraft, persistDraft, restoreDraft } = useWorkoutCreateDraft()
+  const shouldSkipStoredWorkoutInitializationRef = useRef(false)
+  const hasRestoredDraftRef = useRef(false)
+  const restoredPathnameRef = useRef<string | null>(null)
 
-  const [name, setName] = useState(() => formatDefaultWorkoutName(new Date()));
-  const [date, setDate] = useState(() => new Date().toISOString().split('T')[0]);
-  const [errors, setErrors] = useState<{ name?: string; exercises?: string }>({});
+  const [name, setName] = useState(() => formatDefaultWorkoutName(new Date()))
+  const [date, setDate] = useState(() => new Date().toISOString().split('T')[0])
+  const [errors, setErrors] = useState<{ name?: string; exercises?: string }>(
+    {},
+  )
   const {
     handleAddExercise: addExercise,
     handleMoveExerciseDown: moveExerciseDown,
@@ -55,33 +60,33 @@ export function WorkoutEditPage() {
     exercises,
     initialWorkoutExercises: [],
     workouts,
-  });
+  })
 
   useEffect(() => {
     if (restoredPathnameRef.current !== location.pathname) {
-      hasRestoredDraftRef.current = false;
-      restoredPathnameRef.current = location.pathname;
-      shouldSkipStoredWorkoutInitializationRef.current = false;
+      hasRestoredDraftRef.current = false
+      restoredPathnameRef.current = location.pathname
+      shouldSkipStoredWorkoutInitializationRef.current = false
     }
 
     if (hasRestoredDraftRef.current) {
-      return;
+      return
     }
 
-    const draft = consumeWorkoutFormDraft(location.pathname);
+    const draft = consumeWorkoutFormDraft(location.pathname)
     if (!draft) {
-      return;
+      return
     }
 
-    hasRestoredDraftRef.current = true;
-    shouldSkipStoredWorkoutInitializationRef.current = true;
-    setName(draft.name);
-    setDate(draft.date);
-    setWorkoutExercises(draft.workoutExercises);
+    hasRestoredDraftRef.current = true
+    shouldSkipStoredWorkoutInitializationRef.current = true
+    setName(draft.name)
+    setDate(draft.date)
+    setWorkoutExercises(draft.workoutExercises)
     if (isEditing && id) {
-      setLoadedWorkoutId(id);
+      setLoadedWorkoutId(id)
     }
-  }, [id, isEditing, location.pathname, setWorkoutExercises]);
+  }, [id, isEditing, location.pathname, setWorkoutExercises])
 
   useEffect(() => {
     if (
@@ -90,153 +95,169 @@ export function WorkoutEditPage() {
       !id ||
       loadedWorkoutId === id
     ) {
-      return;
+      return
     }
 
-    const workout = workouts.find((entry) => entry.id === id);
+    const workout = workouts.find((entry) => entry.id === id)
     if (workout) {
-      setName(workout.name);
-      setDate(workout.date);
-      setWorkoutExercises(workout.exercises);
-      setLoadedWorkoutId(id);
+      setName(workout.name)
+      setDate(workout.date)
+      setWorkoutExercises(workout.exercises)
+      setLoadedWorkoutId(id)
     }
-  }, [id, isEditing, loadedWorkoutId, setWorkoutExercises, workouts]);
+  }, [id, isEditing, loadedWorkoutId, setWorkoutExercises, workouts])
 
   useEffect(() => {
     if (isEditing) {
-      return;
+      return
     }
 
     if (hasRestoredDraftRef.current) {
-      setHasHydratedCreateDraft(true);
-      return;
+      setHasHydratedCreateDraft(true)
+      return
     }
 
-    const draft = restoreDraft();
+    const draft = restoreDraft()
 
     if (draft) {
-      setName(draft.name);
-      setDate(draft.date);
-      setWorkoutExercises(draft.exercises);
+      setName(draft.name)
+      setDate(draft.date)
+      setWorkoutExercises(draft.exercises)
     }
 
-    setHasHydratedCreateDraft(true);
-  }, [isEditing, restoreDraft, setWorkoutExercises]);
+    setHasHydratedCreateDraft(true)
+  }, [isEditing, restoreDraft, setWorkoutExercises])
 
   useEffect(() => {
     if (isEditing || !hasHydratedCreateDraft || !isCreateDraftDirty) {
-      return;
+      return
     }
 
     persistDraft({
       name,
       date,
       workoutExercises,
-    });
-  }, [date, hasHydratedCreateDraft, isCreateDraftDirty, isEditing, name, persistDraft, workoutExercises]);
+    })
+  }, [
+    date,
+    hasHydratedCreateDraft,
+    isCreateDraftDirty,
+    isEditing,
+    name,
+    persistDraft,
+    workoutExercises,
+  ])
 
   const markCreateDraftDirty = () => {
     if (!isEditing) {
-      setIsCreateDraftDirty(true);
+      setIsCreateDraftDirty(true)
     }
-  };
+  }
 
   const handleNameChange = (value: string) => {
-    markCreateDraftDirty();
-    setName(value);
-  };
+    markCreateDraftDirty()
+    setName(value)
+  }
 
   const handleDateChange = (value: string) => {
-    markCreateDraftDirty();
-    setDate(value);
-  };
+    markCreateDraftDirty()
+    setDate(value)
+  }
 
   const handleAddExercise = (exercise: Exercise) => {
-    markCreateDraftDirty();
-    addExercise(exercise);
-  };
+    markCreateDraftDirty()
+    addExercise(exercise)
+  }
 
   const handleMoveExerciseUp = (index: number) => {
-    markCreateDraftDirty();
-    moveExerciseUp(index);
-  };
+    markCreateDraftDirty()
+    moveExerciseUp(index)
+  }
 
   const handleMoveExerciseDown = (index: number) => {
-    markCreateDraftDirty();
-    moveExerciseDown(index);
-  };
+    markCreateDraftDirty()
+    moveExerciseDown(index)
+  }
 
   const handleRemoveExercise = (index: number) => {
-    markCreateDraftDirty();
-    removeExercise(index);
-  };
+    markCreateDraftDirty()
+    removeExercise(index)
+  }
 
   const handleReplaceExercise = (index: number) => {
-    markCreateDraftDirty();
-    replaceExercise(index);
-  };
+    markCreateDraftDirty()
+    replaceExercise(index)
+  }
 
-  const handleUpdateExercise = (index: number, updatedExercise: Workout['exercises'][number]) => {
-    markCreateDraftDirty();
-    updateExercise(index, updatedExercise);
-  };
+  const handleUpdateExercise = (
+    index: number,
+    updatedExercise: Workout['exercises'][number],
+  ) => {
+    markCreateDraftDirty()
+    updateExercise(index, updatedExercise)
+  }
 
   const validateForm = () => {
-    const nextErrors = validateWorkoutForm(name, workoutExercises);
-    setErrors(nextErrors);
-    return Object.keys(nextErrors).length === 0;
-  };
+    const nextErrors = validateWorkoutForm(name, workoutExercises)
+    setErrors(nextErrors)
+    return Object.keys(nextErrors).length === 0
+  }
 
   const saveWorkout = (finishWorkout: boolean) => {
     if (!validateForm()) {
-      return;
+      return
     }
 
-    const existingWorkout = isEditing && id
-      ? workouts.find((workout) => workout.id === id)
-      : undefined;
+    const existingWorkout =
+      isEditing && id
+        ? workouts.find((workout) => workout.id === id)
+        : undefined
     const completedAt = finishWorkout
       ? new Date().toISOString()
       : existingWorkout?.isCompleted
         ? existingWorkout.completedAt
-        : undefined;
+        : undefined
 
     const workoutData: Omit<Workout, 'id' | 'createdAt' | 'updatedAt'> = {
       name: name.trim(),
       date,
       exercises: workoutExercises,
-      isCompleted: finishWorkout ? true : existingWorkout?.isCompleted ?? false,
+      isCompleted: finishWorkout
+        ? true
+        : (existingWorkout?.isCompleted ?? false),
       completedAt,
-    };
+    }
 
     if (isEditing && id) {
       if (existingWorkout) {
-        updateWorkout(id, workoutData);
+        updateWorkout(id, workoutData)
       }
     } else {
-      addWorkout(workoutData);
-      clearDraft();
+      addWorkout(workoutData)
+      clearDraft()
     }
 
-    navigate(finishWorkout ? '/workouts/completed' : '/workouts');
-  };
+    navigate(finishWorkout ? '/workouts/completed' : '/workouts')
+  }
 
   const handleCancel = () => {
     if (!isEditing) {
-      clearDraft();
+      clearDraft()
     }
 
-    navigate('/workouts');
-  };
+    navigate('/workouts')
+  }
 
   const handleEditExerciseFromWorkout = (exercise: Exercise) => {
     saveWorkoutFormDraft(location.pathname, {
       name,
       date,
       workoutExercises,
-    });
-    navigate(`/exercises/${exercise.id}/edit?returnTo=${encodeURIComponent(location.pathname)}`);
-  };
+    })
+    navigate(
+      `/exercises/${exercise.id}/edit?returnTo=${encodeURIComponent(location.pathname)}`,
+    )
+  }
 
   return (
     <div>
@@ -301,10 +322,7 @@ export function WorkoutEditPage() {
             emptyState={
               <Card className="p-12 text-center">
                 <p className="text-slate-500 mb-4">No exercises added yet</p>
-                <Button
-                  variant="outline"
-                  onClick={openAddExerciseSelector}
-                >
+                <Button variant="outline" onClick={openAddExerciseSelector}>
                   <Plus className="w-4 h-4 mr-2" />
                   Add Your First Exercise
                 </Button>
@@ -315,11 +333,19 @@ export function WorkoutEditPage() {
 
         <div className="pb-6">
           <div className="flex flex-col gap-3 sm:hidden">
-            <Button variant="outline" onClick={() => saveWorkout(false)} className="w-full">
+            <Button
+              variant="outline"
+              onClick={() => saveWorkout(false)}
+              className="w-full"
+            >
               <Save className="w-4 h-4 mr-2" />
               {isEditing ? 'Save Changes' : 'Create Workout'}
             </Button>
-            <Button variant="outline" onClick={() => saveWorkout(true)} className="w-full">
+            <Button
+              variant="outline"
+              onClick={() => saveWorkout(true)}
+              className="w-full"
+            >
               <Save className="w-4 h-4 mr-2" />
               Save and Finish Workout
             </Button>
@@ -331,11 +357,19 @@ export function WorkoutEditPage() {
             <Button variant="ghost" onClick={handleCancel} className="flex-1">
               Cancel
             </Button>
-            <Button variant="outline" onClick={() => saveWorkout(false)} className="flex-1">
+            <Button
+              variant="outline"
+              onClick={() => saveWorkout(false)}
+              className="flex-1"
+            >
               <Save className="w-4 h-4 mr-2" />
               {isEditing ? 'Save Changes' : 'Create Workout'}
             </Button>
-            <Button variant="outline" onClick={() => saveWorkout(true)} className="flex-1">
+            <Button
+              variant="outline"
+              onClick={() => saveWorkout(true)}
+              className="flex-1"
+            >
               <Save className="w-4 h-4 mr-2" />
               Save and Finish Workout
             </Button>
@@ -351,5 +385,5 @@ export function WorkoutEditPage() {
         initialFilterGroup={selectorInitialFilterGroup}
       />
     </div>
-  );
+  )
 }

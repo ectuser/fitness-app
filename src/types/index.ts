@@ -13,42 +13,42 @@ export type MuscleGroup =
   | 'Calves'
   | 'Arms (Legacy)'
   | 'Legs (Legacy)'
-  | 'None';
+  | 'None'
 
-export type WeightUnit = 'kg' | 'lb';
+export type WeightUnit = 'kg' | 'lb'
 
 export interface Exercise {
-  id: string;
-  name: string;
-  muscleGroups: MuscleGroup[];
-  comments?: string;
-  isCustom: boolean;
-  createdAt: string;
+  id: string
+  name: string
+  muscleGroups: Array<MuscleGroup>
+  comments?: string
+  isCustom: boolean
+  createdAt: string
 }
 
 export interface Set {
-  id: string;
-  weight: number;
-  weightUnit: WeightUnit;
-  reps: number;
+  id: string
+  weight: number
+  weightUnit: WeightUnit
+  reps: number
 }
 
 export interface WorkoutExercise {
-  exerciseId: string;
-  sets: Set[];
-  order: number;
-  comment?: string;
+  exerciseId: string
+  sets: Array<Set>
+  order: number
+  comment?: string
 }
 
 export interface Workout {
-  id: string;
-  name: string;
-  date: string; // YYYY-MM-DD format
-  exercises: WorkoutExercise[];
-  isCompleted: boolean;
-  completedAt?: string;
-  createdAt: string;
-  updatedAt: string;
+  id: string
+  name: string
+  date: string // YYYY-MM-DD format
+  exercises: Array<WorkoutExercise>
+  isCompleted: boolean
+  completedAt?: string
+  createdAt: string
+  updatedAt: string
 }
 
 // Note: Workouts can be in three states:
@@ -58,25 +58,25 @@ export interface Workout {
 // Only completed workouts contribute to exercise statistics.
 
 export interface Settings {
-  defaultWeightUnit: WeightUnit;
+  defaultWeightUnit: WeightUnit
 }
 
 // Derived types for UI display
 export interface ExerciseStats {
-  exerciseId: string;
-  maxWeight: number;
-  maxWeightReps: number;
-  maxWeightUnit: WeightUnit;
-  lastWeight?: number;
-  lastWeightReps?: number;
-  lastWeightUnit?: WeightUnit;
-  totalSets: number;
-  lastPerformed?: string;
+  exerciseId: string
+  maxWeight: number
+  maxWeightReps: number
+  maxWeightUnit: WeightUnit
+  lastWeight?: number
+  lastWeightReps?: number
+  lastWeightUnit?: WeightUnit
+  totalSets: number
+  lastPerformed?: string
 }
 
 export interface WorkoutHistory {
-  workoutId: string;
-  workoutName: string;
-  date: string;
-  setData: Set[];
+  workoutId: string
+  workoutName: string
+  date: string
+  setData: Array<Set>
 }

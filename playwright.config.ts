@@ -1,4 +1,4 @@
-import { defineConfig, devices } from '@playwright/test';
+import { defineConfig, devices } from '@playwright/test'
 
 /**
  * Read environment variables from file.
@@ -20,10 +20,7 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   /* Opt out of parallel tests on CI. */
   workers: 1,
-  reporter: [
-    ['list'],
-    ['html', { open: 'never' }],
-  ],
+  reporter: [['list'], ['html', { open: 'never' }]],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     baseURL: 'http://127.0.0.1:4173/',
@@ -41,8 +38,8 @@ export default defineConfig({
   ],
 
   webServer: {
-    command: 'npm run dev -- --host 127.0.0.1 --port 4173 --strictPort',
+    command: 'pnpm dev --host 127.0.0.1 --port 4173 --strictPort',
     url: 'http://127.0.0.1:4173/',
     reuseExistingServer: !process.env.CI,
   },
-});
+})

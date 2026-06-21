@@ -1,94 +1,118 @@
-import type { Exercise, Workout, WorkoutExercise } from '@/types';
+import type { Exercise, Workout, WorkoutExercise } from '@/types'
 
 export interface DuplicateWorkoutOptions {
-  createSetId?: () => string;
-  date?: string;
-  nameSuffix?: string;
+  createSetId?: () => string
+  date?: string
+  nameSuffix?: string
 }
 
-export function sortWorkoutsByDateAsc<T extends Pick<Workout, 'date'>>(workouts: T[]): T[] {
-  return [...workouts].sort((a, b) => a.date.localeCompare(b.date));
+export function sortWorkoutsByDateAsc<T extends Pick<Workout, 'date'>>(
+  workouts: Array<T>,
+): Array<T> {
+  return [...workouts].sort((a, b) => a.date.localeCompare(b.date))
 }
 
-export function sortWorkoutsByDateDesc<T extends Pick<Workout, 'date'>>(workouts: T[]): T[] {
-  return [...workouts].sort((a, b) => b.date.localeCompare(a.date));
+export function sortWorkoutsByDateDesc<T extends Pick<Workout, 'date'>>(
+  workouts: Array<T>,
+): Array<T> {
+  return [...workouts].sort((a, b) => b.date.localeCompare(a.date))
 }
 
-export function getUpcomingWorkouts(workouts: Workout[]): Workout[] {
-  return sortWorkoutsByDateAsc(workouts.filter((workout) => !workout.isCompleted));
+export function getUpcomingWorkouts(workouts: Array<Workout>): Array<Workout> {
+  return sortWorkoutsByDateAsc(
+    workouts.filter((workout) => !workout.isCompleted),
+  )
 }
 
-export function getCompletedWorkouts(workouts: Workout[]): Workout[] {
-  return sortWorkoutsByDateDesc(workouts.filter((workout) => workout.isCompleted));
+export function getCompletedWorkouts(workouts: Array<Workout>): Array<Workout> {
+  return sortWorkoutsByDateDesc(
+    workouts.filter((workout) => workout.isCompleted),
+  )
 }
 
-export function getNextWorkout(workouts: Workout[]): Workout | null {
-  const today = new Date().toISOString().split('T')[0];
-  const upcoming = getUpcomingWorkouts(workouts).filter((workout) => workout.date >= today);
-  return upcoming[0] ?? null;
+export function getNextWorkout(workouts: Array<Workout>): Workout | null {
+  const today = new Date().toISOString().split('T')[0]
+  const upcoming = getUpcomingWorkouts(workouts).filter(
+    (workout) => workout.date >= today,
+  )
+  return upcoming[0] ?? null
 }
 
-export function getWorkoutTotalSets(workout: Pick<Workout, 'exercises'>): number {
-  return workout.exercises.reduce((sum, exercise) => sum + exercise.sets.length, 0);
+export function getWorkoutTotalSets(
+  workout: Pick<Workout, 'exercises'>,
+): number {
+  return workout.exercises.reduce(
+    (sum, exercise) => sum + exercise.sets.length,
+    0,
+  )
 }
 
-export function getWorkoutExercises(workout: Pick<Workout, 'exercises'>, exercises: Exercise[]): Exercise[] {
+export function getWorkoutExercises(
+  workout: Pick<Workout, 'exercises'>,
+  exercises: Array<Exercise>,
+): Array<Exercise> {
   return workout.exercises
-    .map((workoutExercise) => exercises.find((exercise) => exercise.id === workoutExercise.exerciseId))
-    .filter((exercise): exercise is Exercise => exercise !== undefined);
+    .map((workoutExercise) =>
+      exercises.find((exercise) => exercise.id === workoutExercise.exerciseId),
+    )
+    .filter((exercise): exercise is Exercise => exercise !== undefined)
 }
 
 export function getWorkoutMuscleGroups(
   workout: Pick<Workout, 'exercises'>,
-  exercises: Exercise[]
+  exercises: Array<Exercise>,
 ) {
   return Array.from(
-    new Set(getWorkoutExercises(workout, exercises).flatMap((exercise) => exercise.muscleGroups))
-  );
+    new Set(
+      getWorkoutExercises(workout, exercises).flatMap(
+        (exercise) => exercise.muscleGroups,
+      ),
+    ),
+  )
 }
 
 export function formatWorkoutDate(
   dateString: string,
-  options: { includeYesterday?: boolean } = {}
+  options: { includeYesterday?: boolean } = {},
 ): string {
-  const date = new Date(`${dateString}T00:00:00`);
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  const date = new Date(`${dateString}T00:00:00`)
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
 
-  const tomorrow = new Date(today);
-  tomorrow.setDate(tomorrow.getDate() + 1);
+  const tomorrow = new Date(today)
+  tomorrow.setDate(tomorrow.getDate() + 1)
 
-  const yesterday = new Date(today);
-  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterday = new Date(today)
+  yesterday.setDate(yesterday.getDate() - 1)
 
   if (date.getTime() === today.getTime()) {
-    return 'Today';
+    return 'Today'
   }
 
   if (date.getTime() === tomorrow.getTime()) {
-    return 'Tomorrow';
+    return 'Tomorrow'
   }
 
   if (options.includeYesterday && date.getTime() === yesterday.getTime()) {
-    return 'Yesterday';
+    return 'Yesterday'
   }
 
   return date.toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
     year: date.getFullYear() !== today.getFullYear() ? 'numeric' : undefined,
-  });
+  })
 }
 
 export function duplicateWorkoutTemplate(
   workout: Pick<Workout, 'name' | 'date' | 'exercises'>,
-  options: DuplicateWorkoutOptions = {}
+  options: DuplicateWorkoutOptions = {},
 ) {
   const {
     createSetId = () => crypto.randomUUID(),
     date = new Date().toISOString().split('T')[0],
     nameSuffix = ' (Copy)',
-  } = options;
+  } = options
 
   return {
     name: `${workout.name}${nameSuffix}`,
@@ -102,5 +126,5 @@ export function duplicateWorkoutTemplate(
     })),
     isCompleted: false,
     completedAt: undefined,
-  };
+  }
 }

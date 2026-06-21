@@ -1,16 +1,16 @@
-import type { ReactNode } from 'react'
 import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
-import { DashboardDialogs } from '@/features/dashboard/DashboardDialogs'
-import { DashboardHeaderActions } from '@/features/dashboard/DashboardHeaderActions'
-import { NextWorkoutSection } from '@/features/dashboard/NextWorkoutSection'
-import { QuickStatsSection } from '@/features/dashboard/QuickStatsSection'
-import { UpcomingWorkoutsSection } from '@/features/dashboard/UpcomingWorkoutsSection'
 import {
   completedBenchWorkout,
   exercises,
   upcomingWorkout,
 } from '../../fixtures'
+import type { ReactNode } from 'react'
+import { DashboardDialogs } from '@/features/dashboard/DashboardDialogs'
+import { DashboardHeaderActions } from '@/features/dashboard/DashboardHeaderActions'
+import { NextWorkoutSection } from '@/features/dashboard/NextWorkoutSection'
+import { QuickStatsSection } from '@/features/dashboard/QuickStatsSection'
+import { UpcomingWorkoutsSection } from '@/features/dashboard/UpcomingWorkoutsSection'
 
 vi.mock('@/components/ui/dropdown-menu', () => ({
   DropdownMenu: ({ children }: { children: ReactNode }) => (

@@ -1,12 +1,16 @@
-import { describe, expect, it } from 'vitest';
-import { ALL_MUSCLE_GROUPS, getOrderedMuscleGroups, MUSCLE_GROUP_ORDER } from '@/features/exercise/exercise-helpers';
-import { exercises } from '../../fixtures';
+import { describe, expect, it } from 'vitest'
+import { exercises } from '../../fixtures'
+import {
+  ALL_MUSCLE_GROUPS,
+  MUSCLE_GROUP_ORDER,
+  getOrderedMuscleGroups,
+} from '@/features/exercise/exercise-helpers'
 
 describe('exercise helpers', () => {
   it('exports the supported muscle group lists', () => {
-    expect(ALL_MUSCLE_GROUPS).toContain('Chest');
-    expect(MUSCLE_GROUP_ORDER.at(-1)).toBe('None');
-  });
+    expect(ALL_MUSCLE_GROUPS).toContain('Chest')
+    expect(MUSCLE_GROUP_ORDER.at(-1)).toBe('None')
+  })
 
   it('returns unique muscle groups in display order', () => {
     expect(getOrderedMuscleGroups(exercises)).toEqual([
@@ -15,8 +19,8 @@ describe('exercise helpers', () => {
       'Core',
       'Biceps',
       'Triceps',
-    ]);
-  });
+    ])
+  })
 
   it('pushes unknown groups after known ones and sorts unknowns alphabetically', () => {
     expect(
@@ -25,7 +29,7 @@ describe('exercise helpers', () => {
           ...exercises[0],
           muscleGroups: ['Zulu' as never, 'Chest', 'Alpha' as never],
         },
-      ])
-    ).toEqual(['Chest', 'Alpha', 'Zulu']);
-  });
-});
+      ]),
+    ).toEqual(['Chest', 'Alpha', 'Zulu'])
+  })
+})

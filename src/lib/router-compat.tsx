@@ -1,11 +1,11 @@
-import type { AnchorHTMLAttributes, ComponentType, ReactNode } from 'react'
 import {
   Link as TanStackLink,
   useLocation,
+  useRouter,
   useNavigate as useTanStackNavigate,
   useParams as useTanStackParams,
-  useRouter,
 } from '@tanstack/react-router'
+import type { AnchorHTMLAttributes, ComponentType, ReactNode } from 'react'
 
 type NavigateOptions = {
   replace?: boolean

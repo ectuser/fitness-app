@@ -1,15 +1,15 @@
-import type { QueryClient } from '@tanstack/react-query';
 import {
   createExercise,
   deleteExercise,
   updateExercise,
-} from './exercise-source';
-import { exerciseQueryKeys } from './exercise-queries';
+} from './exercise-source'
+import { exerciseQueryKeys } from './exercise-queries'
+import type { QueryClient } from '@tanstack/react-query'
 import type {
   CreateExerciseInput,
   DeleteExerciseInput,
   UpdateExerciseInput,
-} from './exercise-source';
+} from './exercise-source'
 
 export const exerciseMutations = {
   create: (queryClient: QueryClient) => ({
@@ -17,7 +17,7 @@ export const exerciseMutations = {
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: exerciseQueryKeys.list(),
-      });
+      })
     },
   }),
   update: (queryClient: QueryClient) => ({
@@ -25,7 +25,7 @@ export const exerciseMutations = {
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: exerciseQueryKeys.list(),
-      });
+      })
     },
   }),
   delete: (queryClient: QueryClient) => ({
@@ -33,9 +33,9 @@ export const exerciseMutations = {
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: exerciseQueryKeys.list(),
-      });
+      })
     },
   }),
-};
+}
 
-export type { CreateExerciseInput, DeleteExerciseInput, UpdateExerciseInput };
+export type { CreateExerciseInput, DeleteExerciseInput, UpdateExerciseInput }

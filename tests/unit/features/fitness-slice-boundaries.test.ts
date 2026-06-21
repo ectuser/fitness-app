@@ -100,7 +100,9 @@ describe('fitness slice boundaries', () => {
           continue
         }
 
-        const aliasImport = target.replace(/^src/, '@').replace(/\.(ts|tsx)$/, '')
+        const aliasImport = target
+          .replace(/^src/, '@')
+          .replace(/\.(ts|tsx)$/, '')
 
         if (source.includes(`from '${aliasImport}'`)) {
           expect(source).toContain(`from '${relativeImport(file, target)}'`)

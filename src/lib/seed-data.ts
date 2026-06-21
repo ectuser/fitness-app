@@ -1,7 +1,7 @@
-import type { Exercise } from '@/types';
+import type { Exercise } from '@/types'
 
 // Preconfigured exercises that will be loaded on first app launch
-export const SEED_EXERCISES: Omit<Exercise, 'id' | 'createdAt'>[] = [
+export const SEED_EXERCISES: Array<Omit<Exercise, 'id' | 'createdAt'>> = [
   // Chest
   {
     name: 'Bench Press',
@@ -103,13 +103,13 @@ export const SEED_EXERCISES: Omit<Exercise, 'id' | 'createdAt'>[] = [
     isCustom: false,
     comments: 'Rotational core exercise',
   },
-];
+]
 
 // Helper function to initialize exercises with IDs and timestamps
-export function initializeSeedExercises(): Exercise[] {
+export function initializeSeedExercises(): Array<Exercise> {
   return SEED_EXERCISES.map((exercise) => ({
     ...exercise,
     id: crypto.randomUUID(),
     createdAt: new Date().toISOString(),
-  }));
+  }))
 }

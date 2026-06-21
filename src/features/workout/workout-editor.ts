@@ -1,28 +1,34 @@
-import { findLastWorkoutExercise } from '../training-history/training-history-projections';
-import type { Exercise, MuscleGroup, WeightUnit, Workout, WorkoutExercise } from '@/types';
+import { findLastWorkoutExercise } from '../training-history/training-history-projections'
+import type {
+  Exercise,
+  MuscleGroup,
+  WeightUnit,
+  Workout,
+  WorkoutExercise,
+} from '@/types'
 
 export function formatDefaultWorkoutName(date: Date): string {
   return date.toLocaleDateString('en-US', {
     weekday: 'short',
     month: 'long',
     day: 'numeric',
-  });
+  })
 }
 
-function normalizeWorkoutExercises(exercises: WorkoutExercise[]) {
+function normalizeWorkoutExercises(exercises: Array<WorkoutExercise>) {
   return exercises.map((exercise, index) => ({
     ...exercise,
     order: index,
-  }));
+  }))
 }
 
 function buildDefaultSets(
   exercise: Exercise,
-  workouts: Workout[],
+  workouts: Array<Workout>,
   defaultWeightUnit: WeightUnit,
-  createId = () => crypto.randomUUID()
+  createId = () => crypto.randomUUID(),
 ) {
-  const lastWorkoutExercise = findLastWorkoutExercise(exercise.id, workouts);
+  const lastWorkoutExercise = findLastWorkoutExercise(exercise.id, workouts)
 
   if (lastWorkoutExercise) {
     return {
@@ -33,7 +39,7 @@ function buildDefaultSets(
         reps: set.reps,
       })),
       comment: lastWorkoutExercise.comment ?? exercise.comments ?? '',
-    };
+    }
   }
 
   return {
@@ -46,103 +52,118 @@ function buildDefaultSets(
       },
     ],
     comment: exercise.comments ?? '',
-  };
+  }
 }
 
 export function createWorkoutExerciseFromExercise(
   exercise: Exercise,
-  workouts: Workout[],
+  workouts: Array<Workout>,
   defaultWeightUnit: WeightUnit,
   order: number,
-  createId = () => crypto.randomUUID()
+  createId = () => crypto.randomUUID(),
 ): WorkoutExercise {
-  const defaults = buildDefaultSets(exercise, workouts, defaultWeightUnit, createId);
+  const defaults = buildDefaultSets(
+    exercise,
+    workouts,
+    defaultWeightUnit,
+    createId,
+  )
 
   return {
     exerciseId: exercise.id,
     sets: defaults.sets,
     order,
     comment: defaults.comment,
-  };
+  }
 }
 
 export function addOrReplaceWorkoutExercise(
-  workoutExercises: WorkoutExercise[],
+  workoutExercises: Array<WorkoutExercise>,
   exercise: Exercise,
-  workouts: Workout[],
+  workouts: Array<Workout>,
   defaultWeightUnit: WeightUnit,
-  replacingExerciseIndex: number | null
-): WorkoutExercise[] {
+  replacingExerciseIndex: number | null,
+): Array<WorkoutExercise> {
   const nextExercise = createWorkoutExerciseFromExercise(
     exercise,
     workouts,
     defaultWeightUnit,
-    replacingExerciseIndex ?? workoutExercises.length
-  );
+    replacingExerciseIndex ?? workoutExercises.length,
+  )
 
   if (replacingExerciseIndex === null) {
-    return [...workoutExercises, nextExercise];
+    return [...workoutExercises, nextExercise]
   }
 
   return workoutExercises.map((workoutExercise, index) =>
-    index === replacingExerciseIndex ? nextExercise : workoutExercise
-  );
+    index === replacingExerciseIndex ? nextExercise : workoutExercise,
+  )
 }
 
-export function removeWorkoutExerciseAtIndex(workoutExercises: WorkoutExercise[], index: number) {
-  return normalizeWorkoutExercises(workoutExercises.filter((_, currentIndex) => currentIndex !== index));
+export function removeWorkoutExerciseAtIndex(
+  workoutExercises: Array<WorkoutExercise>,
+  index: number,
+) {
+  return normalizeWorkoutExercises(
+    workoutExercises.filter((_, currentIndex) => currentIndex !== index),
+  )
 }
 
 export function moveWorkoutExercise(
-  workoutExercises: WorkoutExercise[],
+  workoutExercises: Array<WorkoutExercise>,
   index: number,
-  direction: 'up' | 'down'
+  direction: 'up' | 'down',
 ) {
-  const nextIndex = direction === 'up' ? index - 1 : index + 1;
+  const nextIndex = direction === 'up' ? index - 1 : index + 1
 
   if (nextIndex < 0 || nextIndex >= workoutExercises.length) {
-    return workoutExercises;
+    return workoutExercises
   }
 
-  const updatedExercises = [...workoutExercises];
-  [updatedExercises[index], updatedExercises[nextIndex]] = [
+  const updatedExercises = [...workoutExercises]
+  ;[updatedExercises[index], updatedExercises[nextIndex]] = [
     updatedExercises[nextIndex],
     updatedExercises[index],
-  ];
+  ]
 
-  return normalizeWorkoutExercises(updatedExercises);
+  return normalizeWorkoutExercises(updatedExercises)
 }
 
 export function updateWorkoutExerciseAtIndex(
-  workoutExercises: WorkoutExercise[],
+  workoutExercises: Array<WorkoutExercise>,
   index: number,
-  updatedExercise: WorkoutExercise
+  updatedExercise: WorkoutExercise,
 ) {
   return workoutExercises.map((workoutExercise, currentIndex) =>
-    currentIndex === index ? updatedExercise : workoutExercise
-  );
+    currentIndex === index ? updatedExercise : workoutExercise,
+  )
 }
 
 export function getExerciseReplacementFilterGroup(
-  workoutExercises: WorkoutExercise[],
-  exercises: Exercise[],
-  index: number
+  workoutExercises: Array<WorkoutExercise>,
+  exercises: Array<Exercise>,
+  index: number,
 ): MuscleGroup | null {
-  const currentExerciseId = workoutExercises[index]?.exerciseId;
-  const currentExercise = exercises.find((exercise) => exercise.id === currentExerciseId);
-  return currentExercise?.muscleGroups[0] ?? null;
+  const currentExerciseId = workoutExercises[index]?.exerciseId
+  const currentExercise = exercises.find(
+    (exercise) => exercise.id === currentExerciseId,
+  )
+  return currentExercise?.muscleGroups[0] ?? null
 }
 
-export function validateWorkoutForm(name: string, workoutExercises: WorkoutExercise[]) {
-  const errors: { exercises?: string; name?: string } = {};
+export function validateWorkoutForm(
+  name: string,
+  workoutExercises: Array<WorkoutExercise>,
+) {
+  const errors: { exercises?: string; name?: string } = {}
 
   if (!name.trim()) {
-    errors.name = 'Workout name is required';
+    errors.name = 'Workout name is required'
   }
 
   if (workoutExercises.length === 0) {
-    errors.exercises = 'Add at least one exercise';
+    errors.exercises = 'Add at least one exercise'
   }
 
-  return errors;
+  return errors
 }

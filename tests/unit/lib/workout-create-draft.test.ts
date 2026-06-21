@@ -1,11 +1,11 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest'
 import {
+  WORKOUT_CREATE_DRAFT_TTL_MS,
   buildWorkoutCreateDraft,
   parseWorkoutCreateDraft,
-  WORKOUT_CREATE_DRAFT_TTL_MS,
-} from '@/features/workout/workout-create-draft';
+} from '@/features/workout/workout-create-draft'
 
-const now = new Date('2026-05-04T12:00:00.000Z');
+const now = new Date('2026-05-04T12:00:00.000Z')
 
 const draftInput = {
   name: 'Push Day',
@@ -25,23 +25,23 @@ const draftInput = {
       ],
     },
   ],
-};
+}
 
 describe('workout create draft helpers', () => {
   it('accepts valid non-expired draft', () => {
-    const draft = buildWorkoutCreateDraft(draftInput, now);
+    const draft = buildWorkoutCreateDraft(draftInput, now)
 
     expect(parseWorkoutCreateDraft(JSON.stringify(draft), now)).toEqual({
       status: 'valid',
       value: draft,
-    });
-  });
+    })
+  })
 
   it('rejects malformed JSON', () => {
     expect(parseWorkoutCreateDraft('{"name":"Push Day"', now)).toEqual({
       status: 'invalid',
-    });
-  });
+    })
+  })
 
   it('rejects schema-invalid data', () => {
     expect(
@@ -65,12 +65,12 @@ describe('workout create draft helpers', () => {
           ],
           updatedAt: now.toISOString(),
         }),
-        now
-      )
+        now,
+      ),
     ).toEqual({
       status: 'invalid',
-    });
-  });
+    })
+  })
 
   it('rejects drafts with unknown extra fields', () => {
     expect(
@@ -80,12 +80,12 @@ describe('workout create draft helpers', () => {
           updatedAt: now.toISOString(),
           unexpectedField: 'unexpected-value',
         }),
-        now
-      )
+        now,
+      ),
     ).toEqual({
       status: 'invalid',
-    });
-  });
+    })
+  })
 
   it('rejects invalid date format', () => {
     expect(
@@ -95,12 +95,12 @@ describe('workout create draft helpers', () => {
           date: '2026/05/04',
           updatedAt: now.toISOString(),
         }),
-        now
-      )
+        now,
+      ),
     ).toEqual({
       status: 'invalid',
-    });
-  });
+    })
+  })
 
   it('rejects impossible calendar dates', () => {
     expect(
@@ -110,11 +110,11 @@ describe('workout create draft helpers', () => {
           date: '2026-99-99',
           updatedAt: now.toISOString(),
         }),
-        now
-      )
+        now,
+      ),
     ).toEqual({
       status: 'invalid',
-    });
+    })
 
     expect(
       parseWorkoutCreateDraft(
@@ -123,15 +123,17 @@ describe('workout create draft helpers', () => {
           date: '2026-02-30',
           updatedAt: now.toISOString(),
         }),
-        now
-      )
+        now,
+      ),
     ).toEqual({
       status: 'invalid',
-    });
-  });
+    })
+  })
 
   it('accepts draft at exact TTL boundary', () => {
-    const boundaryUpdatedAt = new Date(now.getTime() - WORKOUT_CREATE_DRAFT_TTL_MS).toISOString();
+    const boundaryUpdatedAt = new Date(
+      now.getTime() - WORKOUT_CREATE_DRAFT_TTL_MS,
+    ).toISOString()
 
     expect(
       parseWorkoutCreateDraft(
@@ -139,19 +141,19 @@ describe('workout create draft helpers', () => {
           ...draftInput,
           updatedAt: boundaryUpdatedAt,
         }),
-        now
-      )
+        now,
+      ),
     ).toEqual({
       status: 'valid',
       value: {
         ...draftInput,
         updatedAt: boundaryUpdatedAt,
       },
-    });
-  });
+    })
+  })
 
   it('rejects future timestamp draft', () => {
-    const futureUpdatedAt = new Date(now.getTime() + 1).toISOString();
+    const futureUpdatedAt = new Date(now.getTime() + 1).toISOString()
 
     expect(
       parseWorkoutCreateDraft(
@@ -159,15 +161,17 @@ describe('workout create draft helpers', () => {
           ...draftInput,
           updatedAt: futureUpdatedAt,
         }),
-        now
-      )
+        now,
+      ),
     ).toEqual({
       status: 'invalid',
-    });
-  });
+    })
+  })
 
   it('rejects expired draft older than 7 days', () => {
-    const expiredAt = new Date(now.getTime() - WORKOUT_CREATE_DRAFT_TTL_MS - 1).toISOString();
+    const expiredAt = new Date(
+      now.getTime() - WORKOUT_CREATE_DRAFT_TTL_MS - 1,
+    ).toISOString()
 
     expect(
       parseWorkoutCreateDraft(
@@ -175,10 +179,10 @@ describe('workout create draft helpers', () => {
           ...draftInput,
           updatedAt: expiredAt,
         }),
-        now
-      )
+        now,
+      ),
     ).toEqual({
       status: 'expired',
-    });
-  });
-});
+    })
+  })
+})

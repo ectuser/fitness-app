@@ -1,13 +1,13 @@
-import { PageHeader } from '@/components/layout/PageHeader';
-import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
-import { useNavigate } from '@/lib/router-compat';
-import { Badge } from '@/components/ui/badge';
-import { useExercises } from './use-exercises';
+import { Plus } from 'lucide-react'
+import { useExercises } from './use-exercises'
+import { PageHeader } from '@/components/layout/PageHeader'
+import { Button } from '@/components/ui/button'
+import { useNavigate } from '@/lib/router-compat'
+import { Badge } from '@/components/ui/badge'
 
 export function ExercisesPage() {
-  const navigate = useNavigate();
-  const { exercises } = useExercises();
+  const navigate = useNavigate()
+  const { exercises } = useExercises()
 
   return (
     <div>
@@ -42,5 +42,5 @@ export function ExercisesPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }

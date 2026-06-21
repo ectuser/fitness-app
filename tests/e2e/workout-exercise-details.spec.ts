@@ -1,13 +1,15 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test'
 import {
-  seedAppStorage,
   buildExercise,
+  buildSet,
   buildWorkout,
   buildWorkoutExercise,
-  buildSet,
-} from './helpers/storage';
+  seedAppStorage,
+} from './helpers/storage'
 
-test('workout exercise details shows stats and allows editing comment', async ({ page }) => {
+test('workout exercise details shows stats and allows editing comment', async ({
+  page,
+}) => {
   await seedAppStorage(page, {
     exercises: [
       buildExercise({
@@ -43,35 +45,43 @@ test('workout exercise details shows stats and allows editing comment', async ({
       }),
     ],
     settings: { defaultWeightUnit: 'kg' },
-  });
+  })
 
-  await page.goto('/workouts/workout-details-active/session');
-  await expect(page.getByRole('heading', { name: 'Bench Press' })).toBeVisible();
+  await page.goto('/workouts/workout-details-active/session')
+  await expect(page.getByRole('heading', { name: 'Bench Press' })).toBeVisible()
 
-  await page.getByRole('button', { name: 'Details' }).click();
+  await page.getByRole('button', { name: 'Details' }).click()
 
-  await expect(page.getByText('Max:')).toBeVisible();
-  await expect(page.getByText('Last:')).toBeVisible();
-  await expect(page.locator('span', { hasText: '95 kg × 6' })).toHaveCount(2);
+  await expect(page.getByText('Max:')).toBeVisible()
+  await expect(page.getByText('Last:')).toBeVisible()
+  await expect(page.locator('span', { hasText: '95 kg × 6' })).toHaveCount(2)
 
-  const commentInput = page.getByLabel('Comment');
-  await expect(commentInput).toHaveValue('Keep scapula tight');
+  const commentInput = page.getByLabel('Comment')
+  await expect(commentInput).toHaveValue('Keep scapula tight')
 
-  const updatedComment = 'Keep elbows under the bar';
-  await commentInput.fill(updatedComment);
+  const updatedComment = 'Keep elbows under the bar'
+  await commentInput.fill(updatedComment)
 
-  await expect.poll(async () => {
-    return page.evaluate(() => {
-      const workouts = JSON.parse(localStorage.getItem('fitness-app-workouts') || '[]');
-      const workout = workouts.find((w: { id: string }) => w.id === 'workout-details-active');
-      return workout?.exercises?.[0]?.comment ?? null;
-    });
-  }).toBe(updatedComment);
+  await expect
+    .poll(async () => {
+      return page.evaluate(() => {
+        const workouts = JSON.parse(
+          localStorage.getItem('fitness-app-workouts') || '[]',
+        )
+        const workout = workouts.find(
+          (w: { id: string }) => w.id === 'workout-details-active',
+        )
+        return workout?.exercises?.[0]?.comment ?? null
+      })
+    })
+    .toBe(updatedComment)
 
-  await expect(commentInput).toHaveValue(updatedComment);
-});
+  await expect(commentInput).toHaveValue(updatedComment)
+})
 
-test('workout exercise details comment stays editable without exercise stats', async ({ page }) => {
+test('workout exercise details comment stays editable without exercise stats', async ({
+  page,
+}) => {
   await seedAppStorage(page, {
     exercises: [
       buildExercise({
@@ -95,23 +105,29 @@ test('workout exercise details comment stays editable without exercise stats', a
       }),
     ],
     settings: { defaultWeightUnit: 'kg' },
-  });
+  })
 
-  await page.goto('/workouts/workout-details-no-stats/session');
-  await page.getByRole('button', { name: 'Details' }).click();
+  await page.goto('/workouts/workout-details-no-stats/session')
+  await page.getByRole('button', { name: 'Details' }).click()
 
-  await expect(page.getByText('Max:')).toHaveCount(0);
-  await expect(page.getByText('Last:')).toHaveCount(0);
+  await expect(page.getByText('Max:')).toHaveCount(0)
+  await expect(page.getByText('Last:')).toHaveCount(0)
 
-  const commentInput = page.getByLabel('Comment');
-  const comment = 'Stay upright through the full range';
-  await commentInput.fill(comment);
+  const commentInput = page.getByLabel('Comment')
+  const comment = 'Stay upright through the full range'
+  await commentInput.fill(comment)
 
-  await expect.poll(async () => {
-    return page.evaluate(() => {
-      const workouts = JSON.parse(localStorage.getItem('fitness-app-workouts') || '[]');
-      const workout = workouts.find((w: { id: string }) => w.id === 'workout-details-no-stats');
-      return workout?.exercises?.[0]?.comment ?? null;
-    });
-  }).toBe(comment);
-});
+  await expect
+    .poll(async () => {
+      return page.evaluate(() => {
+        const workouts = JSON.parse(
+          localStorage.getItem('fitness-app-workouts') || '[]',
+        )
+        const workout = workouts.find(
+          (w: { id: string }) => w.id === 'workout-details-no-stats',
+        )
+        return workout?.exercises?.[0]?.comment ?? null
+      })
+    })
+    .toBe(comment)
+})

@@ -1,15 +1,15 @@
-import { queryOptions } from '@tanstack/react-query';
-import type { QueryKey } from '@tanstack/react-query';
+import { queryOptions } from '@tanstack/react-query'
+import type { QueryKey } from '@tanstack/react-query'
 
 type CreateQueryOptions<TData> = {
-  initialData?: TData | (() => TData);
-  staleTime?: number;
-};
+  initialData?: TData | (() => TData)
+  staleTime?: number
+}
 
 export function createQuery<TData, TQueryKey extends QueryKey>(
   queryKey: TQueryKey,
   queryFn: () => TData | Promise<TData>,
-  options?: CreateQueryOptions<TData>
+  options?: CreateQueryOptions<TData>,
 ) {
   if (options && 'initialData' in options) {
     return queryOptions({
@@ -17,7 +17,7 @@ export function createQuery<TData, TQueryKey extends QueryKey>(
       queryFn,
       initialData: options.initialData,
       staleTime: options.staleTime ?? Infinity,
-    });
+    })
   }
 
   return queryOptions({
@@ -25,5 +25,5 @@ export function createQuery<TData, TQueryKey extends QueryKey>(
     queryFn,
     initialData: queryFn as () => TData,
     staleTime: options?.staleTime ?? Infinity,
-  });
+  })
 }

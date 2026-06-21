@@ -13,9 +13,9 @@ import type { ImportPayload } from './dashboard-data'
 import type { Exercise, Settings, Workout } from '@/types'
 
 interface UseDashboardDataManagementOptions {
-  exercises: Exercise[]
+  exercises: Array<Exercise>
   settings: Settings
-  workouts: Workout[]
+  workouts: Array<Workout>
 }
 
 export function useDashboardDataManagement({

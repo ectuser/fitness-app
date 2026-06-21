@@ -1,9 +1,9 @@
 import { RefreshCw, X } from 'lucide-react'
 import { useState } from 'react'
+import { usePwaUpdateStatus } from './pwa-update-status'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { useNavigate } from '@/lib/router-compat'
-import { usePwaUpdateStatus } from './pwa-update-status'
 
 export function UpdateNotice() {
   const updateStatus = usePwaUpdateStatus()

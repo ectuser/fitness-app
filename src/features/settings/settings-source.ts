@@ -1,27 +1,32 @@
-import type { Settings } from '@/types';
-import { STORAGE_KEYS, getFromStorage, saveToStorage } from '@/lib/storage';
+import type { Settings } from '@/types'
+import { STORAGE_KEYS, getFromStorage, saveToStorage } from '@/lib/storage'
 
 export const DEFAULT_SETTINGS: Settings = {
   defaultWeightUnit: 'kg',
-};
+}
 
 export function readSettingsSnapshot(): Settings {
-  const settings = getFromStorage<Settings>(STORAGE_KEYS.SETTINGS, DEFAULT_SETTINGS);
+  const settings = getFromStorage<Settings>(
+    STORAGE_KEYS.SETTINGS,
+    DEFAULT_SETTINGS,
+  )
 
-  saveToStorage(STORAGE_KEYS.SETTINGS, settings);
+  saveToStorage(STORAGE_KEYS.SETTINGS, settings)
 
-  return settings;
+  return settings
 }
 
 export async function readSettings(): Promise<Settings> {
-  return readSettingsSnapshot();
+  return readSettingsSnapshot()
 }
 
-export async function updateSettings(updates: Partial<Settings>): Promise<Settings> {
-  const currentSettings = await readSettings();
-  const nextSettings = { ...currentSettings, ...updates };
+export async function updateSettings(
+  updates: Partial<Settings>,
+): Promise<Settings> {
+  const currentSettings = await readSettings()
+  const nextSettings = { ...currentSettings, ...updates }
 
-  saveToStorage(STORAGE_KEYS.SETTINGS, nextSettings);
+  saveToStorage(STORAGE_KEYS.SETTINGS, nextSettings)
 
-  return nextSettings;
+  return nextSettings
 }

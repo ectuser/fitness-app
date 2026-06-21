@@ -1,15 +1,19 @@
-import { ArrowLeft } from 'lucide-react';
-import { useNavigate } from '@/lib/router-compat';
-import { Button } from '@/components/ui/button';
+import { ArrowLeft } from 'lucide-react'
+import { useNavigate } from '@/lib/router-compat'
+import { Button } from '@/components/ui/button'
 
 interface PageHeaderProps {
-  title: string;
-  showBack?: boolean;
-  action?: React.ReactNode;
+  title: string
+  showBack?: boolean
+  action?: React.ReactNode
 }
 
-export function PageHeader({ title, showBack = false, action }: PageHeaderProps) {
-  const navigate = useNavigate();
+export function PageHeader({
+  title,
+  showBack = false,
+  action,
+}: PageHeaderProps) {
+  const navigate = useNavigate()
 
   return (
     <div className="bg-white border-b border-slate-200">
@@ -32,5 +36,5 @@ export function PageHeader({ title, showBack = false, action }: PageHeaderProps)
         </div>
       </div>
     </div>
-  );
+  )
 }

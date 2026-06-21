@@ -5,7 +5,9 @@ import {
   createRootRouteWithContext,
 } from '@tanstack/react-router'
 import { useEffect, useRef, useState } from 'react'
+import appCss from '../styles.css?url'
 import type { ReactNode } from 'react'
+import type { QueryClient } from '@tanstack/react-query'
 import { MainLayout } from '@/components/layout/MainLayout'
 import { PwaUpdateStatusProvider } from '@/features/app-update/pwa-update-status'
 import { STORAGE_KEYS, getFromStorage, saveToStorage } from '@/lib/storage'
@@ -13,9 +15,7 @@ import { useLocation, useNavigate } from '@/lib/router-compat'
 
 import { getLocale } from '#/paraglide/runtime'
 
-import appCss from '../styles.css?url'
 
-import type { QueryClient } from '@tanstack/react-query'
 
 interface MyRouterContext {
   queryClient: QueryClient

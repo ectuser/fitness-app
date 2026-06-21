@@ -1,16 +1,16 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test'
 import {
-  seedAppStorage,
   buildExercise,
+  buildSet,
   buildWorkout,
   buildWorkoutExercise,
-  buildSet,
-} from './helpers/storage';
+  seedAppStorage,
+} from './helpers/storage'
 
 test('dashboard shows next workout, coming workouts, show all, and start workout entrypoints', async ({
   page,
 }) => {
-  await page.clock.setFixedTime(new Date('2026-05-04T12:00:00.000Z'));
+  await page.clock.setFixedTime(new Date('2026-05-04T12:00:00.000Z'))
 
   await seedAppStorage(page, {
     exercises: [
@@ -85,25 +85,29 @@ test('dashboard shows next workout, coming workouts, show all, and start workout
       }),
     ],
     settings: { defaultWeightUnit: 'kg' },
-  });
+  })
 
-  await page.goto('');
-  await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
+  await page.goto('')
+  await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible()
 
-  await expect(page.getByText('Earliest Workout')).toBeVisible();
-  await expect(page.getByText('Second Workout')).toBeVisible();
-  await expect(page.getByText('Third Workout')).toBeVisible();
-  await expect(page.getByText('Fourth Workout')).toBeVisible();
-  await expect(page.getByText('Fifth Workout')).toBeVisible();
+  await expect(page.getByText('Earliest Workout')).toBeVisible()
+  await expect(page.getByText('Second Workout')).toBeVisible()
+  await expect(page.getByText('Third Workout')).toBeVisible()
+  await expect(page.getByText('Fourth Workout')).toBeVisible()
+  await expect(page.getByText('Fifth Workout')).toBeVisible()
 
-  await page.getByRole('button', { name: 'Show All' }).click();
-  await expect(page.getByRole('heading', { name: 'Workouts' })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Earliest Workout' })).toBeVisible();
+  await page.getByRole('button', { name: 'Show All' }).click()
+  await expect(page.getByRole('heading', { name: 'Workouts' })).toBeVisible()
+  await expect(
+    page.getByRole('heading', { name: 'Earliest Workout' }),
+  ).toBeVisible()
 
-  await page.goto('/');
-  await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
+  await page.goto('/')
+  await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible()
 
-  await page.getByRole('button', { name: 'Start Workout' }).click();
-  await expect(page).toHaveURL(/\/workouts\/dashboard-workout-1\/session$/);
-  await expect(page.getByRole('heading', { name: 'Earliest Workout' })).toBeVisible();
-});
+  await page.getByRole('button', { name: 'Start Workout' }).click()
+  await expect(page).toHaveURL(/\/workouts\/dashboard-workout-1\/session$/)
+  await expect(
+    page.getByRole('heading', { name: 'Earliest Workout' }),
+  ).toBeVisible()
+})

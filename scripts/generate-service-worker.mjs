@@ -24,4 +24,6 @@ for (const warning of warnings) {
   console.warn(warning)
 }
 
-console.log(`Generated service worker precaching ${count} files (${size} bytes).`)
+console.log(
+  `Generated service worker precaching ${count} files (${size} bytes).`,
+)

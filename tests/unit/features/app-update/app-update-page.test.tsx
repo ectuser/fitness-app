@@ -48,7 +48,9 @@ describe('AppUpdatePage', () => {
 
     expect(screen.getByText('Update checks are unavailable')).toBeVisible()
     expect(
-      screen.getByText(/this browser environment cannot check for app updates/i),
+      screen.getByText(
+        /this browser environment cannot check for app updates/i,
+      ),
     ).toBeVisible()
     expect(screen.queryByRole('button', { name: 'Update now' })).toBeNull()
     expect(screen.getByText('Current version: local')).toBeVisible()

@@ -1,14 +1,15 @@
-import { useParams, useNavigate } from '@/lib/router-compat';
-import { useWorkouts } from '../workout/use-workouts';
+import { Edit, Trash2 } from 'lucide-react'
+import { useWorkouts } from '../workout/use-workouts'
 import {
   useExerciseHistory,
   useExerciseStats,
-} from '../training-history/use-training-history';
-import { PageHeader } from '@/components/layout/PageHeader';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Card } from '@/components/ui/card';
-import { Edit, Trash2 } from 'lucide-react';
+} from '../training-history/use-training-history'
+import { useExercises } from './use-exercises'
+import { useNavigate, useParams } from '@/lib/router-compat'
+import { PageHeader } from '@/components/layout/PageHeader'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Card } from '@/components/ui/card'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,39 +20,44 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
-import { useExercises } from './use-exercises';
+} from '@/components/ui/alert-dialog'
 
 export function ExerciseDetailPage() {
-  const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
-  const { exercises, deleteExercise } = useExercises();
-  const { workouts } = useWorkouts();
+  const { id } = useParams<{ id: string }>()
+  const navigate = useNavigate()
+  const { exercises, deleteExercise } = useExercises()
+  const { workouts } = useWorkouts()
 
-  const exercise = exercises.find((e) => e.id === id);
-  const stats = useExerciseStats(id || '', workouts);
-  const history = useExerciseHistory(id || '', workouts);
+  const exercise = exercises.find((e) => e.id === id)
+  const stats = useExerciseStats(id || '', workouts)
+  const history = useExerciseHistory(id || '', workouts)
 
   if (!exercise) {
     return (
       <div>
         <PageHeader title="Exercise Not Found" showBack />
         <div className="container mx-auto px-4 py-12 text-center">
-          <p className="text-slate-600 mb-4">This exercise could not be found.</p>
-          <Button onClick={() => navigate('/exercises')}>Back to Exercises</Button>
+          <p className="text-slate-600 mb-4">
+            This exercise could not be found.
+          </p>
+          <Button onClick={() => navigate('/exercises')}>
+            Back to Exercises
+          </Button>
         </div>
       </div>
-    );
+    )
   }
 
   const handleDelete = async () => {
     try {
-      await deleteExercise(exercise.id);
-      navigate('/exercises');
+      await deleteExercise(exercise.id)
+      navigate('/exercises')
     } catch (error) {
-      alert(error instanceof Error ? error.message : 'Failed to delete exercise');
+      alert(
+        error instanceof Error ? error.message : 'Failed to delete exercise',
+      )
     }
-  };
+  }
 
   return (
     <div>
@@ -78,17 +84,21 @@ export function ExerciseDetailPage() {
                   <AlertDialogHeader>
                     <AlertDialogTitle>Delete Exercise?</AlertDialogTitle>
                     <AlertDialogDescription>
-                      This will permanently delete &quot;{exercise.name}&quot;. This action cannot be undone.
+                      This will permanently delete &quot;{exercise.name}&quot;.
+                      This action cannot be undone.
                       {history.length > 0 && (
                         <p className="mt-2 text-red-600 font-medium">
-                          Warning: This exercise has been used in {history.length} workout(s).
+                          Warning: This exercise has been used in{' '}
+                          {history.length} workout(s).
                         </p>
                       )}
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
+                    <AlertDialogAction onClick={handleDelete}>
+                      Delete
+                    </AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
               </AlertDialog>
@@ -152,7 +162,8 @@ export function ExerciseDetailPage() {
             </div>
           ) : (
             <Card className="p-6 text-center text-slate-500">
-              No statistics available yet. Complete a workout with this exercise to see stats!
+              No statistics available yet. Complete a workout with this exercise
+              to see stats!
             </Card>
           )}
         </div>
@@ -169,7 +180,9 @@ export function ExerciseDetailPage() {
                       <h3 className="font-semibold">{workout.workoutName}</h3>
                       <p className="text-sm text-slate-600">{workout.date}</p>
                     </div>
-                    <Badge variant="secondary">{workout.setData.length} sets</Badge>
+                    <Badge variant="secondary">
+                      {workout.setData.length} sets
+                    </Badge>
                   </div>
                   <div className="space-y-1">
                     {workout.setData.map((set, idx) => (
@@ -189,11 +202,12 @@ export function ExerciseDetailPage() {
             </div>
           ) : (
             <Card className="p-6 text-center text-slate-500">
-              No workout history yet. This exercise hasn&apos;t been used in any completed workouts.
+              No workout history yet. This exercise hasn&apos;t been used in any
+              completed workouts.
             </Card>
           )}
         </div>
       </div>
     </div>
-  );
+  )
 }

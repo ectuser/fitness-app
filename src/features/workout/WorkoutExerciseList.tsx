@@ -1,17 +1,17 @@
-import type { ReactNode } from 'react';
-import type { Exercise, WorkoutExercise } from '@/types';
-import { WorkoutExerciseCard } from './WorkoutExerciseCard';
+import { WorkoutExerciseCard } from './WorkoutExerciseCard'
+import type { ReactNode } from 'react'
+import type { Exercise, WorkoutExercise } from '@/types'
 
 interface WorkoutExerciseListProps {
-  emptyState: ReactNode;
-  exercises: Exercise[];
-  onChangeExercise: (index: number, updatedExercise: WorkoutExercise) => void;
-  onEditExercise?: (exercise: Exercise) => void;
-  onMoveExerciseDown: (index: number) => void;
-  onMoveExerciseUp: (index: number) => void;
-  onRemoveExercise: (index: number) => void;
-  onReplaceExercise: (index: number) => void;
-  workoutExercises: WorkoutExercise[];
+  emptyState: ReactNode
+  exercises: Array<Exercise>
+  onChangeExercise: (index: number, updatedExercise: WorkoutExercise) => void
+  onEditExercise?: (exercise: Exercise) => void
+  onMoveExerciseDown: (index: number) => void
+  onMoveExerciseUp: (index: number) => void
+  onRemoveExercise: (index: number) => void
+  onReplaceExercise: (index: number) => void
+  workoutExercises: Array<WorkoutExercise>
 }
 
 export function WorkoutExerciseList({
@@ -26,16 +26,18 @@ export function WorkoutExerciseList({
   workoutExercises,
 }: WorkoutExerciseListProps) {
   if (workoutExercises.length === 0) {
-    return emptyState;
+    return emptyState
   }
 
   return (
     <div className="space-y-4">
       {workoutExercises.map((workoutExercise, index) => {
-        const exercise = exercises.find((entry) => entry.id === workoutExercise.exerciseId);
+        const exercise = exercises.find(
+          (entry) => entry.id === workoutExercise.exerciseId,
+        )
 
         if (!exercise) {
-          return null;
+          return null
         }
 
         return (
@@ -45,15 +47,17 @@ export function WorkoutExerciseList({
             exercise={exercise}
             index={index}
             totalCount={workoutExercises.length}
-            onChange={(updatedExercise) => onChangeExercise(index, updatedExercise)}
+            onChange={(updatedExercise) =>
+              onChangeExercise(index, updatedExercise)
+            }
             onEditExercise={onEditExercise}
             onRemove={() => onRemoveExercise(index)}
             onMoveUp={() => onMoveExerciseUp(index)}
             onMoveDown={() => onMoveExerciseDown(index)}
             onReplace={() => onReplaceExercise(index)}
           />
-        );
+        )
       })}
     </div>
-  );
+  )
 }

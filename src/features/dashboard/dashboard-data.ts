@@ -1,12 +1,12 @@
 import { createDefaultExerciseCatalog } from '../exercise/exercise-source'
 import { DEFAULT_SETTINGS } from '../settings/settings-source'
+import type { Exercise, Settings, Workout } from '@/types'
 import { migrateExercises } from '@/lib/migrations'
 import { STORAGE_KEYS, removeFromStorage, saveToStorage } from '@/lib/storage'
-import type { Exercise, Settings, Workout } from '@/types'
 
 export interface ImportPayload {
-  exercises: Exercise[]
-  workouts: Workout[]
+  exercises: Array<Exercise>
+  workouts: Array<Workout>
   settings?: Settings
 }
 

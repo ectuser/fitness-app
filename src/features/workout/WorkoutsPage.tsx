@@ -1,41 +1,42 @@
-import { PageHeader } from '@/components/layout/PageHeader';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Plus } from 'lucide-react';
-import { useNavigate } from '@/lib/router-compat';
-import { useExercises } from '../exercise/use-exercises';
-import { useWorkouts } from './use-workouts';
-import { WorkoutList } from './WorkoutList';
-import { getUpcomingWorkouts } from './workout-helpers';
+import { Plus } from 'lucide-react'
+import { useExercises } from '../exercise/use-exercises'
+import { useWorkouts } from './use-workouts'
+import { WorkoutList } from './WorkoutList'
+import { getUpcomingWorkouts } from './workout-helpers'
+import { useNavigate } from '@/lib/router-compat'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { PageHeader } from '@/components/layout/PageHeader'
 
 export function WorkoutsPage() {
-  const navigate = useNavigate();
-  const { exercises } = useExercises();
-  const { workouts, deleteWorkout, duplicateWorkout, toggleWorkoutComplete } = useWorkouts();
+  const navigate = useNavigate()
+  const { exercises } = useExercises()
+  const { workouts, deleteWorkout, duplicateWorkout, toggleWorkoutComplete } =
+    useWorkouts()
 
-  const upcomingWorkouts = getUpcomingWorkouts(workouts);
+  const upcomingWorkouts = getUpcomingWorkouts(workouts)
 
   const handleStart = (workoutId: string) => {
-    navigate(`/workouts/${workoutId}/session`);
-  };
+    navigate(`/workouts/${workoutId}/session`)
+  }
 
   const handleEdit = (workoutId: string) => {
-    navigate(`/workouts/${workoutId}/edit`);
-  };
+    navigate(`/workouts/${workoutId}/edit`)
+  }
 
   const handleDuplicate = (workoutId: string) => {
     duplicateWorkout(workoutId, {
       date: new Date().toISOString().split('T')[0],
-    });
-  };
+    })
+  }
 
   const handleDelete = (workoutId: string) => {
-    deleteWorkout(workoutId);
-  };
+    deleteWorkout(workoutId)
+  }
 
   const handleToggleComplete = (workoutId: string) => {
-    toggleWorkoutComplete(workoutId);
-  };
+    toggleWorkoutComplete(workoutId)
+  }
 
   return (
     <div>
@@ -84,5 +85,5 @@ export function WorkoutsPage() {
         )}
       </div>
     </div>
-  );
+  )
 }

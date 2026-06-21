@@ -1,7 +1,7 @@
+import type { Exercise, Settings, Workout } from '@/types'
 import { readExerciseCatalogSnapshot } from '@/features/exercise/exercise-source'
 import { readWorkoutLibrarySnapshot } from '@/features/workout/workout-source'
 import { readSettingsSnapshot } from '@/features/settings/settings-source'
-import type { Exercise, Settings, Workout } from '@/types'
 
 export {
   createWorkoutRecord,
@@ -13,9 +13,9 @@ export {
 } from '@/features/workout/workout-source'
 
 export interface FitnessDataState {
-  exercises: Exercise[]
+  exercises: Array<Exercise>
   settings: Settings
-  workouts: Workout[]
+  workouts: Array<Workout>
 }
 
 export function loadFitnessData(): FitnessDataState {

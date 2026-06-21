@@ -1,14 +1,14 @@
 import { describe, expect, it } from 'vitest'
 import {
-  buildExerciseHistory,
-  calculateExerciseStats,
-  findLastWorkoutExercise,
-} from '@/features/training-history/training-history-projections'
-import {
   completedBenchWorkout,
   completedRowWorkout,
   upcomingWorkout,
 } from '../../fixtures'
+import {
+  buildExerciseHistory,
+  calculateExerciseStats,
+  findLastWorkoutExercise,
+} from '@/features/training-history/training-history-projections'
 
 describe('exercise stats helpers', () => {
   it('calculates stats from completed workouts only', () => {

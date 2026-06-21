@@ -1,46 +1,50 @@
-import { useState } from 'react';
-import type { Exercise, MuscleGroup } from '@/types';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
-import { X } from 'lucide-react';
-import { ALL_MUSCLE_GROUPS } from './exercise-helpers';
+import { useState } from 'react'
+import { X } from 'lucide-react'
+import { ALL_MUSCLE_GROUPS } from './exercise-helpers'
+import type { Exercise, MuscleGroup } from '@/types'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Badge } from '@/components/ui/badge'
 
 interface ExerciseFormProps {
-  exercise?: Exercise;
-  onSave: (exercise: Omit<Exercise, 'id' | 'createdAt'>) => void | Promise<void>;
-  onCancel: () => void;
+  exercise?: Exercise
+  onSave: (exercise: Omit<Exercise, 'id' | 'createdAt'>) => void | Promise<void>
+  onCancel: () => void
 }
 
-export function ExerciseForm({ exercise, onSave, onCancel }: ExerciseFormProps) {
-  const [name, setName] = useState(exercise?.name || '');
-  const [selectedMuscles, setSelectedMuscles] = useState<MuscleGroup[]>(
-    exercise?.muscleGroups || []
-  );
-  const [comments, setComments] = useState(exercise?.comments || '');
-  const [error, setError] = useState('');
+export function ExerciseForm({
+  exercise,
+  onSave,
+  onCancel,
+}: ExerciseFormProps) {
+  const [name, setName] = useState(exercise?.name || '')
+  const [selectedMuscles, setSelectedMuscles] = useState<Array<MuscleGroup>>(
+    exercise?.muscleGroups || [],
+  )
+  const [comments, setComments] = useState(exercise?.comments || '')
+  const [error, setError] = useState('')
 
   const toggleMuscle = (muscle: MuscleGroup) => {
     setSelectedMuscles((prev) =>
       prev.includes(muscle)
         ? prev.filter((m) => m !== muscle)
-        : [...prev, muscle]
-    );
-  };
+        : [...prev, muscle],
+    )
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
+    e.preventDefault()
+    setError('')
 
     if (!name.trim()) {
-      setError('Exercise name is required');
-      return;
+      setError('Exercise name is required')
+      return
     }
 
     if (selectedMuscles.length === 0) {
-      setError('Please select at least one muscle group');
-      return;
+      setError('Please select at least one muscle group')
+      return
     }
 
     onSave({
@@ -48,8 +52,8 @@ export function ExerciseForm({ exercise, onSave, onCancel }: ExerciseFormProps) 
       muscleGroups: selectedMuscles,
       comments: comments.trim() || undefined,
       isCustom: true,
-    });
-  };
+    })
+  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -74,7 +78,7 @@ export function ExerciseForm({ exercise, onSave, onCancel }: ExerciseFormProps) 
         <Label>Muscle Groups</Label>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
           {ALL_MUSCLE_GROUPS.map((muscle) => {
-            const isSelected = selectedMuscles.includes(muscle);
+            const isSelected = selectedMuscles.includes(muscle)
             return (
               <button
                 key={muscle}
@@ -88,7 +92,7 @@ export function ExerciseForm({ exercise, onSave, onCancel }: ExerciseFormProps) 
               >
                 {muscle}
               </button>
-            );
+            )
           })}
         </div>
         {selectedMuscles.length > 0 && (
@@ -134,5 +138,5 @@ export function ExerciseForm({ exercise, onSave, onCancel }: ExerciseFormProps) 
         </Button>
       </div>
     </form>
-  );
+  )
 }

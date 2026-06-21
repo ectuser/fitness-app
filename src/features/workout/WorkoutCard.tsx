@@ -1,19 +1,23 @@
-import { Badge } from '@/components/ui/badge';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { formatWorkoutDate, getWorkoutMuscleGroups, getWorkoutTotalSets } from './workout-helpers';
-import { Calendar, Play } from 'lucide-react';
-import type { Workout, Exercise } from '@/types';
-import { WorkoutMenu } from './WorkoutMenu';
+import { Calendar, Play } from 'lucide-react'
+import {
+  formatWorkoutDate,
+  getWorkoutMuscleGroups,
+  getWorkoutTotalSets,
+} from './workout-helpers'
+import { WorkoutMenu } from './WorkoutMenu'
+import type { Exercise, Workout } from '@/types'
+import { Badge } from '@/components/ui/badge'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 
 interface WorkoutCardProps {
-  workout: Workout;
-  exercises: Exercise[];
-  onStart: () => void;
-  onEdit: () => void;
-  onDuplicate: () => void;
-  onDelete: () => void;
-  onToggleComplete: () => void;
+  workout: Workout
+  exercises: Array<Exercise>
+  onStart: () => void
+  onEdit: () => void
+  onDuplicate: () => void
+  onDelete: () => void
+  onToggleComplete: () => void
 }
 
 export function WorkoutCard({
@@ -25,8 +29,8 @@ export function WorkoutCard({
   onDelete,
   onToggleComplete,
 }: WorkoutCardProps) {
-  const muscleGroups = getWorkoutMuscleGroups(workout, exercises);
-  const totalSets = getWorkoutTotalSets(workout);
+  const muscleGroups = getWorkoutMuscleGroups(workout, exercises)
+  const totalSets = getWorkoutTotalSets(workout)
 
   return (
     <Card className="p-4 hover:shadow-md transition-shadow">
@@ -42,7 +46,9 @@ export function WorkoutCard({
           </div>
           <div className="flex items-center gap-1 text-sm text-slate-600">
             <Calendar className="w-4 h-4" />
-            <span>{formatWorkoutDate(workout.date, { includeYesterday: true })}</span>
+            <span>
+              {formatWorkoutDate(workout.date, { includeYesterday: true })}
+            </span>
           </div>
         </div>
 
@@ -65,8 +71,9 @@ export function WorkoutCard({
         </div>
 
         <div className="text-sm text-slate-600">
-          {workout.exercises.length} exercise{workout.exercises.length !== 1 ? 's' : ''}{' '}
-          • {totalSets} set{totalSets !== 1 ? 's' : ''}
+          {workout.exercises.length} exercise
+          {workout.exercises.length !== 1 ? 's' : ''} • {totalSets} set
+          {totalSets !== 1 ? 's' : ''}
         </div>
 
         {!workout.isCompleted && (
@@ -77,5 +84,5 @@ export function WorkoutCard({
         )}
       </div>
     </Card>
-  );
+  )
 }

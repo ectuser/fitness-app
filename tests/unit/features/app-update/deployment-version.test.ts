@@ -8,10 +8,7 @@ describe('formatDeploymentVersion', () => {
 
   it('truncates a full commit sha to seven characters', () => {
     expect(
-      formatDeploymentVersion(
-        '42',
-        'a1b2c3d4e5f6789012345678901234567890abcd',
-      ),
+      formatDeploymentVersion('42', 'a1b2c3d4e5f6789012345678901234567890abcd'),
     ).toBe('42-a1b2c3d')
   })
 
