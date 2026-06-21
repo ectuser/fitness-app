@@ -37,7 +37,7 @@ const config = defineConfig({
         : undefined,
     ),
     VitePWA({
-      registerType: 'prompt',
+      registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'logo192.png', 'logo512.png'],
       manifest: {
         short_name: 'Fitness',
@@ -65,8 +65,8 @@ const config = defineConfig({
         background_color: '#ffffff',
       },
       workbox: {
-        clientsClaim: false,
-        skipWaiting: false,
+        clientsClaim: true,
+        skipWaiting: true,
       },
     }),
     viteReact(),
