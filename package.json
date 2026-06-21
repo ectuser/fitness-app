@@ -14,7 +14,7 @@
     "build": "vite build",
     "postbuild": "node scripts/generate-service-worker.mjs",
     "preview": "vite preview",
-    "test": "vitest run",
+    "test": "pnpm paraglide && vitest run",
     "test:e2e": "playwright test --project=chromium",
     "test:e2e:headed": "playwright test --project=chromium --headed",
     "lint": "eslint",

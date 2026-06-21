@@ -65,7 +65,7 @@ jobs:
             "Critical: \(.critical), High: \(.high), Moderate: \(.moderate), Low: \(.low)"
           ' audit.json)
           audit_findings=$(jq -r '
-            .vulnerabilities | to_entries |
+            (.vulnerabilities // {}) | to_entries |
             if length == 0 then "No vulnerabilities found."
             else
               map("- **\(.value.severity | ascii_upcase)** `\(.key)`: " +
