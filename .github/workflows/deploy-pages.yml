@@ -99,6 +99,29 @@ jobs:
           cp dist/client/index.html dist/client/404.html
           cp -R dist/client/. ../pages/
 
+      - name: Exclude PR previews from production service worker
+        if: github.event_name == 'pull_request'
+        run: |
+          node --input-type=module <<'EOF'
+          import { readFile, writeFile } from 'node:fs/promises'
+
+          const serviceWorkerPath = 'pages/sw.js'
+          const serviceWorker = await readFile(serviceWorkerPath, 'utf8')
+          const navigationRoute =
+            'new e.NavigationRoute(e.createHandlerBoundToURL("index.html"))'
+          const patchedNavigationRoute =
+            'new e.NavigationRoute(e.createHandlerBoundToURL("index.html"),{denylist:[/\\/pr-\\d+\\//]})'
+
+          if (!serviceWorker.includes(navigationRoute)) {
+            throw new Error('Could not find production navigation route in sw.js')
+          }
+
+          await writeFile(
+            serviceWorkerPath,
+            serviceWorker.replace(navigationRoute, patchedNavigationRoute),
+          )
+          EOF
+
       - name: Publish to GitHub Pages branch
         shell: bash
         run: |
