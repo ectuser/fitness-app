@@ -1,5 +1,8 @@
 import { createDefaultExerciseCatalog } from '../exercise/exercise-source'
-import { DEFAULT_SETTINGS } from '../settings/settings-source'
+import {
+  DEFAULT_SETTINGS,
+  readSettingsSnapshot,
+} from '../settings/settings-source'
 import type { Exercise, Settings, Workout } from '@/types'
 import { migrateExercises } from '@/lib/migrations'
 import { STORAGE_KEYS, removeFromStorage, saveToStorage } from '@/lib/storage'
@@ -53,9 +56,12 @@ export function importDashboardData(data: ImportPayload): void {
   saveToStorage(STORAGE_KEYS.EXERCISES, migrateExercises(data.exercises))
   saveToStorage(STORAGE_KEYS.WORKOUTS, data.workouts)
 
-  if (data.settings) {
-    saveToStorage(STORAGE_KEYS.SETTINGS, data.settings)
-  }
+  saveToStorage(
+    STORAGE_KEYS.SETTINGS,
+    data.settings
+      ? { ...DEFAULT_SETTINGS, ...data.settings }
+      : readSettingsSnapshot(),
+  )
 }
 
 export function resetDashboardData(): Required<ImportPayload> {

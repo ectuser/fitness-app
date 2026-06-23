@@ -28,10 +28,13 @@ describe('settings data feature', () => {
   it('reads stored settings asynchronously', async () => {
     localStorage.setItem(
       STORAGE_KEYS.SETTINGS,
-      JSON.stringify({ defaultWeightUnit: 'lb' }),
+      JSON.stringify({ themeMode: 'dark' }),
     )
 
-    await expect(readSettings()).resolves.toEqual({ defaultWeightUnit: 'lb' })
+    await expect(readSettings()).resolves.toEqual({
+      defaultWeightUnit: 'kg',
+      themeMode: 'dark',
+    })
   })
 
   it('updates stored settings asynchronously by merging with the current settings', async () => {
@@ -43,11 +46,15 @@ describe('settings data feature', () => {
     const settingsRequest = updateSettings({ defaultWeightUnit: 'lb' })
 
     expect(settingsRequest).toBeInstanceOf(Promise)
-    await expect(settingsRequest).resolves.toEqual({ defaultWeightUnit: 'lb' })
+    await expect(settingsRequest).resolves.toEqual({
+      defaultWeightUnit: 'lb',
+      themeMode: 'system',
+    })
     expect(
       JSON.parse(localStorage.getItem(STORAGE_KEYS.SETTINGS) ?? 'null'),
     ).toEqual({
       defaultWeightUnit: 'lb',
+      themeMode: 'system',
     })
   })
 
@@ -58,9 +65,15 @@ describe('settings data feature', () => {
     )
 
     const query = settingsQueries.detail()
-    const queryFn = query.queryFn as () => Promise<{ defaultWeightUnit: 'lb' }>
+    const queryFn = query.queryFn as () => Promise<{
+      defaultWeightUnit: 'lb'
+      themeMode: 'system'
+    }>
 
     expect(query.queryKey).toEqual(settingsQueryKeys.detail())
-    await expect(queryFn()).resolves.toEqual({ defaultWeightUnit: 'lb' })
+    await expect(queryFn()).resolves.toEqual({
+      defaultWeightUnit: 'lb',
+      themeMode: 'system',
+    })
   })
 })

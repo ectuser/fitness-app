@@ -1,13 +1,10 @@
 import { useExercises } from '../exercise/use-exercises'
-import { useSettings } from '../settings/use-settings'
 import { getWorkoutTotalSets } from '../workout/workout-helpers'
 import { useWorkouts } from '../workout/use-workouts'
-import { DashboardDialogs } from './DashboardDialogs'
 import { DashboardHeaderActions } from './DashboardHeaderActions'
 import { NextWorkoutSection } from './NextWorkoutSection'
 import { QuickStatsSection } from './QuickStatsSection'
 import { UpcomingWorkoutsSection } from './UpcomingWorkoutsSection'
-import { useDashboardDataManagement } from './use-dashboard-data-management'
 import { useNavigate } from '@/lib/router-compat'
 import { usePwaUpdateStatus } from '@/features/app-update/pwa-update-status'
 import { PageHeader } from '@/components/layout/PageHeader'
@@ -18,25 +15,6 @@ export function Dashboard() {
   const { exercises } = useExercises()
   const hasAvailableUpdate = updateStatus.state === 'available-update'
   const { nextWorkout, upcomingWorkouts, workouts } = useWorkouts()
-  const { settings } = useSettings()
-  const {
-    closeImportDialog,
-    fileInputRef,
-    handleConfirmImport,
-    handleExportData,
-    handleFileChange,
-    handleImportClick,
-    handleResetData,
-    importError,
-    setShowResetDialog,
-    showImportDialog,
-    showResetDialog,
-  } = useDashboardDataManagement({
-    exercises,
-    workouts,
-    settings,
-  })
-
   const completedWorkouts = workouts.filter((workout) => workout.isCompleted)
 
   return (
@@ -45,14 +23,8 @@ export function Dashboard() {
         title="Dashboard"
         action={
           <DashboardHeaderActions
-            fileInputRef={fileInputRef}
             hasAvailableUpdate={hasAvailableUpdate}
             onCreateWorkout={() => navigate('/workouts/new')}
-            onExportData={handleExportData}
-            onFileChange={handleFileChange}
-            onImportClick={handleImportClick}
-            onOpenAppUpdate={() => navigate('/app-update')}
-            onOpenResetDialog={() => setShowResetDialog(true)}
           />
         }
       />
@@ -84,16 +56,6 @@ export function Dashboard() {
           )}
         />
       </div>
-
-      <DashboardDialogs
-        importError={importError}
-        onCloseImportDialog={closeImportDialog}
-        onConfirmImport={handleConfirmImport}
-        onConfirmReset={handleResetData}
-        openImportDialog={showImportDialog}
-        openResetDialog={showResetDialog}
-        setOpenResetDialog={setShowResetDialog}
-      />
     </div>
   )
 }

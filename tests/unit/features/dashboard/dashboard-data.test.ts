@@ -20,7 +20,7 @@ describe('dashboard helpers', () => {
         {
           exercises,
           workouts: [upcomingWorkout],
-          settings: { defaultWeightUnit: 'kg' },
+          settings: DEFAULT_SETTINGS,
         },
         '2026-04-25T12:00:00.000Z',
       ),
@@ -30,7 +30,7 @@ describe('dashboard helpers', () => {
       data: {
         exercises,
         workouts: [upcomingWorkout],
-        settings: { defaultWeightUnit: 'kg' },
+        settings: DEFAULT_SETTINGS,
       },
     })
   })
@@ -79,6 +79,7 @@ describe('dashboard helpers', () => {
       JSON.parse(localStorage.getItem(STORAGE_KEYS.SETTINGS) ?? 'null'),
     ).toEqual({
       defaultWeightUnit: 'lb',
+      themeMode: 'system',
     })
 
     importDashboardData({

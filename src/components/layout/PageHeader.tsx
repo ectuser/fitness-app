@@ -16,7 +16,7 @@ export function PageHeader({
   const navigate = useNavigate()
 
   return (
-    <div className="bg-white border-b border-slate-200">
+    <div className="bg-card border-b border-border">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">

@@ -36,6 +36,21 @@ vi.mock('@/components/ui/dropdown-menu', () => ({
   ),
 }))
 
+vi.mock('@/lib/router-compat', () => ({
+  Link: ({
+    children,
+    to,
+    ...props
+  }: {
+    children: ReactNode
+    to: string
+  }) => (
+    <a href={to} {...props}>
+      {children}
+    </a>
+  ),
+}))
+
 vi.mock('@/components/ui/alert-dialog', () => ({
   AlertDialog: ({ children }: { children: ReactNode }) => <div>{children}</div>,
   AlertDialogAction: ({
@@ -80,36 +95,18 @@ vi.mock('@/components/ui/alert-dialog', () => ({
 describe('dashboard components', () => {
   it('renders header actions and delegates click handlers', () => {
     const onCreateWorkout = vi.fn()
-    const onExportData = vi.fn()
-    const onFileChange = vi.fn()
-    const onImportClick = vi.fn()
-    const onOpenAppUpdate = vi.fn()
-    const onOpenResetDialog = vi.fn()
 
     render(
-      <DashboardHeaderActions
-        fileInputRef={{ current: null }}
-        onCreateWorkout={onCreateWorkout}
-        onExportData={onExportData}
-        onFileChange={onFileChange}
-        onImportClick={onImportClick}
-        onOpenAppUpdate={onOpenAppUpdate}
-        onOpenResetDialog={onOpenResetDialog}
-      />,
+      <DashboardHeaderActions onCreateWorkout={onCreateWorkout} />,
     )
 
     fireEvent.click(screen.getByRole('button', { name: /new workout/i }))
-    fireEvent.click(screen.getByRole('button', { name: /app update/i }))
-    fireEvent.click(screen.getByRole('button', { name: /export/i }))
-    fireEvent.click(screen.getByRole('button', { name: /import/i }))
-    fireEvent.click(screen.getByRole('button', { name: /reset/i }))
 
     expect(onCreateWorkout).toHaveBeenCalled()
-    expect(onOpenAppUpdate).toHaveBeenCalled()
-    expect(onExportData).toHaveBeenCalled()
-    expect(onImportClick).toHaveBeenCalled()
-    expect(onOpenResetDialog).toHaveBeenCalled()
-    expect(onFileChange).not.toHaveBeenCalled()
+    expect(screen.getByRole('link', { name: /settings/i })).toHaveAttribute(
+      'href',
+      '/settings',
+    )
   })
 
   it('renders next workout and upcoming workouts sections', () => {
