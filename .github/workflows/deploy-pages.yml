@@ -112,7 +112,7 @@ jobs:
             git -C "$publish_dir" remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           fi
 
-          rsync -a --delete --exclude='pr-*' pages/ "$publish_dir/"
+          rsync -a --delete --exclude='.git' --exclude='pr-*' pages/ "$publish_dir/"
 
           if [[ -n "$PREVIEW_PATH" ]]; then
             mkdir -p "$publish_dir/$PREVIEW_PATH"
