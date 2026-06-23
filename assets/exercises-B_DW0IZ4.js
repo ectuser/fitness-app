@@ -1,1 +1,0 @@
-import{R as e}from"./index-Bqbe-vdR.js";var t=e;export{t as component};
