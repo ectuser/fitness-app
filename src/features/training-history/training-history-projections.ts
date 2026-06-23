@@ -1,11 +1,16 @@
+import {
+  findLastWorkoutExercise,
+  getCompletedWorkouts,
+  sortWorkoutsByDateDesc,
+} from '../workout/workout-helpers'
 import type {
   ExerciseStats,
-  Workout,
-  WorkoutExercise,
-  WorkoutHistory,
   WeightUnit,
+  Workout,
+  WorkoutHistory,
 } from '@/types'
-import { getCompletedWorkouts, sortWorkoutsByDateDesc } from '../workout/workout-helpers'
+
+export { findLastWorkoutExercise } from '../workout/workout-helpers'
 
 type ExerciseSetSnapshot = {
   reps: number
@@ -15,9 +20,9 @@ type ExerciseSetSnapshot = {
 
 function collectExerciseSets(
   exerciseId: string,
-  workouts: Workout[],
-): ExerciseSetSnapshot[] {
-  const exerciseSets: ExerciseSetSnapshot[] = []
+  workouts: Array<Workout>,
+): Array<ExerciseSetSnapshot> {
+  const exerciseSets: Array<ExerciseSetSnapshot> = []
 
   getCompletedWorkouts(workouts).forEach((workout) => {
     workout.exercises.forEach((workoutExercise) => {
@@ -40,7 +45,7 @@ function collectExerciseSets(
 
 export function calculateExerciseStats(
   exerciseId: string,
-  workouts: Workout[],
+  workouts: Array<Workout>,
 ): ExerciseStats | null {
   const exerciseSets = collectExerciseSets(exerciseId, workouts)
 
@@ -85,9 +90,9 @@ export function calculateExerciseStats(
 
 export function buildExerciseHistory(
   exerciseId: string,
-  workouts: Workout[],
-): WorkoutHistory[] {
-  const history: WorkoutHistory[] = []
+  workouts: Array<Workout>,
+): Array<WorkoutHistory> {
+  const history: Array<WorkoutHistory> = []
 
   getCompletedWorkouts(workouts).forEach((workout) => {
     workout.exercises.forEach((workoutExercise) => {
@@ -105,23 +110,4 @@ export function buildExerciseHistory(
   })
 
   return sortWorkoutsByDateDesc(history)
-}
-
-export function findLastWorkoutExercise(
-  exerciseId: string,
-  workouts: Workout[],
-): WorkoutExercise | null {
-  for (const workout of sortWorkoutsByDateDesc(
-    getCompletedWorkouts(workouts),
-  )) {
-    const workoutExercise = workout.exercises.find(
-      (entry) => entry.exerciseId === exerciseId,
-    )
-
-    if (workoutExercise) {
-      return workoutExercise
-    }
-  }
-
-  return null
 }

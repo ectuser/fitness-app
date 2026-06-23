@@ -1,32 +1,42 @@
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Card } from '@/components/ui/card';
+import { useState } from 'react'
+import {
+  ChevronDown,
+  ChevronUp,
+  Clock,
+  MoreVertical,
+  Pencil,
+  Plus,
+  Repeat,
+  Trash2,
+  TrendingUp,
+} from 'lucide-react'
+import { useSettings } from '../settings/use-settings'
+import { useExerciseStats } from '../training-history/use-training-history'
+import { SetInput } from './SetInput'
+import { useWorkouts } from './use-workouts'
+import type { Exercise, WorkoutExercise } from '@/types'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Card } from '@/components/ui/card'
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from '@/components/ui/accordion';
-import { Plus, Trash2, ChevronUp, ChevronDown, MoreVertical, Repeat, Pencil, TrendingUp, Clock } from 'lucide-react';
-import type { WorkoutExercise, Exercise } from '@/types';
-import { SetInput } from './SetInput';
-import { useSettings } from '../settings/use-settings';
-import { useWorkouts } from './use-workouts';
-import { useExerciseStats } from '../training-history/use-training-history';
-import { useNavigate } from '@/lib/router-compat';
+} from '@/components/ui/accordion'
+import { useNavigate } from '@/lib/router-compat'
 
 interface WorkoutExerciseCardProps {
-  workoutExercise: WorkoutExercise;
-  exercise: Exercise;
-  index: number;
-  totalCount: number;
-  onChange: (exercise: WorkoutExercise) => void;
-  onEditExercise?: (exercise: Exercise) => void;
-  onRemove: () => void;
-  onMoveUp: () => void;
-  onMoveDown: () => void;
-  onReplace?: () => void;
+  workoutExercise: WorkoutExercise
+  exercise: Exercise
+  index: number
+  totalCount: number
+  onChange: (exercise: WorkoutExercise) => void
+  onEditExercise?: (exercise: Exercise) => void
+  onRemove: () => void
+  onMoveUp: () => void
+  onMoveDown: () => void
+  onReplace?: () => void
 }
 
 export function WorkoutExerciseCard({
@@ -41,50 +51,51 @@ export function WorkoutExerciseCard({
   onMoveDown,
   onReplace,
 }: WorkoutExerciseCardProps) {
-  const { settings } = useSettings();
-  const { workouts } = useWorkouts();
-  const stats = useExerciseStats(exercise.id, workouts);
-  const navigate = useNavigate();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { settings } = useSettings()
+  const { workouts } = useWorkouts()
+  const stats = useExerciseStats(exercise.id, workouts)
+  const navigate = useNavigate()
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   const addSet = () => {
-    const lastSet = workoutExercise.sets.at(-1);
+    const lastSet = workoutExercise.sets.at(-1)
     const newSet = {
       id: crypto.randomUUID(),
       weight: lastSet?.weight ?? 0,
       weightUnit: lastSet?.weightUnit ?? settings.defaultWeightUnit,
       reps: lastSet?.reps ?? 0,
-    };
+    }
     onChange({
       ...workoutExercise,
       sets: [...workoutExercise.sets, newSet],
-    });
-  };
+    })
+  }
 
-  const updateSet = (setId: string, updatedSet: typeof workoutExercise.sets[0]) => {
+  const updateSet = (
+    setId: string,
+    updatedSet: (typeof workoutExercise.sets)[0],
+  ) => {
     onChange({
       ...workoutExercise,
       sets: workoutExercise.sets.map((s) => (s.id === setId ? updatedSet : s)),
-    });
-  };
+    })
+  }
 
   const removeSet = (setId: string) => {
     onChange({
       ...workoutExercise,
       sets: workoutExercise.sets.filter((s) => s.id !== setId),
-    });
-  };
-  const commentId = `exercise-comment-${exercise.id}-${index}`;
-  const commentValue = workoutExercise.comment ?? exercise.comments ?? '';
+    })
+  }
+  const commentId = `exercise-comment-${exercise.id}-${index}`
+  const commentValue = workoutExercise.comment ?? exercise.comments ?? ''
 
   return (
     <Card className="p-4">
       <div className="flex items-start justify-between mb-4">
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-2">
-            <h3 className="font-semibold text-lg">
-              {exercise.name}
-            </h3>
+            <h3 className="font-semibold text-lg">{exercise.name}</h3>
           </div>
           <div className="flex flex-wrap gap-1">
             {exercise.muscleGroups.map((muscle) => (
@@ -129,8 +140,8 @@ export function WorkoutExerciseCard({
                   type="button"
                   role="menuitem"
                   onClick={() => {
-                    setIsMenuOpen(false);
-                    onReplace();
+                    setIsMenuOpen(false)
+                    onReplace()
                   }}
                   className="flex w-full items-center rounded-sm px-2 py-2 text-sm hover:bg-slate-100"
                 >
@@ -142,12 +153,12 @@ export function WorkoutExerciseCard({
                 type="button"
                 role="menuitem"
                 onClick={() => {
-                  setIsMenuOpen(false);
+                  setIsMenuOpen(false)
                   if (onEditExercise) {
-                    onEditExercise(exercise);
-                    return;
+                    onEditExercise(exercise)
+                    return
                   }
-                  navigate(`/exercises/${exercise.id}/edit`);
+                  navigate(`/exercises/${exercise.id}/edit`)
                 }}
                 className="flex w-full items-center rounded-sm px-2 py-2 text-sm hover:bg-slate-100"
               >
@@ -158,8 +169,8 @@ export function WorkoutExerciseCard({
                 type="button"
                 role="menuitem"
                 onClick={() => {
-                  setIsMenuOpen(false);
-                  onRemove();
+                  setIsMenuOpen(false)
+                  onRemove()
                 }}
                 className="flex w-full items-center rounded-sm px-2 py-2 text-sm text-red-600 hover:bg-slate-100"
               >
@@ -196,7 +207,8 @@ export function WorkoutExerciseCard({
                     <TrendingUp className="w-4 h-4 text-slate-500" />
                     <span className="text-slate-600">Max:</span>
                     <span className="font-semibold">
-                      {stats.maxWeight} {stats.maxWeightUnit} × {stats.maxWeightReps}
+                      {stats.maxWeight} {stats.maxWeightUnit} ×{' '}
+                      {stats.maxWeightReps}
                     </span>
                   </div>
                 )}
@@ -205,14 +217,18 @@ export function WorkoutExerciseCard({
                     <Clock className="w-4 h-4 text-slate-500" />
                     <span className="text-slate-600">Last:</span>
                     <span className="font-semibold">
-                      {stats.lastWeight} {stats.lastWeightUnit} × {stats.lastWeightReps}
+                      {stats.lastWeight} {stats.lastWeightUnit} ×{' '}
+                      {stats.lastWeightReps}
                     </span>
                   </div>
                 )}
               </div>
             )}
             <div className="space-y-1">
-              <label htmlFor={commentId} className="text-xs font-medium text-slate-600">
+              <label
+                htmlFor={commentId}
+                className="text-xs font-medium text-slate-600"
+              >
                 Comment
               </label>
               <textarea
@@ -233,15 +249,10 @@ export function WorkoutExerciseCard({
         </AccordionItem>
       </Accordion>
 
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={addSet}
-        className="w-full"
-      >
+      <Button variant="outline" size="sm" onClick={addSet} className="w-full">
         <Plus className="w-4 h-4 mr-2" />
         Add Set
       </Button>
     </Card>
-  );
+  )
 }

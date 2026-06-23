@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest'
+import { exercises, upcomingWorkout } from '../../fixtures'
 import {
   buildExportPayload,
   importDashboardData,
@@ -7,7 +8,6 @@ import {
 } from '@/features/dashboard/dashboard-data'
 import { STORAGE_KEYS } from '@/lib/storage'
 import { DEFAULT_SETTINGS } from '@/features/settings/settings-source'
-import { exercises, upcomingWorkout } from '../../fixtures'
 
 describe('dashboard helpers', () => {
   beforeEach(() => {

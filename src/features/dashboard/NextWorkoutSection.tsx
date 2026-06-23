@@ -1,16 +1,16 @@
 import { Calendar, Play, Plus } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
 import {
   formatWorkoutDate,
   getWorkoutMuscleGroups,
   getWorkoutTotalSets,
 } from '../workout/workout-helpers'
 import type { Exercise, Workout } from '@/types'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
 
 interface NextWorkoutSectionProps {
-  exercises: Exercise[]
+  exercises: Array<Exercise>
   nextWorkout: Workout | null
   onCreateWorkout: () => void
   onStartWorkout: (workoutId: string) => void

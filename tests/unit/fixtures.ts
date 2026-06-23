@@ -1,6 +1,6 @@
-import type { Exercise, Workout, WorkoutExercise } from '@/types';
+import type { Exercise, Workout, WorkoutExercise } from '@/types'
 
-export const exercises: Exercise[] = [
+export const exercises: Array<Exercise> = [
   {
     id: 'exercise-bench',
     name: 'Bench Press',
@@ -24,11 +24,11 @@ export const exercises: Exercise[] = [
     isCustom: false,
     createdAt: '2026-01-03T00:00:00.000Z',
   },
-];
+]
 
 export function createWorkoutExercise(
   exerciseId: string,
-  overrides: Partial<WorkoutExercise> = {}
+  overrides: Partial<WorkoutExercise> = {},
 ): WorkoutExercise {
   return {
     exerciseId,
@@ -43,7 +43,7 @@ export function createWorkoutExercise(
       },
     ],
     ...overrides,
-  };
+  }
 }
 
 export function createWorkout(overrides: Partial<Workout> = {}): Workout {
@@ -56,7 +56,7 @@ export function createWorkout(overrides: Partial<Workout> = {}): Workout {
     completedAt: overrides.completedAt,
     createdAt: overrides.createdAt ?? '2026-04-20T00:00:00.000Z',
     updatedAt: overrides.updatedAt ?? '2026-04-20T00:00:00.000Z',
-  };
+  }
 }
 
 export const completedBenchWorkout = createWorkout({
@@ -84,7 +84,7 @@ export const completedBenchWorkout = createWorkout({
       ],
     }),
   ],
-});
+})
 
 export const completedRowWorkout = createWorkout({
   id: 'workout-completed-2',
@@ -116,7 +116,7 @@ export const completedRowWorkout = createWorkout({
       ],
     }),
   ],
-});
+})
 
 export const upcomingWorkout = createWorkout({
   id: 'workout-upcoming',
@@ -134,8 +134,8 @@ export const upcomingWorkout = createWorkout({
       ],
     }),
   ],
-});
+})
 
 export function clone<T>(value: T): T {
-  return JSON.parse(JSON.stringify(value)) as T;
+  return JSON.parse(JSON.stringify(value)) as T
 }

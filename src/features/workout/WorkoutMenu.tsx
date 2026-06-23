@@ -1,11 +1,14 @@
-import { Button } from '@/components/ui/button';
+import { Check, Copy, Edit, MoreVertical, Trash2, X } from 'lucide-react'
+import { useState } from 'react'
+import type { Workout } from '@/types'
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from '@/components/ui/dropdown-menu'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -15,17 +18,14 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-import { MoreVertical, Edit, Copy, Trash2, Check, X } from 'lucide-react';
-import type { Workout } from '@/types';
-import { useState } from 'react';
+} from '@/components/ui/alert-dialog'
 
 interface WorkoutMenuProps {
-  workout: Workout;
-  onEdit: () => void;
-  onDuplicate: () => void;
-  onDelete: () => void;
-  onToggleComplete: () => void;
+  workout: Workout
+  onEdit: () => void
+  onDuplicate: () => void
+  onDelete: () => void
+  onToggleComplete: () => void
 }
 
 export function WorkoutMenu({
@@ -35,12 +35,12 @@ export function WorkoutMenu({
   onDelete,
   onToggleComplete,
 }: WorkoutMenuProps) {
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
 
   const handleDelete = () => {
-    onDelete();
-    setShowDeleteDialog(false);
-  };
+    onDelete()
+    setShowDeleteDialog(false)
+  }
 
   return (
     <>
@@ -88,8 +88,8 @@ export function WorkoutMenu({
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Workout?</AlertDialogTitle>
             <AlertDialogDescription>
-              This will permanently delete &quot;{workout.name}&quot;. This action cannot be
-              undone.
+              This will permanently delete &quot;{workout.name}&quot;. This
+              action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -99,5 +99,5 @@ export function WorkoutMenu({
         </AlertDialogContent>
       </AlertDialog>
     </>
-  );
+  )
 }

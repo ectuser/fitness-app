@@ -1,29 +1,29 @@
-import { useEffect, useRef, useState } from 'react';
-import { useParams, useNavigate } from '@/lib/router-compat';
-import { PageHeader } from '@/components/layout/PageHeader';
-import { Button } from '@/components/ui/button';
-import { CheckCircle2, Plus, X } from 'lucide-react';
-import { ExerciseSelector } from '../exercise/ExerciseSelector';
-import { useExercises } from '../exercise/use-exercises';
-import { useSettings } from '../settings/use-settings';
-import { WorkoutExerciseList } from './WorkoutExerciseList';
-import { useWorkouts } from './use-workouts';
-import { useWorkoutExerciseEditor } from './use-workout-exercise-editor';
-import type { Workout } from '@/types';
-import { SimpleModal } from '@/components/ui/simple-modal';
+import { useEffect, useRef, useState } from 'react'
+import { CheckCircle2, Plus, X } from 'lucide-react'
+import { ExerciseSelector } from '../exercise/ExerciseSelector'
+import { useExercises } from '../exercise/use-exercises'
+import { useSettings } from '../settings/use-settings'
+import { WorkoutExerciseList } from './WorkoutExerciseList'
+import { useWorkouts } from './use-workouts'
+import { useWorkoutExerciseEditor } from './use-workout-exercise-editor'
+import type { Workout } from '@/types'
+import { Button } from '@/components/ui/button'
+import { PageHeader } from '@/components/layout/PageHeader'
+import { useNavigate, useParams } from '@/lib/router-compat'
+import { SimpleModal } from '@/components/ui/simple-modal'
 
 export function WorkoutSessionPage() {
-  const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
-  const { exercises } = useExercises();
-  const { workouts, updateWorkout } = useWorkouts();
-  const { settings } = useSettings();
+  const { id } = useParams<{ id: string }>()
+  const navigate = useNavigate()
+  const { exercises } = useExercises()
+  const { workouts, updateWorkout } = useWorkouts()
+  const { settings } = useSettings()
 
-  const [workout, setWorkout] = useState<Workout | null>(null);
-  const [loadedWorkoutId, setLoadedWorkoutId] = useState<string | null>(null);
-  const [showFinishDialog, setShowFinishDialog] = useState(false);
-  const [showExitDialog, setShowExitDialog] = useState(false);
-  const lastSavedExercisesRef = useRef('');
+  const [workout, setWorkout] = useState<Workout | null>(null)
+  const [loadedWorkoutId, setLoadedWorkoutId] = useState<string | null>(null)
+  const [showFinishDialog, setShowFinishDialog] = useState(false)
+  const [showExitDialog, setShowExitDialog] = useState(false)
+  const lastSavedExercisesRef = useRef('')
   const {
     handleAddExercise,
     handleMoveExerciseDown,
@@ -43,52 +43,59 @@ export function WorkoutSessionPage() {
     exercises,
     initialWorkoutExercises: [],
     workouts,
-  });
+  })
 
   useEffect(() => {
     if (!id || loadedWorkoutId === id) {
-      return;
+      return
     }
 
-    const foundWorkout = workouts.find((entry) => entry.id === id);
+    const foundWorkout = workouts.find((entry) => entry.id === id)
     if (foundWorkout) {
-      setWorkout(foundWorkout);
-      setWorkoutExercises(foundWorkout.exercises);
-      lastSavedExercisesRef.current = JSON.stringify(foundWorkout.exercises);
-      setLoadedWorkoutId(id);
+      setWorkout(foundWorkout)
+      setWorkoutExercises(foundWorkout.exercises)
+      lastSavedExercisesRef.current = JSON.stringify(foundWorkout.exercises)
+      setLoadedWorkoutId(id)
     }
-  }, [id, loadedWorkoutId, setWorkoutExercises, workouts]);
+  }, [id, loadedWorkoutId, setWorkoutExercises, workouts])
 
   useEffect(() => {
     if (!id || loadedWorkoutId !== id) {
-      return;
+      return
     }
 
-    const serializedExercises = JSON.stringify(workoutExercises);
+    const serializedExercises = JSON.stringify(workoutExercises)
 
     if (serializedExercises === lastSavedExercisesRef.current) {
-      return;
+      return
     }
 
-    lastSavedExercisesRef.current = serializedExercises;
+    lastSavedExercisesRef.current = serializedExercises
     updateWorkout(id, {
       exercises: workoutExercises,
-    });
-  }, [id, loadedWorkoutId, updateWorkout, workoutExercises]);
+    })
+  }, [id, loadedWorkoutId, updateWorkout, workoutExercises])
 
   if (!workout) {
     return (
       <div>
         <PageHeader title="Workout Not Found" showBack />
         <div className="container mx-auto px-4 py-12 text-center">
-          <p className="text-slate-600 mb-4">This workout could not be found.</p>
-          <Button onClick={() => navigate('/workouts')}>Back to Workouts</Button>
+          <p className="text-slate-600 mb-4">
+            This workout could not be found.
+          </p>
+          <Button onClick={() => navigate('/workouts')}>
+            Back to Workouts
+          </Button>
         </div>
       </div>
-    );
+    )
   }
 
-  const totalSets = workoutExercises.reduce((sum, workoutExercise) => sum + workoutExercise.sets.length, 0);
+  const totalSets = workoutExercises.reduce(
+    (sum, workoutExercise) => sum + workoutExercise.sets.length,
+    0,
+  )
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -113,8 +120,9 @@ export function WorkoutSessionPage() {
             <div>
               <h3 className="font-semibold text-lg">Workout in Progress</h3>
               <p className="text-sm text-slate-600">
-                {workoutExercises.length} exercise{workoutExercises.length !== 1 ? 's' : ''}{' '}
-                • {totalSets} set{totalSets !== 1 ? 's' : ''}
+                {workoutExercises.length} exercise
+                {workoutExercises.length !== 1 ? 's' : ''} • {totalSets} set
+                {totalSets !== 1 ? 's' : ''}
               </p>
             </div>
           </div>
@@ -139,11 +147,10 @@ export function WorkoutSessionPage() {
           onReplaceExercise={handleReplaceExercise}
           emptyState={
             <div className="bg-white rounded-lg p-12 text-center">
-              <p className="text-slate-500 mb-4">No exercises in this workout</p>
-              <Button
-                variant="outline"
-                onClick={openAddExerciseSelector}
-              >
+              <p className="text-slate-500 mb-4">
+                No exercises in this workout
+              </p>
+              <Button variant="outline" onClick={openAddExerciseSelector}>
                 <Plus className="w-4 h-4 mr-2" />
                 Add Your First Exercise
               </Button>
@@ -157,7 +164,7 @@ export function WorkoutSessionPage() {
           <Button
             onClick={() => {
               if (id) {
-                setShowFinishDialog(true);
+                setShowFinishDialog(true)
               }
             }}
             className="flex-1 h-12 text-lg"
@@ -193,15 +200,19 @@ export function WorkoutSessionPage() {
                   exercises: workoutExercises,
                   isCompleted: true,
                   completedAt: new Date().toISOString(),
-                });
-                navigate('/workouts');
+                })
+                navigate('/workouts')
               }
             }}
             className="w-full"
           >
             Finish Workout
           </Button>
-          <Button variant="ghost" onClick={() => setShowFinishDialog(false)} className="w-full">
+          <Button
+            variant="ghost"
+            onClick={() => setShowFinishDialog(false)}
+            className="w-full"
+          >
             Continue Workout
           </Button>
         </div>
@@ -217,8 +228,8 @@ export function WorkoutSessionPage() {
                   exercises: workoutExercises,
                   isCompleted: true,
                   completedAt: new Date().toISOString(),
-                });
-                navigate('/workouts');
+                })
+                navigate('/workouts')
               }
             }}
           >
@@ -235,8 +246,18 @@ export function WorkoutSessionPage() {
         description="Your progress has been auto-saved. You can resume this workout later from the workouts page."
       >
         <div className="sm:hidden space-y-2">
-          <Button variant="outline" onClick={() => navigate('/workouts')} className="w-full">Exit</Button>
-          <Button variant="ghost" onClick={() => setShowExitDialog(false)} className="w-full">
+          <Button
+            variant="outline"
+            onClick={() => navigate('/workouts')}
+            className="w-full"
+          >
+            Exit
+          </Button>
+          <Button
+            variant="ghost"
+            onClick={() => setShowExitDialog(false)}
+            className="w-full"
+          >
             Continue Workout
           </Button>
         </div>
@@ -244,9 +265,11 @@ export function WorkoutSessionPage() {
           <Button variant="ghost" onClick={() => setShowExitDialog(false)}>
             Continue Workout
           </Button>
-          <Button variant="outline" onClick={() => navigate('/workouts')}>Exit</Button>
+          <Button variant="outline" onClick={() => navigate('/workouts')}>
+            Exit
+          </Button>
         </div>
       </SimpleModal>
     </div>
-  );
+  )
 }

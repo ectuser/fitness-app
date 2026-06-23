@@ -1,6 +1,3 @@
-import { PageHeader } from '@/components/layout/PageHeader'
-import { usePwaUpdateStatus } from '@/features/app-update/pwa-update-status'
-import { useNavigate } from '@/lib/router-compat'
 import { useExercises } from '../exercise/use-exercises'
 import { useSettings } from '../settings/use-settings'
 import { getWorkoutTotalSets } from '../workout/workout-helpers'
@@ -11,6 +8,9 @@ import { NextWorkoutSection } from './NextWorkoutSection'
 import { QuickStatsSection } from './QuickStatsSection'
 import { UpcomingWorkoutsSection } from './UpcomingWorkoutsSection'
 import { useDashboardDataManagement } from './use-dashboard-data-management'
+import { useNavigate } from '@/lib/router-compat'
+import { usePwaUpdateStatus } from '@/features/app-update/pwa-update-status'
+import { PageHeader } from '@/components/layout/PageHeader'
 
 export function Dashboard() {
   const navigate = useNavigate()

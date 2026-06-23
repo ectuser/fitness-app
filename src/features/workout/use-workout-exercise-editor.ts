@@ -1,18 +1,24 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react'
 import {
   addOrReplaceWorkoutExercise,
   getExerciseReplacementFilterGroup,
   moveWorkoutExercise,
   removeWorkoutExerciseAtIndex,
   updateWorkoutExerciseAtIndex,
-} from './workout-editor';
-import type { Exercise, MuscleGroup, WeightUnit, Workout, WorkoutExercise } from '@/types';
+} from './workout-editor'
+import type {
+  Exercise,
+  MuscleGroup,
+  WeightUnit,
+  Workout,
+  WorkoutExercise,
+} from '@/types'
 
 interface UseWorkoutExerciseEditorOptions {
-  defaultWeightUnit: WeightUnit;
-  exercises: Exercise[];
-  initialWorkoutExercises?: WorkoutExercise[];
-  workouts: Workout[];
+  defaultWeightUnit: WeightUnit
+  exercises: Array<Exercise>
+  initialWorkoutExercises?: Array<WorkoutExercise>
+  workouts: Array<Workout>
 }
 
 export function useWorkoutExerciseEditor({
@@ -21,38 +27,44 @@ export function useWorkoutExerciseEditor({
   initialWorkoutExercises = [],
   workouts,
 }: UseWorkoutExerciseEditorOptions) {
-  const [workoutExercises, setWorkoutExercises] = useState(initialWorkoutExercises);
-  const [isSelectorOpen, setIsSelectorOpen] = useState(false);
-  const [replacingExerciseIndex, setReplacingExerciseIndex] = useState<number | null>(null);
-  const [selectorInitialFilterGroup, setSelectorInitialFilterGroup] = useState<MuscleGroup | null>(null);
+  const [workoutExercises, setWorkoutExercises] = useState(
+    initialWorkoutExercises,
+  )
+  const [isSelectorOpen, setIsSelectorOpen] = useState(false)
+  const [replacingExerciseIndex, setReplacingExerciseIndex] = useState<
+    number | null
+  >(null)
+  const [selectorInitialFilterGroup, setSelectorInitialFilterGroup] =
+    useState<MuscleGroup | null>(null)
 
   const closeSelector = () => {
-    setIsSelectorOpen(false);
-    setReplacingExerciseIndex(null);
-    setSelectorInitialFilterGroup(null);
-  };
+    setIsSelectorOpen(false)
+    setReplacingExerciseIndex(null)
+    setSelectorInitialFilterGroup(null)
+  }
 
   return {
     workoutExercises,
     setWorkoutExercises,
     selectedExerciseIds: useMemo(
-      () => workoutExercises.map((workoutExercise) => workoutExercise.exerciseId),
-      [workoutExercises]
+      () =>
+        workoutExercises.map((workoutExercise) => workoutExercise.exerciseId),
+      [workoutExercises],
     ),
     showExerciseSelector: isSelectorOpen,
     selectorInitialFilterGroup,
     openAddExerciseSelector: () => {
-      setReplacingExerciseIndex(null);
-      setSelectorInitialFilterGroup(null);
-      setIsSelectorOpen(true);
+      setReplacingExerciseIndex(null)
+      setSelectorInitialFilterGroup(null)
+      setIsSelectorOpen(true)
     },
     setShowExerciseSelector: (isOpen: boolean) => {
       if (!isOpen) {
-        closeSelector();
-        return;
+        closeSelector()
+        return
       }
 
-      setIsSelectorOpen(true);
+      setIsSelectorOpen(true)
     },
     handleAddExercise: (exercise: Exercise) => {
       setWorkoutExercises((currentExercises) =>
@@ -61,31 +73,37 @@ export function useWorkoutExerciseEditor({
           exercise,
           workouts,
           defaultWeightUnit,
-          replacingExerciseIndex
-        )
-      );
-      closeSelector();
+          replacingExerciseIndex,
+        ),
+      )
+      closeSelector()
     },
     handleRemoveExercise: (index: number) => {
-      setWorkoutExercises((currentExercises) => removeWorkoutExerciseAtIndex(currentExercises, index));
+      setWorkoutExercises((currentExercises) =>
+        removeWorkoutExerciseAtIndex(currentExercises, index),
+      )
     },
     handleMoveExerciseUp: (index: number) => {
-      setWorkoutExercises((currentExercises) => moveWorkoutExercise(currentExercises, index, 'up'));
+      setWorkoutExercises((currentExercises) =>
+        moveWorkoutExercise(currentExercises, index, 'up'),
+      )
     },
     handleMoveExerciseDown: (index: number) => {
-      setWorkoutExercises((currentExercises) => moveWorkoutExercise(currentExercises, index, 'down'));
+      setWorkoutExercises((currentExercises) =>
+        moveWorkoutExercise(currentExercises, index, 'down'),
+      )
     },
     handleUpdateExercise: (index: number, updatedExercise: WorkoutExercise) => {
       setWorkoutExercises((currentExercises) =>
-        updateWorkoutExerciseAtIndex(currentExercises, index, updatedExercise)
-      );
+        updateWorkoutExerciseAtIndex(currentExercises, index, updatedExercise),
+      )
     },
     handleReplaceExercise: (index: number) => {
-      setReplacingExerciseIndex(index);
+      setReplacingExerciseIndex(index)
       setSelectorInitialFilterGroup(
-        getExerciseReplacementFilterGroup(workoutExercises, exercises, index)
-      );
-      setIsSelectorOpen(true);
+        getExerciseReplacementFilterGroup(workoutExercises, exercises, index),
+      )
+      setIsSelectorOpen(true)
     },
-  };
+  }
 }

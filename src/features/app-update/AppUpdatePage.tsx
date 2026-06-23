@@ -1,9 +1,9 @@
 import { CheckCircle2, Info, RefreshCw, WifiOff } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { getCurrentDeploymentVersion } from './deployment-version'
 import { usePwaUpdateStatus } from './pwa-update-status'
 import type { PwaUpdateStatus } from './pwa-update-status'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 
 type PwaUpdateState = PwaUpdateStatus['state']
 
@@ -110,11 +110,7 @@ function getStatusTitle(state: PwaUpdateState) {
   }
 }
 
-function StatusDescription({
-  state,
-}: {
-  state: PwaUpdateState
-}) {
+function StatusDescription({ state }: { state: PwaUpdateState }) {
   if (state === 'available-update') {
     return (
       <p>

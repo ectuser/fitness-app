@@ -1,48 +1,53 @@
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { X } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import type { Set as SetType } from '@/types';
+import { X } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import type { Set as SetType } from '@/types'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 
 interface SetInputProps {
-  set: SetType;
-  setNumber: number;
-  onChange: (set: SetType) => void;
-  onRemove: () => void;
+  set: SetType
+  setNumber: number
+  onChange: (set: SetType) => void
+  onRemove: () => void
 }
 
 const normalizeWeight = (value: string): number => {
-  const canonicalValue = value.replace(',', '.').trim();
+  const canonicalValue = value.replace(',', '.').trim()
   const isValidNumericPattern = /^[+-]?(?:\d+\.?\d*|\.\d+)$/.test(
-    canonicalValue
-  );
+    canonicalValue,
+  )
 
   if (!isValidNumericPattern) {
-    return 0;
+    return 0
   }
 
-  const parsed = Number.parseFloat(canonicalValue);
+  const parsed = Number.parseFloat(canonicalValue)
 
   if (!Number.isFinite(parsed) || parsed < 0) {
-    return 0;
+    return 0
   }
 
-  return Math.trunc(parsed * 100) / 100;
-};
+  return Math.trunc(parsed * 100) / 100
+}
 
-export function SetInput({ set, setNumber, onChange, onRemove }: SetInputProps) {
+export function SetInput({
+  set,
+  setNumber,
+  onChange,
+  onRemove,
+}: SetInputProps) {
   const [rawWeight, setRawWeight] = useState(
-    set.weight === 0 ? '' : String(set.weight)
-  );
-  const [isEditingWeight, setIsEditingWeight] = useState(false);
+    set.weight === 0 ? '' : String(set.weight),
+  )
+  const [isEditingWeight, setIsEditingWeight] = useState(false)
 
   useEffect(() => {
     if (isEditingWeight) {
-      return;
+      return
     }
 
-    setRawWeight(set.weight === 0 ? '' : String(set.weight));
-  }, [isEditingWeight, set.id, set.weight]);
+    setRawWeight(set.weight === 0 ? '' : String(set.weight))
+  }, [isEditingWeight, set.id, set.weight])
 
   return (
     <div className="flex items-center gap-2 p-3 bg-slate-50 rounded-lg">
@@ -59,9 +64,9 @@ export function SetInput({ set, setNumber, onChange, onRemove }: SetInputProps) 
             onFocus={() => setIsEditingWeight(true)}
             onBlur={() => setIsEditingWeight(false)}
             onChange={(e) => {
-              const { value } = e.target;
-              setRawWeight(value);
-              onChange({ ...set, weight: normalizeWeight(value) });
+              const { value } = e.target
+              setRawWeight(value)
+              onChange({ ...set, weight: normalizeWeight(value) })
             }}
             placeholder="Weight"
             className="text-base h-11"
@@ -99,5 +104,5 @@ export function SetInput({ set, setNumber, onChange, onRemove }: SetInputProps) 
         <X className="w-4 h-4" />
       </Button>
     </div>
-  );
+  )
 }

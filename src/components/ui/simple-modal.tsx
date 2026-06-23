@@ -1,14 +1,14 @@
-import { useId } from 'react';
-import type { ReactNode } from 'react';
-import { X } from 'lucide-react';
+import { useId } from 'react'
+import { X } from 'lucide-react'
+import type { ReactNode } from 'react'
 
 interface SimpleModalProps {
-  children: ReactNode;
-  description?: ReactNode;
-  onClose: () => void;
-  open: boolean;
-  role?: 'alertdialog' | 'dialog';
-  title: ReactNode;
+  children: ReactNode
+  description?: ReactNode
+  onClose: () => void
+  open: boolean
+  role?: 'alertdialog' | 'dialog'
+  title: ReactNode
 }
 
 export function SimpleModal({
@@ -19,11 +19,11 @@ export function SimpleModal({
   role = 'dialog',
   title,
 }: SimpleModalProps) {
-  const titleId = useId();
-  const descriptionId = useId();
+  const titleId = useId()
+  const descriptionId = useId()
 
   if (!open) {
-    return null;
+    return null
   }
 
   return (
@@ -44,7 +44,10 @@ export function SimpleModal({
           <X className="h-4 w-4" />
         </button>
         <div className="flex flex-col space-y-1.5 text-center sm:text-left">
-          <h2 id={titleId} className="text-lg font-semibold leading-none tracking-tight">
+          <h2
+            id={titleId}
+            className="text-lg font-semibold leading-none tracking-tight"
+          >
             {title}
           </h2>
           {description ? (
@@ -56,5 +59,5 @@ export function SimpleModal({
         <div className="mt-4">{children}</div>
       </div>
     </div>
-  );
+  )
 }

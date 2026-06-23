@@ -1,20 +1,20 @@
-import { Link, useLocation } from '@/lib/router-compat';
-import { BottomNav } from './BottomNav';
-import { cn } from '@/lib/utils';
-import { UpdateNotice } from '@/features/app-update/UpdateNotice';
+import { BottomNav } from './BottomNav'
+import { Link, useLocation } from '@/lib/router-compat'
+import { cn } from '@/lib/utils'
+import { UpdateNotice } from '@/features/app-update/UpdateNotice'
 
 interface MainLayoutProps {
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 export function MainLayout({ children }: MainLayoutProps) {
-  const location = useLocation();
+  const location = useLocation()
 
   const navItems = [
     { path: '/', label: 'Home' },
     { path: '/workouts', label: 'Workouts' },
     { path: '/exercises', label: 'Exercises' },
-  ];
+  ]
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
@@ -27,7 +27,7 @@ export function MainLayout({ children }: MainLayoutProps) {
             </div>
             <div className="flex gap-6">
               {navItems.map((item) => {
-                const isActive = location.pathname === item.path;
+                const isActive = location.pathname === item.path
                 return (
                   <Link
                     key={item.path}
@@ -36,12 +36,12 @@ export function MainLayout({ children }: MainLayoutProps) {
                       'text-sm font-medium transition-colors',
                       isActive
                         ? 'text-slate-900'
-                        : 'text-slate-600 hover:text-slate-900'
+                        : 'text-slate-600 hover:text-slate-900',
                     )}
                   >
                     {item.label}
                   </Link>
-                );
+                )
               })}
             </div>
           </div>
@@ -63,5 +63,5 @@ export function MainLayout({ children }: MainLayoutProps) {
       {/* Mobile bottom navigation */}
       <BottomNav />
     </div>
-  );
+  )
 }

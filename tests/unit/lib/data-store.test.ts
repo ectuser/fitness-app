@@ -1,5 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import {
+  clone,
+  completedBenchWorkout,
+  completedRowWorkout,
+  createWorkoutExercise,
+  exercises,
+  upcomingWorkout,
+} from '../fixtures'
+import {
   createWorkoutRecord,
   deleteWorkoutRecord,
   duplicateWorkoutRecord,
@@ -10,14 +18,6 @@ import {
 } from '@/lib/data-store'
 import { STORAGE_KEYS } from '@/lib/storage'
 import { DEFAULT_SETTINGS } from '@/lib/settings'
-import {
-  clone,
-  completedBenchWorkout,
-  completedRowWorkout,
-  createWorkoutExercise,
-  exercises,
-  upcomingWorkout,
-} from '../fixtures'
 
 describe('data store helpers', () => {
   beforeEach(() => {

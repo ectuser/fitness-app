@@ -1,41 +1,41 @@
-import { useEffect, useMemo, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Card } from '@/components/ui/card';
+import { useEffect, useMemo, useState } from 'react'
+import { Check, Clock, Plus, Search, TrendingUp } from 'lucide-react'
+import { useWorkouts } from '../workout/use-workouts'
+import { useExerciseStats } from '../training-history/use-training-history'
+import { ExerciseForm } from './ExerciseForm'
+import { getOrderedMuscleGroups } from './exercise-helpers'
+import { useExercises } from './use-exercises'
+import type { Exercise, MuscleGroup } from '@/types'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Badge } from '@/components/ui/badge'
+import { Card } from '@/components/ui/card'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Search, Plus, Check, TrendingUp, Clock } from 'lucide-react';
-import { useWorkouts } from '../workout/use-workouts';
-import type { Exercise, MuscleGroup } from '@/types';
-import { useExerciseStats } from '../training-history/use-training-history';
-import { SimpleModal } from '@/components/ui/simple-modal';
-import { ExerciseForm } from './ExerciseForm';
-import { getOrderedMuscleGroups } from './exercise-helpers';
-import { useExercises } from './use-exercises';
+} from '@/components/ui/select'
+import { SimpleModal } from '@/components/ui/simple-modal'
 
 interface ExerciseSelectorProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  onSelect: (exercise: Exercise) => void;
-  selectedExerciseIds?: string[];
-  initialFilterGroup?: MuscleGroup | null;
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  onSelect: (exercise: Exercise) => void
+  selectedExerciseIds?: Array<string>
+  initialFilterGroup?: MuscleGroup | null
 }
 
 interface ExerciseCardProps {
-  exercise: Exercise;
-  isSelected: boolean;
-  onClick: () => void;
+  exercise: Exercise
+  isSelected: boolean
+  onClick: () => void
 }
 
 function ExerciseCard({ exercise, isSelected, onClick }: ExerciseCardProps) {
-  const { workouts } = useWorkouts();
-  const stats = useExerciseStats(exercise.id, workouts);
+  const { workouts } = useWorkouts()
+  const stats = useExerciseStats(exercise.id, workouts)
 
   return (
     <Card
@@ -63,7 +63,8 @@ function ExerciseCard({ exercise, isSelected, onClick }: ExerciseCardProps) {
                 <div className="flex items-center gap-1">
                   <TrendingUp className="w-3 h-3" />
                   <span>
-                    Max: {stats.maxWeight} {stats.maxWeightUnit} × {stats.maxWeightReps}
+                    Max: {stats.maxWeight} {stats.maxWeightUnit} ×{' '}
+                    {stats.maxWeightReps}
                   </span>
                 </div>
               )}
@@ -71,7 +72,8 @@ function ExerciseCard({ exercise, isSelected, onClick }: ExerciseCardProps) {
                 <div className="flex items-center gap-1">
                   <Clock className="w-3 h-3" />
                   <span>
-                    Last: {stats.lastWeight} {stats.lastWeightUnit} × {stats.lastWeightReps}
+                    Last: {stats.lastWeight} {stats.lastWeightUnit} ×{' '}
+                    {stats.lastWeightReps}
                   </span>
                 </div>
               )}
@@ -85,7 +87,7 @@ function ExerciseCard({ exercise, isSelected, onClick }: ExerciseCardProps) {
         </div>
       </div>
     </Card>
-  );
+  )
 }
 
 export function ExerciseSelector({
@@ -95,38 +97,44 @@ export function ExerciseSelector({
   selectedExerciseIds = [],
   initialFilterGroup = null,
 }: ExerciseSelectorProps) {
-  const { exercises, addExercise } = useExercises();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [showCreateForm, setShowCreateForm] = useState(false);
-  const [selectedFilterGroup, setSelectedFilterGroup] = useState<MuscleGroup | null>(null);
+  const { exercises, addExercise } = useExercises()
+  const [searchQuery, setSearchQuery] = useState('')
+  const [showCreateForm, setShowCreateForm] = useState(false)
+  const [selectedFilterGroup, setSelectedFilterGroup] =
+    useState<MuscleGroup | null>(null)
 
-  const availableMuscleGroups = useMemo(() => getOrderedMuscleGroups(exercises), [exercises]);
+  const availableMuscleGroups = useMemo(
+    () => getOrderedMuscleGroups(exercises),
+    [exercises],
+  )
 
   useEffect(() => {
-    if (!open) return;
-    setSelectedFilterGroup(initialFilterGroup ?? null);
-  }, [initialFilterGroup, open]);
+    if (!open) return
+    setSelectedFilterGroup(initialFilterGroup ?? null)
+  }, [initialFilterGroup, open])
 
   const filteredExercises = exercises.filter((exercise) => {
     const matchesSearch = exercise.name
       .toLowerCase()
-      .includes(searchQuery.toLowerCase());
+      .includes(searchQuery.toLowerCase())
     const matchesFilter = selectedFilterGroup
       ? exercise.muscleGroups.includes(selectedFilterGroup)
-      : true;
-    return matchesSearch && matchesFilter;
-  });
+      : true
+    return matchesSearch && matchesFilter
+  })
 
-  const handleExerciseSave = async (exerciseData: Omit<Exercise, 'id' | 'createdAt'>) => {
-    const newExercise = await addExercise(exerciseData);
-    setShowCreateForm(false);
-    setSearchQuery('');
-    onSelect(newExercise);
-  };
+  const handleExerciseSave = async (
+    exerciseData: Omit<Exercise, 'id' | 'createdAt'>,
+  ) => {
+    const newExercise = await addExercise(exerciseData)
+    setShowCreateForm(false)
+    setSearchQuery('')
+    onSelect(newExercise)
+  }
 
   const handleSelectExercise = (exercise: Exercise) => {
-    onSelect(exercise);
-  };
+    onSelect(exercise)
+  }
 
   if (showCreateForm) {
     return (
@@ -143,7 +151,7 @@ export function ExerciseSelector({
           />
         </div>
       </SimpleModal>
-    );
+    )
   }
 
   return (
@@ -181,15 +189,17 @@ export function ExerciseSelector({
               value={selectedFilterGroup ?? 'all'}
               onValueChange={(value) => {
                 if (value === 'all') {
-                  setSelectedFilterGroup(null);
-                  return;
+                  setSelectedFilterGroup(null)
+                  return
                 }
-                setSelectedFilterGroup(value as MuscleGroup);
+                setSelectedFilterGroup(value as MuscleGroup)
               }}
             >
               <SelectTrigger
                 className={`w-full sm:w-[260px] ${
-                  selectedFilterGroup ? 'border-slate-900 ring-1 ring-slate-200' : ''
+                  selectedFilterGroup
+                    ? 'border-slate-900 ring-1 ring-slate-200'
+                    : ''
                 }`}
               >
                 <SelectValue placeholder="Filter by muscle group" />
@@ -216,7 +226,9 @@ export function ExerciseSelector({
 
           {selectedFilterGroup && (
             <div className="rounded-md border border-slate-300 bg-slate-50 px-3 py-2 text-sm">
-              Filtering by <span className="font-semibold">{selectedFilterGroup}</span>. Reset to see all exercises.
+              Filtering by{' '}
+              <span className="font-semibold">{selectedFilterGroup}</span>.
+              Reset to see all exercises.
             </div>
           )}
 
@@ -224,7 +236,7 @@ export function ExerciseSelector({
           <div className="flex-1 overflow-y-auto space-y-2 pr-2">
             {filteredExercises.length > 0 ? (
               filteredExercises.map((exercise) => {
-                const isSelected = selectedExerciseIds.includes(exercise.id);
+                const isSelected = selectedExerciseIds.includes(exercise.id)
                 return (
                   <ExerciseCard
                     key={exercise.id}
@@ -232,7 +244,7 @@ export function ExerciseSelector({
                     isSelected={isSelected}
                     onClick={() => handleSelectExercise(exercise)}
                   />
-                );
+                )
               })
             ) : (
               <div className="text-center py-12 text-slate-500">
@@ -254,5 +266,5 @@ export function ExerciseSelector({
         </div>
       </div>
     </SimpleModal>
-  );
+  )
 }

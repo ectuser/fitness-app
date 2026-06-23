@@ -1,7 +1,7 @@
-import { fireEvent, render, screen } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
-import { WorkoutList } from '@/features/workout/WorkoutList';
-import { completedBenchWorkout, exercises, upcomingWorkout } from '../fixtures';
+import { fireEvent, render, screen } from '@testing-library/react'
+import { describe, expect, it, vi } from 'vitest'
+import { completedBenchWorkout, exercises, upcomingWorkout } from '../fixtures'
+import { WorkoutList } from '@/features/workout/WorkoutList'
 
 vi.mock('@/features/workout/WorkoutCard', () => ({
   WorkoutCard: ({
@@ -12,12 +12,12 @@ vi.mock('@/features/workout/WorkoutCard', () => ({
     onToggleComplete,
     workout,
   }: {
-    onDelete: () => void;
-    onDuplicate: () => void;
-    onEdit: () => void;
-    onStart: () => void;
-    onToggleComplete: () => void;
-    workout: { name: string };
+    onDelete: () => void
+    onDuplicate: () => void
+    onEdit: () => void
+    onStart: () => void
+    onToggleComplete: () => void
+    workout: { name: string }
   }) => (
     <div>
       <span>{workout.name}</span>
@@ -38,7 +38,7 @@ vi.mock('@/features/workout/WorkoutCard', () => ({
       </button>
     </div>
   ),
-}));
+}))
 
 describe('WorkoutList', () => {
   it('returns null for empty lists and renders workout cards otherwise', () => {
@@ -51,10 +51,10 @@ describe('WorkoutList', () => {
         onDuplicate={vi.fn()}
         onDelete={vi.fn()}
         onToggleComplete={vi.fn()}
-      />
-    );
+      />,
+    )
 
-    expect(container).toBeEmptyDOMElement();
+    expect(container).toBeEmptyDOMElement()
 
     rerender(
       <WorkoutList
@@ -65,19 +65,19 @@ describe('WorkoutList', () => {
         onDuplicate={vi.fn()}
         onDelete={vi.fn()}
         onToggleComplete={vi.fn()}
-      />
-    );
+      />,
+    )
 
-    expect(screen.getByText('Push Day')).toBeInTheDocument();
-    expect(screen.getByText('Leg Day')).toBeInTheDocument();
-  });
+    expect(screen.getByText('Push Day')).toBeInTheDocument()
+    expect(screen.getByText('Leg Day')).toBeInTheDocument()
+  })
 
   it('binds item callbacks to each workout id', () => {
-    const onDelete = vi.fn();
-    const onDuplicate = vi.fn();
-    const onEdit = vi.fn();
-    const onStart = vi.fn();
-    const onToggleComplete = vi.fn();
+    const onDelete = vi.fn()
+    const onDuplicate = vi.fn()
+    const onEdit = vi.fn()
+    const onStart = vi.fn()
+    const onToggleComplete = vi.fn()
 
     render(
       <WorkoutList
@@ -88,19 +88,19 @@ describe('WorkoutList', () => {
         onDuplicate={onDuplicate}
         onDelete={onDelete}
         onToggleComplete={onToggleComplete}
-      />
-    );
+      />,
+    )
 
-    fireEvent.click(screen.getAllByRole('button', { name: 'Start' })[1]);
-    fireEvent.click(screen.getAllByRole('button', { name: 'Edit' })[1]);
-    fireEvent.click(screen.getAllByRole('button', { name: 'Duplicate' })[1]);
-    fireEvent.click(screen.getAllByRole('button', { name: 'Delete' })[1]);
-    fireEvent.click(screen.getAllByRole('button', { name: 'Toggle' })[1]);
+    fireEvent.click(screen.getAllByRole('button', { name: 'Start' })[1])
+    fireEvent.click(screen.getAllByRole('button', { name: 'Edit' })[1])
+    fireEvent.click(screen.getAllByRole('button', { name: 'Duplicate' })[1])
+    fireEvent.click(screen.getAllByRole('button', { name: 'Delete' })[1])
+    fireEvent.click(screen.getAllByRole('button', { name: 'Toggle' })[1])
 
-    expect(onStart).toHaveBeenCalledWith(upcomingWorkout.id);
-    expect(onEdit).toHaveBeenCalledWith(upcomingWorkout.id);
-    expect(onDuplicate).toHaveBeenCalledWith(upcomingWorkout.id);
-    expect(onDelete).toHaveBeenCalledWith(upcomingWorkout.id);
-    expect(onToggleComplete).toHaveBeenCalledWith(upcomingWorkout.id);
-  });
-});
+    expect(onStart).toHaveBeenCalledWith(upcomingWorkout.id)
+    expect(onEdit).toHaveBeenCalledWith(upcomingWorkout.id)
+    expect(onDuplicate).toHaveBeenCalledWith(upcomingWorkout.id)
+    expect(onDelete).toHaveBeenCalledWith(upcomingWorkout.id)
+    expect(onToggleComplete).toHaveBeenCalledWith(upcomingWorkout.id)
+  })
+})

@@ -1,45 +1,46 @@
-import { PageHeader } from '@/components/layout/PageHeader';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { useNavigate } from '@/lib/router-compat';
-import { useExercises } from '../exercise/use-exercises';
-import { useWorkouts } from './use-workouts';
-import { WorkoutList } from './WorkoutList';
+import { useExercises } from '../exercise/use-exercises'
+import { useWorkouts } from './use-workouts'
+import { WorkoutList } from './WorkoutList'
+import { PageHeader } from '@/components/layout/PageHeader'
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
+import { useNavigate } from '@/lib/router-compat'
 
 export function WorkoutsCompletedPage() {
-  const navigate = useNavigate();
-  const { exercises } = useExercises();
-  const { workouts, deleteWorkout, duplicateWorkout, toggleWorkoutComplete } = useWorkouts();
+  const navigate = useNavigate()
+  const { exercises } = useExercises()
+  const { workouts, deleteWorkout, duplicateWorkout, toggleWorkoutComplete } =
+    useWorkouts()
 
   const completedWorkouts = workouts
     .filter((w) => w.isCompleted)
     .sort((a, b) => {
-      const dateA = new Date(a.completedAt || a.date);
-      const dateB = new Date(b.completedAt || b.date);
-      return dateB.getTime() - dateA.getTime();
-    });
+      const dateA = new Date(a.completedAt || a.date)
+      const dateB = new Date(b.completedAt || b.date)
+      return dateB.getTime() - dateA.getTime()
+    })
 
   const handleStart = (workoutId: string) => {
-    navigate(`/workouts/${workoutId}/session`);
-  };
+    navigate(`/workouts/${workoutId}/session`)
+  }
 
   const handleEdit = (workoutId: string) => {
-    navigate(`/workouts/${workoutId}/edit`);
-  };
+    navigate(`/workouts/${workoutId}/edit`)
+  }
 
   const handleDuplicate = (workoutId: string) => {
     duplicateWorkout(workoutId, {
       date: new Date().toISOString().split('T')[0],
-    });
-  };
+    })
+  }
 
   const handleDelete = (workoutId: string) => {
-    deleteWorkout(workoutId);
-  };
+    deleteWorkout(workoutId)
+  }
 
   const handleToggleComplete = (workoutId: string) => {
-    toggleWorkoutComplete(workoutId);
-  };
+    toggleWorkoutComplete(workoutId)
+  }
 
   return (
     <div>
@@ -73,5 +74,5 @@ export function WorkoutsCompletedPage() {
         )}
       </div>
     </div>
-  );
+  )
 }

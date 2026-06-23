@@ -1,14 +1,14 @@
-import { WorkoutCard } from './WorkoutCard';
-import type { Workout, Exercise } from '@/types';
+import { WorkoutCard } from './WorkoutCard'
+import type { Exercise, Workout } from '@/types'
 
 interface WorkoutListProps {
-  workouts: Workout[];
-  exercises: Exercise[];
-  onStart: (workoutId: string) => void;
-  onEdit: (workoutId: string) => void;
-  onDuplicate: (workoutId: string) => void;
-  onDelete: (workoutId: string) => void;
-  onToggleComplete: (workoutId: string) => void;
+  workouts: Array<Workout>
+  exercises: Array<Exercise>
+  onStart: (workoutId: string) => void
+  onEdit: (workoutId: string) => void
+  onDuplicate: (workoutId: string) => void
+  onDelete: (workoutId: string) => void
+  onToggleComplete: (workoutId: string) => void
 }
 
 export function WorkoutList({
@@ -21,7 +21,7 @@ export function WorkoutList({
   onToggleComplete,
 }: WorkoutListProps) {
   if (workouts.length === 0) {
-    return null;
+    return null
   }
 
   return (
@@ -39,5 +39,5 @@ export function WorkoutList({
         />
       ))}
     </div>
-  );
+  )
 }

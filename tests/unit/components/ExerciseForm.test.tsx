@@ -1,82 +1,91 @@
-import { fireEvent, render, screen } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
-import { ExerciseForm } from '@/features/exercise/ExerciseForm';
-import { exercises } from '../fixtures';
+import { fireEvent, render, screen, within } from '@testing-library/react'
+import { describe, expect, it, vi } from 'vitest'
+import { exercises } from '../fixtures'
+import { ExerciseForm } from '@/features/exercise/ExerciseForm'
 
 describe('ExerciseForm', () => {
   it('validates required fields before saving', () => {
-    const onSave = vi.fn();
+    const onSave = vi.fn()
 
-    render(<ExerciseForm onCancel={vi.fn()} onSave={onSave} />);
+    render(<ExerciseForm onCancel={vi.fn()} onSave={onSave} />)
 
-    fireEvent.click(screen.getByRole('button', { name: /save exercise/i }));
-    expect(screen.getByText('Exercise name is required')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: /save exercise/i }))
+    expect(screen.getByText('Exercise name is required')).toBeInTheDocument()
 
     fireEvent.change(screen.getByLabelText(/exercise name/i), {
       target: { value: 'Incline Curl' },
-    });
-    fireEvent.click(screen.getByRole('button', { name: /save exercise/i }));
+    })
+    fireEvent.click(screen.getByRole('button', { name: /save exercise/i }))
 
-    expect(screen.getByText('Please select at least one muscle group')).toBeInTheDocument();
-    expect(onSave).not.toHaveBeenCalled();
-  });
+    expect(
+      screen.getByText('Please select at least one muscle group'),
+    ).toBeInTheDocument()
+    expect(onSave).not.toHaveBeenCalled()
+  })
 
   it('saves trimmed values and lets the user remove a selected muscle badge', () => {
-    const onSave = vi.fn();
+    const onSave = vi.fn()
 
-    render(<ExerciseForm onCancel={vi.fn()} onSave={onSave} />);
+    render(<ExerciseForm onCancel={vi.fn()} onSave={onSave} />)
 
     fireEvent.change(screen.getByLabelText(/exercise name/i), {
       target: { value: '  Incline Curl  ' },
-    });
-    fireEvent.click(screen.getAllByRole('button', { name: 'Biceps' })[0]);
+    })
+    fireEvent.click(screen.getAllByRole('button', { name: 'Biceps' })[0])
     fireEvent.change(screen.getByLabelText(/comments/i), {
       target: { value: '  Focus on the squeeze.  ' },
-    });
+    })
 
-    fireEvent.click(screen.getByRole('button', { name: /save exercise/i }));
+    fireEvent.click(screen.getByRole('button', { name: /save exercise/i }))
 
     expect(onSave).toHaveBeenCalledWith({
       comments: 'Focus on the squeeze.',
       isCustom: true,
       muscleGroups: ['Biceps'],
       name: 'Incline Curl',
-    });
-  });
+    })
+  })
 
   it('prefills existing exercise data and supports cancel', () => {
-    const onCancel = vi.fn();
+    const onCancel = vi.fn()
 
-    render(<ExerciseForm exercise={exercises[1]} onCancel={onCancel} onSave={vi.fn()} />);
+    render(
+      <ExerciseForm
+        exercise={exercises[1]}
+        onCancel={onCancel}
+        onSave={vi.fn()}
+      />,
+    )
 
-    expect(screen.getByDisplayValue('Barbell Row')).toBeInTheDocument();
-    expect(screen.getByDisplayValue('Keep your chest up.')).toBeInTheDocument();
+    expect(screen.getByDisplayValue('Barbell Row')).toBeInTheDocument()
+    expect(screen.getByDisplayValue('Keep your chest up.')).toBeInTheDocument()
 
-    fireEvent.click(screen.getAllByRole('button', { name: /cancel/i }).at(-1)!);
-    expect(onCancel).toHaveBeenCalled();
-  });
+    fireEvent.click(screen.getAllByRole('button', { name: /cancel/i }).at(-1)!)
+    expect(onCancel).toHaveBeenCalled()
+  })
 
   it('renders action buttons with correct variants, order, and responsive row semantics', () => {
-    render(<ExerciseForm onCancel={vi.fn()} onSave={vi.fn()} />);
+    render(<ExerciseForm onCancel={vi.fn()} onSave={vi.fn()} />)
 
-    const cancelButton = screen.getByRole('button', { name: /^cancel$/i });
-    const saveButton = screen.getByRole('button', { name: /save exercise/i });
-    const actions = saveButton.parentElement;
+    const cancelButton = screen.getByRole('button', { name: /^cancel$/i })
+    const saveButton = screen.getByRole('button', { name: /save exercise/i })
+    const actions = screen.getByRole('group', {
+      name: /exercise form actions/i,
+    })
 
-    expect(actions).not.toBeNull();
-    expect(actions?.className).toContain('flex-col-reverse');
-    expect(actions?.className).toContain('sm:flex-row');
+    expect(actions.className).toContain('flex-col-reverse')
+    expect(actions.className).toContain('sm:flex-row')
 
-    expect(saveButton.className).toContain('border');
-    expect(saveButton.className).toContain('border-input');
-    expect(saveButton.className).toContain('bg-background');
-    expect(cancelButton.className).toContain('hover:bg-accent');
-    expect(cancelButton.className).not.toContain('border-input');
-    expect(cancelButton.className).not.toContain('bg-background');
+    expect(saveButton.className).toContain('border')
+    expect(saveButton.className).toContain('border-input')
+    expect(saveButton.className).toContain('bg-background')
+    expect(cancelButton.className).toContain('hover:bg-accent')
+    expect(cancelButton.className).not.toContain('border-input')
+    expect(cancelButton.className).not.toContain('bg-background')
 
-    const actionButtons = Array.from(actions?.querySelectorAll('button') ?? []);
-    expect(actionButtons).toHaveLength(2);
-    expect(actionButtons[0]).toBe(cancelButton);
-    expect(actionButtons[1]).toBe(saveButton);
-  });
-});
+    const actionButtons = within(actions).getAllByRole('button')
+    expect(actionButtons).toHaveLength(2)
+    expect(actionButtons[0]).toBe(cancelButton)
+    expect(actionButtons[1]).toBe(saveButton)
+  })
+})

@@ -4,12 +4,14 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
+  pull-requests: write
 
 concurrency:
   group: pages
@@ -18,43 +20,170 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Checkout current production source
+        if: github.event_name == 'pull_request'
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.base_ref }}
+          path: production-source
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.8.0
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 22
-          cache: npm
+          node-version: 24.17.0
+          cache: pnpm
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
+
+      - name: Resolve GitHub Pages base path
+        id: pages
+        shell: bash
+        run: |
+          REPO_NAME="${GITHUB_REPOSITORY#*/}"
+
+          if [[ "${{ github.event_name }}" == 'pull_request' ]]; then
+            preview_path="pr-${{ github.event.pull_request.number }}"
+            echo "base_path=/${REPO_NAME}/${preview_path}/" >> "$GITHUB_OUTPUT"
+            echo "publish_path=pages/${preview_path}" >> "$GITHUB_OUTPUT"
+            echo "deployment_url=https://${GITHUB_REPOSITORY_OWNER}.github.io/${REPO_NAME}/${preview_path}/" >> "$GITHUB_OUTPUT"
+          else
+            echo "base_path=/${REPO_NAME}/" >> "$GITHUB_OUTPUT"
+            echo "publish_path=pages" >> "$GITHUB_OUTPUT"
+            echo "deployment_url=https://${GITHUB_REPOSITORY_OWNER}.github.io/${REPO_NAME}/" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Build (GitHub Pages base path)
         env:
           GITHUB_PAGES: 'true'
           VITE_DEPLOYMENT_RUN_NUMBER: ${{ github.run_number }}
           VITE_DEPLOYMENT_SHORT_SHA: ${{ github.sha }}
-        run: |
-          REPO_NAME="${GITHUB_REPOSITORY#*/}"
-          npm run build -- --base "/${REPO_NAME}/"
+        run: pnpm build --base "${{ steps.pages.outputs.base_path }}"
 
       - name: Add SPA fallback for deep links
         run: cp dist/client/index.html dist/client/404.html
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
+      - name: Stage Pages artifact
+        run: |
+          mkdir -p "${{ steps.pages.outputs.publish_path }}"
+          cp -R dist/client/. "${{ steps.pages.outputs.publish_path }}/"
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist/client
+      - name: Stage current production site
+        if: github.event_name == 'pull_request'
+        working-directory: production-source
+        env:
+          GITHUB_PAGES: 'true'
+          VITE_DEPLOYMENT_RUN_NUMBER: ${{ github.run_number }}
+          VITE_DEPLOYMENT_SHORT_SHA: ${{ github.event.pull_request.base.sha }}
+        shell: bash
+        run: |
+          REPO_NAME="${GITHUB_REPOSITORY#*/}"
 
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          if [[ -f pnpm-lock.yaml ]]; then
+            pnpm install --frozen-lockfile
+            pnpm build --base "/${REPO_NAME}/"
+          else
+            npm ci
+            npm run build -- --base "/${REPO_NAME}/"
+          fi
+
+          cp dist/client/index.html dist/client/404.html
+          cp -R dist/client/. ../pages/
+
+      - name: Exclude PR previews from production service worker
+        if: github.event_name == 'pull_request'
+        run: |
+          node --input-type=module <<'EOF'
+          import { readFile, writeFile } from 'node:fs/promises'
+
+          const serviceWorkerPath = 'pages/sw.js'
+          const serviceWorker = await readFile(serviceWorkerPath, 'utf8')
+          const navigationRoute =
+            'new e.NavigationRoute(e.createHandlerBoundToURL("index.html"))'
+          const patchedNavigationRoute =
+            'new e.NavigationRoute(e.createHandlerBoundToURL("index.html"),{denylist:[/\\/pr-\\d+\\//]})'
+
+          if (!serviceWorker.includes(navigationRoute)) {
+            throw new Error('Could not find production navigation route in sw.js')
+          }
+
+          await writeFile(
+            serviceWorkerPath,
+            serviceWorker.replace(navigationRoute, patchedNavigationRoute),
+          )
+          EOF
+
+      - name: Publish to GitHub Pages branch
+        shell: bash
+        run: |
+          publish_dir="$(mktemp -d)"
+
+          if git ls-remote --exit-code --heads origin gh-pages >/dev/null 2>&1; then
+            git clone --depth 1 --branch gh-pages "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "$publish_dir"
+          else
+            git init "$publish_dir"
+            git -C "$publish_dir" checkout -b gh-pages
+            git -C "$publish_dir" remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          fi
+
+          rsync -a --delete --exclude='.git' --exclude='pr-*' pages/ "$publish_dir/"
+
+          if [[ -n "$PREVIEW_PATH" ]]; then
+            mkdir -p "$publish_dir/$PREVIEW_PATH"
+            rsync -a --delete "pages/$PREVIEW_PATH/" "$publish_dir/$PREVIEW_PATH/"
+          fi
+
+          touch "$publish_dir/.nojekyll"
+
+          git -C "$publish_dir" config user.name 'github-actions[bot]'
+          git -C "$publish_dir" config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git -C "$publish_dir" add -A
+
+          if git -C "$publish_dir" diff --cached --quiet; then
+            echo 'No GitHub Pages changes to publish.'
+            exit 0
+          fi
+
+          git -C "$publish_dir" commit -m "deploy: update GitHub Pages"
+          git -C "$publish_dir" push origin gh-pages
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          PREVIEW_PATH: ${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || '' }}
+
+      - name: Comment preview link
+        if: github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PREVIEW_URL: ${{ steps.pages.outputs.deployment_url }}
+        shell: bash
+        run: |
+          marker='<!-- fitness-app-pr-preview -->'
+
+          {
+            echo "$marker"
+            echo '## Preview deployment'
+            echo
+            echo "[Open PR preview]($PREVIEW_URL)"
+          } > preview-comment.md
+
+          comment_id=$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" \
+            --paginate \
+            --jq 'map(select(.body | startswith("<!-- fitness-app-pr-preview -->")))[0].id // empty')
+
+          if [[ -n "$comment_id" ]]; then
+            gh api --method PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$comment_id" \
+              --raw-field body="$(<preview-comment.md)"
+          else
+            gh api --method POST "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" \
+              --raw-field body="$(<preview-comment.md)"
+          fi

@@ -1,5 +1,7 @@
 # Agent Guide for Fitness Tracker
 
+Keep this file short and concise.
+
 ## Scope Discipline
 
 - Only implement exactly what the user requests; do not expand the scope on your own.
@@ -9,10 +11,18 @@
 
 For verification use:
 
-- npm run build
-- npm run typecheck
-- npm run lint
-- npm run test:e2e
+- pnpm build
+- pnpm typecheck
+- pnpm lint
+- pnpm test:e2e
+
+## Commits
+
+- Use Conventional Commits for all commit messages.
+
+## Dependencies
+
+- All dependency versions in package manifests must be pinned exactly. Version ranges and tags such as `^`, `~`, `*`, and `latest` are prohibited.
 
 ## TDD
 

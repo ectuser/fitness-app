@@ -24,8 +24,8 @@ A mobile-first workout tracker built with React, TypeScript, TanStack Start, Tan
 ## Getting Started
 
 ```bash
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
 
 The local app runs at `http://localhost:3000/`.
@@ -33,12 +33,12 @@ The local app runs at `http://localhost:3000/`.
 ## Scripts
 
 ```bash
-npm run dev
-npm run build
-npm run preview
-npm run typecheck
-npm run lint
-npm run test:e2e
+pnpm dev
+pnpm build
+pnpm preview
+pnpm typecheck
+pnpm lint
+pnpm test:e2e
 ```
 
 ## Project Structure
@@ -67,4 +67,4 @@ Clearing browser data will remove local workouts and custom exercises.
 
 ## Deployment
 
-`npm run build` emits TanStack Start output under `dist/client` and `dist/server`. Deploy it to a target that supports the TanStack Start server output, or add a static adapter before deploying to static-only hosting.
+`pnpm build` emits TanStack Start output under `dist/client` and `dist/server`. Deploy it to a target that supports the TanStack Start server output, or add a static adapter before deploying to static-only hosting.

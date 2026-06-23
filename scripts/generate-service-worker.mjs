@@ -15,6 +15,7 @@ const { count, size, warnings } = await generateSW({
   globPatterns: ['**/*.{css,html,ico,js,json,png,txt,webmanifest}'],
   swDest: `${clientDirectory}/sw.js`,
   navigateFallback: 'index.html',
+  navigateFallbackDenylist: [/\/pr-\d+\//],
   cleanupOutdatedCaches: true,
   clientsClaim: true,
   skipWaiting: true,
@@ -24,4 +25,6 @@ for (const warning of warnings) {
   console.warn(warning)
 }
 
-console.log(`Generated service worker precaching ${count} files (${size} bytes).`)
+console.log(
+  `Generated service worker precaching ${count} files (${size} bytes).`,
+)

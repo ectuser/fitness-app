@@ -1,11 +1,12 @@
-import { fileURLToPath, URL } from 'node:url'
+import { URL, fileURLToPath } from 'node:url'
 import { defineConfig } from 'vite'
 import { paraglideVitePlugin } from '@inlang/paraglide-js'
+import babel from '@rolldown/plugin-babel'
 import { VitePWA } from 'vite-plugin-pwa'
 
 import { tanstackStart } from '@tanstack/react-start/plugin/vite'
 
-import viteReact from '@vitejs/plugin-react'
+import viteReact, { reactCompilerPreset } from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
 const isPagesBuild = process.env.GITHUB_PAGES === 'true'
@@ -70,6 +71,9 @@ const config = defineConfig({
       },
     }),
     viteReact(),
+    babel({
+      presets: [reactCompilerPreset()],
+    }),
   ],
 })
 
