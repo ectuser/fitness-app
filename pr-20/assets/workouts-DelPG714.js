@@ -1,1 +1,0 @@
-import{R as e}from"./index-C_VWLdWb.js";var t=e;export{t as component};
