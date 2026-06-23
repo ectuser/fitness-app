@@ -10,9 +10,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
   pull-requests: write
 
 concurrency:
@@ -104,17 +102,42 @@ jobs:
           cp dist/client/index.html dist/client/404.html
           cp -R dist/client/. ../pages/
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
+      - name: Publish to GitHub Pages branch
+        shell: bash
+        run: |
+          publish_dir="$(mktemp -d)"
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: pages
+          if git ls-remote --exit-code --heads origin gh-pages >/dev/null 2>&1; then
+            git clone --depth 1 --branch gh-pages "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "$publish_dir"
+          else
+            git init "$publish_dir"
+            git -C "$publish_dir" checkout -b gh-pages
+            git -C "$publish_dir" remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          fi
 
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          rsync -a --delete --exclude='pr-*' pages/ "$publish_dir/"
+
+          if [[ -n "$PREVIEW_PATH" ]]; then
+            mkdir -p "$publish_dir/$PREVIEW_PATH"
+            rsync -a --delete "pages/$PREVIEW_PATH/" "$publish_dir/$PREVIEW_PATH/"
+          fi
+
+          touch "$publish_dir/.nojekyll"
+
+          git -C "$publish_dir" config user.name 'github-actions[bot]'
+          git -C "$publish_dir" config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git -C "$publish_dir" add -A
+
+          if git -C "$publish_dir" diff --cached --quiet; then
+            echo 'No GitHub Pages changes to publish.'
+            exit 0
+          fi
+
+          git -C "$publish_dir" commit -m "deploy: update GitHub Pages"
+          git -C "$publish_dir" push origin gh-pages
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          PREVIEW_PATH: ${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || '' }}
 
       - name: Comment preview link
         if: github.event_name == 'pull_request'
