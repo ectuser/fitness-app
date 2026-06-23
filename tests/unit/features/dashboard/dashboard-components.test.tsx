@@ -37,14 +37,7 @@ vi.mock('@/components/ui/dropdown-menu', () => ({
 }))
 
 vi.mock('@/lib/router-compat', () => ({
-  Link: ({
-    children,
-    to,
-    ...props
-  }: {
-    children: ReactNode
-    to: string
-  }) => (
+  Link: ({ children, to, ...props }: { children: ReactNode; to: string }) => (
     <a href={to} {...props}>
       {children}
     </a>
@@ -96,9 +89,7 @@ describe('dashboard components', () => {
   it('renders header actions and delegates click handlers', () => {
     const onCreateWorkout = vi.fn()
 
-    render(
-      <DashboardHeaderActions onCreateWorkout={onCreateWorkout} />,
-    )
+    render(<DashboardHeaderActions onCreateWorkout={onCreateWorkout} />)
 
     fireEvent.click(screen.getByRole('button', { name: /new workout/i }))
 
