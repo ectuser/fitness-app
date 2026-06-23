@@ -1,0 +1,1 @@
+import{i as e,n as t}from"./jsx-runtime-CUBmso4R.js";import{W as n,i as r,t as i}from"./useStore-DEWa04OC.js";var a=e(t(),1);function o(e){let t=r(),o=(0,a.useRef)(void 0);return i(t.stores.location,r=>{let i=e?.select?e.select(r):r;if(e?.structuralSharing??t.options.defaultStructuralSharing){let e=n(o.current,i);return o.current=e,e}return i})}export{o as t};
