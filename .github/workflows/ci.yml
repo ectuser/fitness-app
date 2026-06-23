@@ -45,7 +45,7 @@ jobs:
         shell: bash
         run: |
           marker='<!-- fitness-app-ci-report -->'
-          deployment_url="https://${GITHUB_REPOSITORY_OWNER}.github.io/${GITHUB_REPOSITORY#*/}/"
+          deployment_url="https://${GITHUB_REPOSITORY_OWNER}.github.io/${GITHUB_REPOSITORY#*/}/pr-${PR_NUMBER}/"
 
           if [[ -f coverage/coverage-summary.json ]]; then
             coverage_rows=$(jq -r '
@@ -92,7 +92,7 @@ jobs:
             echo
             echo '### Deployment'
             echo
-            echo "[Open GitHub Pages deployment]($deployment_url)"
+            echo "[Open PR preview]($deployment_url)"
           } > ci-report.md
 
           comment_id=$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" \
