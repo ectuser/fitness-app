@@ -1,4 +1,5 @@
 import {
+  findLastWorkoutExercise,
   getCompletedWorkouts,
   sortWorkoutsByDateDesc,
 } from '../workout/workout-helpers'
@@ -6,9 +7,10 @@ import type {
   ExerciseStats,
   WeightUnit,
   Workout,
-  WorkoutExercise,
   WorkoutHistory,
 } from '@/types'
+
+export { findLastWorkoutExercise } from '../workout/workout-helpers'
 
 type ExerciseSetSnapshot = {
   reps: number
@@ -108,23 +110,4 @@ export function buildExerciseHistory(
   })
 
   return sortWorkoutsByDateDesc(history)
-}
-
-export function findLastWorkoutExercise(
-  exerciseId: string,
-  workouts: Array<Workout>,
-): WorkoutExercise | null {
-  for (const workout of sortWorkoutsByDateDesc(
-    getCompletedWorkouts(workouts),
-  )) {
-    const workoutExercise = workout.exercises.find(
-      (entry) => entry.exerciseId === exerciseId,
-    )
-
-    if (workoutExercise) {
-      return workoutExercise
-    }
-  }
-
-  return null
 }

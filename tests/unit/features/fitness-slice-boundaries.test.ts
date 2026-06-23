@@ -117,4 +117,13 @@ describe('fitness slice boundaries', () => {
 
     expect(invalidImports).toEqual([])
   })
+
+  it('keeps workout editing independent from training history projections', () => {
+    const source = readFileSync(
+      projectPath('src/features/workout/workout-editor.ts'),
+      'utf8',
+    )
+
+    expect(source).not.toContain('../training-history/')
+  })
 })

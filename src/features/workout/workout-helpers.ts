@@ -30,6 +30,23 @@ export function getCompletedWorkouts(workouts: Array<Workout>): Array<Workout> {
   )
 }
 
+export function findLastWorkoutExercise(
+  exerciseId: string,
+  workouts: Array<Workout>,
+): WorkoutExercise | null {
+  for (const workout of getCompletedWorkouts(workouts)) {
+    const workoutExercise = workout.exercises.find(
+      (entry) => entry.exerciseId === exerciseId,
+    )
+
+    if (workoutExercise) {
+      return workoutExercise
+    }
+  }
+
+  return null
+}
+
 export function getNextWorkout(workouts: Array<Workout>): Workout | null {
   const today = new Date().toISOString().split('T')[0]
   const upcoming = getUpcomingWorkouts(workouts).filter(

@@ -1,4 +1,4 @@
-import { findLastWorkoutExercise } from '../training-history/training-history-projections'
+import { findLastWorkoutExercise } from './workout-helpers'
 import type {
   Exercise,
   MuscleGroup,
