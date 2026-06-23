@@ -1,0 +1,1 @@
+import{R as e}from"./index-BAb18RBf.js";var t=e;export{t as component};
