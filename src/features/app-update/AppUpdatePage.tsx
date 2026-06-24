@@ -24,28 +24,26 @@ export function AppUpdatePage() {
   return (
     <div className="container mx-auto max-w-3xl px-4 py-6 md:py-10">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-slate-950 md:text-3xl">
-          App Update
-        </h1>
-        <p className="mt-2 text-sm leading-6 text-slate-600">
+        <h1 className="text-2xl font-bold md:text-3xl">App Update</h1>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
           Fitness Tracker updates the app shell separately from your workout
           data. Your workouts and settings stay stored in this browser.
         </p>
       </div>
 
-      <Card className="rounded-md border-slate-200">
+      <Card className="rounded-md">
         <CardHeader>
           <CardTitle className="flex items-center gap-3 text-xl">
             <StatusIcon state={updateStatus.state} />
             {getStatusTitle(updateStatus.state)}
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-5 text-sm leading-6 text-slate-600">
+        <CardContent className="space-y-5 text-sm leading-6 text-muted-foreground">
           <StatusDescription state={updateStatus.state} />
 
-          <div className="rounded-md border border-slate-200 bg-slate-50 p-4">
+          <div className="rounded-md border bg-muted p-4">
             <div className="flex gap-3">
-              <Info className="mt-0.5 h-5 w-5 shrink-0 text-slate-500" />
+              <Info className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground" />
               <p>
                 Applying an Available Update activates the waiting app version
                 and reloads the page. Save or finish important changes before
@@ -54,7 +52,7 @@ export function AppUpdatePage() {
             </div>
           </div>
 
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-muted-foreground">
             Current version: {getCurrentDeploymentVersion()}
           </p>
 
@@ -91,7 +89,7 @@ function StatusIcon({ state }: { state: PwaUpdateState }) {
   }
 
   if (state === 'unavailable') {
-    return <WifiOff className="h-5 w-5 text-slate-500" />
+    return <WifiOff className="h-5 w-5 text-muted-foreground" />
   }
 
   return <CheckCircle2 className="h-5 w-5 text-emerald-600" />
