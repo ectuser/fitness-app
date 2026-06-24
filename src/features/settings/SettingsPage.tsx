@@ -1,12 +1,12 @@
 import { useExercises } from '../exercise/use-exercises'
 import { usePwaUpdateStatus } from '../app-update/pwa-update-status'
 import { useWorkouts } from '../workout/use-workouts'
-import { useDashboardDataManagement } from '../dashboard/use-dashboard-data-management'
-import { DashboardDialogs } from '../dashboard/DashboardDialogs'
 import { AppUpdateSettingsSection } from './AppUpdateSettingsSection'
 import { AppearanceSettingsSection } from './AppearanceSettingsSection'
 import { DataSettingsSection } from './DataSettingsSection'
+import { SettingsDataDialogs } from './SettingsDataDialogs'
 import { SettingsSectionNav } from './SettingsSectionNav'
+import { useSettingsDataManagement } from './use-settings-data-management'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { useSettings } from '@/features/settings/use-settings'
 
@@ -27,7 +27,7 @@ export function SettingsPage() {
     setShowResetDialog,
     showImportDialog,
     showResetDialog,
-  } = useDashboardDataManagement({
+  } = useSettingsDataManagement({
     exercises,
     workouts,
     settings,
@@ -58,7 +58,7 @@ export function SettingsPage() {
         <SettingsSectionNav />
       </div>
 
-      <DashboardDialogs
+      <SettingsDataDialogs
         importError={importError}
         onCloseImportDialog={closeImportDialog}
         onConfirmImport={handleConfirmImport}

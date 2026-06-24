@@ -1,28 +1,28 @@
 import { useRef, useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { exerciseQueryKeys } from '../exercise/exercise-queries'
-import { settingsQueryKeys } from '../settings/settings-queries'
-import { workoutQueryKeys } from '../workout/workout-queries'
 import {
   buildExportPayload,
   importDashboardData,
   parseImportPayload,
   resetDashboardData,
-} from './dashboard-data'
-import type { ImportPayload } from './dashboard-data'
+} from '../dashboard/dashboard-data'
+import { workoutQueryKeys } from '../workout/workout-queries'
+import { settingsQueryKeys } from './settings-queries'
+import type { ImportPayload } from '../dashboard/dashboard-data'
 import type { Exercise, Settings, Workout } from '@/types'
 
-interface UseDashboardDataManagementOptions {
+interface UseSettingsDataManagementOptions {
   exercises: Array<Exercise>
   settings: Settings
   workouts: Array<Workout>
 }
 
-export function useDashboardDataManagement({
+export function useSettingsDataManagement({
   exercises,
   settings,
   workouts,
-}: UseDashboardDataManagementOptions) {
+}: UseSettingsDataManagementOptions) {
   const queryClient = useQueryClient()
   const [showResetDialog, setShowResetDialog] = useState(false)
   const [showImportDialog, setShowImportDialog] = useState(false)

@@ -9,7 +9,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 
-interface DashboardDialogsProps {
+interface SettingsDataDialogsProps {
   importError: string | null
   onCloseImportDialog: () => void
   onConfirmImport: () => void
@@ -19,7 +19,7 @@ interface DashboardDialogsProps {
   setOpenResetDialog: (open: boolean) => void
 }
 
-export function DashboardDialogs({
+export function SettingsDataDialogs({
   importError,
   onCloseImportDialog,
   onConfirmImport,
@@ -27,7 +27,7 @@ export function DashboardDialogs({
   openImportDialog,
   openResetDialog,
   setOpenResetDialog,
-}: DashboardDialogsProps) {
+}: SettingsDataDialogsProps) {
   return (
     <>
       <AlertDialog open={openResetDialog} onOpenChange={setOpenResetDialog}>

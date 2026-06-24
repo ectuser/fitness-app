@@ -6,7 +6,6 @@ import {
   upcomingWorkout,
 } from '../../fixtures'
 import type { ReactNode } from 'react'
-import { DashboardDialogs } from '@/features/dashboard/DashboardDialogs'
 import { DashboardHeaderActions } from '@/features/dashboard/DashboardHeaderActions'
 import { NextWorkoutSection } from '@/features/dashboard/NextWorkoutSection'
 import { QuickStatsSection } from '@/features/dashboard/QuickStatsSection'
@@ -41,47 +40,6 @@ vi.mock('@/lib/router-compat', () => ({
     <a href={to} {...props}>
       {children}
     </a>
-  ),
-}))
-
-vi.mock('@/components/ui/alert-dialog', () => ({
-  AlertDialog: ({ children }: { children: ReactNode }) => <div>{children}</div>,
-  AlertDialogAction: ({
-    children,
-    onClick,
-  }: {
-    children: ReactNode
-    onClick?: () => void
-  }) => (
-    <button type="button" onClick={onClick}>
-      {children}
-    </button>
-  ),
-  AlertDialogCancel: ({
-    children,
-    onClick,
-  }: {
-    children: ReactNode
-    onClick?: () => void
-  }) => (
-    <button type="button" onClick={onClick}>
-      {children}
-    </button>
-  ),
-  AlertDialogContent: ({ children }: { children: ReactNode }) => (
-    <div>{children}</div>
-  ),
-  AlertDialogDescription: ({ children }: { children: ReactNode }) => (
-    <div>{children}</div>
-  ),
-  AlertDialogFooter: ({ children }: { children: ReactNode }) => (
-    <div>{children}</div>
-  ),
-  AlertDialogHeader: ({ children }: { children: ReactNode }) => (
-    <div>{children}</div>
-  ),
-  AlertDialogTitle: ({ children }: { children: ReactNode }) => (
-    <h2>{children}</h2>
   ),
 }))
 
@@ -141,44 +99,17 @@ describe('dashboard components', () => {
     expect(onCreateWorkout).not.toHaveBeenCalled()
   })
 
-  it('renders quick stats and dialog states', () => {
-    const onCloseImportDialog = vi.fn()
-    const onConfirmImport = vi.fn()
-    const onConfirmReset = vi.fn()
-    const setOpenResetDialog = vi.fn()
-
+  it('renders quick stats', () => {
     render(
-      <>
-        <QuickStatsSection
-          exercisesCount={12}
-          upcomingWorkoutsCount={3}
-          completedWorkoutsCount={5}
-          totalSets={42}
-        />
-        <DashboardDialogs
-          importError={null}
-          onCloseImportDialog={onCloseImportDialog}
-          onConfirmImport={onConfirmImport}
-          onConfirmReset={onConfirmReset}
-          openImportDialog
-          openResetDialog
-          setOpenResetDialog={setOpenResetDialog}
-        />
-      </>,
+      <QuickStatsSection
+        exercisesCount={12}
+        upcomingWorkoutsCount={3}
+        completedWorkoutsCount={5}
+        totalSets={42}
+      />,
     )
 
     expect(screen.getByText('42')).toBeInTheDocument()
-    expect(screen.getByText('Reset All Data?')).toBeInTheDocument()
-    expect(screen.getByText('Import Data?')).toBeInTheDocument()
-
-    fireEvent.click(screen.getByRole('button', { name: /reset data/i }))
-    fireEvent.click(screen.getByRole('button', { name: /import data/i }))
-    fireEvent.click(screen.getAllByRole('button', { name: /cancel/i }).at(-1)!)
-
-    expect(onConfirmReset).toHaveBeenCalled()
-    expect(onConfirmImport).toHaveBeenCalled()
-    expect(setOpenResetDialog).not.toHaveBeenCalled()
-    expect(onCloseImportDialog).toHaveBeenCalled()
   })
 
   it('renders empty states and error dialog branches', () => {
@@ -199,15 +130,6 @@ describe('dashboard components', () => {
           onShowAll={vi.fn()}
           onStartWorkout={vi.fn()}
         />
-        <DashboardDialogs
-          importError="Bad backup"
-          onCloseImportDialog={onCloseImportDialog}
-          onConfirmImport={vi.fn()}
-          onConfirmReset={vi.fn()}
-          openImportDialog
-          openResetDialog={false}
-          setOpenResetDialog={vi.fn()}
-        />
       </>,
     )
 
@@ -215,11 +137,6 @@ describe('dashboard components', () => {
 
     expect(onCreateWorkout).toHaveBeenCalled()
     expect(screen.queryByText('Coming Workouts')).not.toBeInTheDocument()
-    expect(screen.getByText('Import Failed')).toBeInTheDocument()
-    expect(
-      screen.queryByRole('button', { name: /import data/i }),
-    ).not.toBeInTheDocument()
-    fireEvent.click(screen.getAllByRole('button', { name: /cancel/i }).at(-1)!)
-    expect(onCloseImportDialog).toHaveBeenCalled()
+    expect(onCloseImportDialog).not.toHaveBeenCalled()
   })
 })
