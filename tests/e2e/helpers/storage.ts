@@ -9,6 +9,7 @@ export const STORAGE_KEYS = {
 } as const
 
 type WeightUnit = 'kg' | 'lb'
+type ThemeMode = 'light' | 'dark' | 'system'
 
 export interface ExerciseFixture {
   id: string
@@ -47,7 +48,7 @@ export interface WorkoutFixture {
 export interface AppStorageFixture {
   exercises?: Array<ExerciseFixture>
   workouts?: Array<WorkoutFixture>
-  settings?: { defaultWeightUnit: WeightUnit }
+  settings?: { defaultWeightUnit: WeightUnit; themeMode?: ThemeMode }
   lastVisitedPath?: string
 }
 

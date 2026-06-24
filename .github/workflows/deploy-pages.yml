@@ -112,6 +112,10 @@ jobs:
           const patchedNavigationRoute =
             'new e.NavigationRoute(e.createHandlerBoundToURL("index.html"),{denylist:[/\\/pr-\\d+\\//]})'
 
+          if (serviceWorker.includes(patchedNavigationRoute)) {
+            process.exit(0)
+          }
+
           if (!serviceWorker.includes(navigationRoute)) {
             throw new Error('Could not find production navigation route in sw.js')
           }

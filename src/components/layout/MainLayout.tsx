@@ -17,9 +17,9 @@ export function MainLayout({ children }: MainLayoutProps) {
   ]
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
+    <div className="min-h-screen bg-background text-foreground flex flex-col">
       {/* Desktop navigation */}
-      <nav className="hidden md:block bg-white shadow-sm border-b border-slate-200">
+      <nav className="hidden md:block bg-card shadow-sm border-b border-border">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -35,8 +35,8 @@ export function MainLayout({ children }: MainLayoutProps) {
                     className={cn(
                       'text-sm font-medium transition-colors',
                       isActive
-                        ? 'text-slate-900'
-                        : 'text-slate-600 hover:text-slate-900',
+                        ? 'text-foreground'
+                        : 'text-muted-foreground hover:text-foreground',
                     )}
                   >
                     {item.label}
@@ -49,7 +49,7 @@ export function MainLayout({ children }: MainLayoutProps) {
       </nav>
 
       {/* Mobile header */}
-      <header className="md:hidden bg-white shadow-sm border-b border-slate-200">
+      <header className="md:hidden bg-card shadow-sm border-b border-border">
         <div className="container mx-auto px-4 py-4">
           <h1 className="text-xl font-bold text-center">💪 Fitness Tracker</h1>
         </div>

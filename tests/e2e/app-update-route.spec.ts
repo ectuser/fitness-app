@@ -1,22 +1,16 @@
 import { expect, test } from '@playwright/test'
 import { STORAGE_KEYS, seedAppStorage } from './helpers/storage'
-import type { Page } from '@playwright/test'
 
-const openDashboardSettingsMenu = async (page: Page) => {
-  await page.getByRole('button').first().click()
-}
-
-test('dashboard settings opens the App Update Page', async ({ page }) => {
+test('settings page opens the App Update Page', async ({ page }) => {
   await seedAppStorage(page, {
     workouts: [],
     settings: { defaultWeightUnit: 'kg' },
   })
 
-  await page.goto('')
-  await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible()
+  await page.goto('/settings')
+  await expect(page.getByRole('heading', { name: 'Settings' })).toBeVisible()
 
-  await openDashboardSettingsMenu(page)
-  await page.getByRole('menuitem', { name: 'App Update' }).click()
+  await page.getByRole('link', { name: 'Open App Update' }).click()
 
   await expect(page).toHaveURL(/\/app-update$/)
   await expect(page.getByRole('heading', { name: 'App Update' })).toBeVisible()

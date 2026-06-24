@@ -29,7 +29,7 @@ export function NextWorkoutSection({
         <Card className="p-6">
           <div className="mb-4">
             <h3 className="text-xl font-bold mb-2">{nextWorkout.name}</h3>
-            <div className="flex items-center gap-2 text-slate-600 mb-3">
+            <div className="flex items-center gap-2 text-muted-foreground mb-3">
               <Calendar className="w-4 h-4" />
               <span>{formatWorkoutDate(nextWorkout.date)}</span>
             </div>
@@ -40,7 +40,7 @@ export function NextWorkoutSection({
                 </Badge>
               ))}
             </div>
-            <p className="text-sm text-slate-600">
+            <p className="text-sm text-muted-foreground">
               {nextWorkout.exercises.length} exercise
               {nextWorkout.exercises.length !== 1 ? 's' : ''} •{' '}
               {getWorkoutTotalSets(nextWorkout)} set
@@ -57,8 +57,8 @@ export function NextWorkoutSection({
         </Card>
       ) : (
         <Card className="p-12 text-center">
-          <p className="text-slate-500 mb-4">No upcoming workouts.</p>
-          <p className="text-sm text-slate-500 mb-4">
+          <p className="text-muted-foreground mb-4">No upcoming workouts.</p>
+          <p className="text-sm text-muted-foreground mb-4">
             Create one to get started!
           </p>
           <Button onClick={onCreateWorkout}>

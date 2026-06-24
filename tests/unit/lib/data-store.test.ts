@@ -38,7 +38,7 @@ describe('data store helpers', () => {
     expect(loadFitnessData()).toEqual({
       exercises,
       workouts: [upcomingWorkout],
-      settings: { defaultWeightUnit: 'lb' },
+      settings: { defaultWeightUnit: 'lb', themeMode: 'system' },
     })
 
     localStorage.clear()

@@ -12,9 +12,6 @@ describe('dashboard slice boundary', () => {
   it('owns dashboard pages, components, hooks, and domain helpers', () => {
     expect(projectFileExists('src/features/dashboard/Dashboard.tsx')).toBe(true)
     expect(
-      projectFileExists('src/features/dashboard/DashboardDialogs.tsx'),
-    ).toBe(true)
-    expect(
       projectFileExists('src/features/dashboard/DashboardHeaderActions.tsx'),
     ).toBe(true)
     expect(
@@ -25,11 +22,6 @@ describe('dashboard slice boundary', () => {
     ).toBe(true)
     expect(
       projectFileExists('src/features/dashboard/UpcomingWorkoutsSection.tsx'),
-    ).toBe(true)
-    expect(
-      projectFileExists(
-        'src/features/dashboard/use-dashboard-data-management.ts',
-      ),
     ).toBe(true)
     expect(projectFileExists('src/features/dashboard/dashboard-data.ts')).toBe(
       true,

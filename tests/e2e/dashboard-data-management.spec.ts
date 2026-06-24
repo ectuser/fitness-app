@@ -9,13 +9,8 @@ import {
   buildWorkoutExercise,
   seedAppStorage,
 } from './helpers/storage'
-import type { Page } from '@playwright/test'
 
-const openDashboardMenu = async (page: Page) => {
-  await page.getByRole('button').first().click()
-}
-
-test('dashboard export downloads the current app data', async ({ page }) => {
+test('settings export downloads the current app data', async ({ page }) => {
   await seedAppStorage(page, {
     exercises: [
       buildExercise({
@@ -42,12 +37,11 @@ test('dashboard export downloads the current app data', async ({ page }) => {
     settings: { defaultWeightUnit: 'lb' },
   })
 
-  await page.goto('')
-  await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible()
+  await page.goto('/settings')
+  await expect(page.getByRole('heading', { name: 'Settings' })).toBeVisible()
 
-  await openDashboardMenu(page)
   const downloadPromise = page.waitForEvent('download')
-  await page.getByRole('menuitem', { name: 'Export Data' }).click()
+  await page.getByRole('button', { name: 'Export Data' }).click()
   const download = await downloadPromise
 
   expect(download.suggestedFilename()).toMatch(
@@ -78,7 +72,7 @@ test('dashboard export downloads the current app data', async ({ page }) => {
   expect(exportPayload.data.settings.defaultWeightUnit).toBe('lb')
 })
 
-test('dashboard import shows an error for malformed backup files', async ({
+test('settings import shows an error for malformed backup files', async ({
   page,
 }) => {
   await seedAppStorage(page, {
@@ -86,8 +80,8 @@ test('dashboard import shows an error for malformed backup files', async ({
     settings: { defaultWeightUnit: 'kg' },
   })
 
-  await page.goto('')
-  await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible()
+  await page.goto('/settings')
+  await expect(page.getByRole('heading', { name: 'Settings' })).toBeVisible()
 
   await page.locator('input[type="file"]').setInputFiles({
     name: 'broken-backup.json',
@@ -106,7 +100,7 @@ test('dashboard import shows an error for malformed backup files', async ({
   await expect(page.getByRole('button', { name: 'Import Data' })).toHaveCount(0)
 })
 
-test('dashboard import replaces local data and migrates imported exercises', async ({
+test('settings import replaces local data and migrates imported exercises', async ({
   page,
 }) => {
   const existingExercises = [
@@ -179,8 +173,8 @@ test('dashboard import replaces local data and migrates imported exercises', asy
     },
   }
 
-  await page.goto('')
-  await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible()
+  await page.goto('/settings')
+  await expect(page.getByRole('heading', { name: 'Settings' })).toBeVisible()
   await page.evaluate(
     ({ keys, exercises, workouts }) => {
       localStorage.setItem(keys.EXERCISES, JSON.stringify(exercises))
@@ -197,7 +191,7 @@ test('dashboard import replaces local data and migrates imported exercises', asy
     },
   )
   await page.reload()
-  await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Settings' })).toBeVisible()
 
   await page.locator('input[type="file"]').setInputFiles({
     name: 'backup.json',
@@ -210,7 +204,7 @@ test('dashboard import replaces local data and migrates imported exercises', asy
   ).toBeVisible()
   await page.getByRole('button', { name: 'Import Data' }).click()
 
-  await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Settings' })).toBeVisible()
 
   await expect
     .poll(async () => {

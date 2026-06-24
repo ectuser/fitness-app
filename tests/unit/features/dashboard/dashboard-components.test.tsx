@@ -6,7 +6,6 @@ import {
   upcomingWorkout,
 } from '../../fixtures'
 import type { ReactNode } from 'react'
-import { DashboardDialogs } from '@/features/dashboard/DashboardDialogs'
 import { DashboardHeaderActions } from '@/features/dashboard/DashboardHeaderActions'
 import { NextWorkoutSection } from '@/features/dashboard/NextWorkoutSection'
 import { QuickStatsSection } from '@/features/dashboard/QuickStatsSection'
@@ -36,80 +35,27 @@ vi.mock('@/components/ui/dropdown-menu', () => ({
   ),
 }))
 
-vi.mock('@/components/ui/alert-dialog', () => ({
-  AlertDialog: ({ children }: { children: ReactNode }) => <div>{children}</div>,
-  AlertDialogAction: ({
-    children,
-    onClick,
-  }: {
-    children: ReactNode
-    onClick?: () => void
-  }) => (
-    <button type="button" onClick={onClick}>
+vi.mock('@/lib/router-compat', () => ({
+  Link: ({ children, to, ...props }: { children: ReactNode; to: string }) => (
+    <a href={to} {...props}>
       {children}
-    </button>
-  ),
-  AlertDialogCancel: ({
-    children,
-    onClick,
-  }: {
-    children: ReactNode
-    onClick?: () => void
-  }) => (
-    <button type="button" onClick={onClick}>
-      {children}
-    </button>
-  ),
-  AlertDialogContent: ({ children }: { children: ReactNode }) => (
-    <div>{children}</div>
-  ),
-  AlertDialogDescription: ({ children }: { children: ReactNode }) => (
-    <div>{children}</div>
-  ),
-  AlertDialogFooter: ({ children }: { children: ReactNode }) => (
-    <div>{children}</div>
-  ),
-  AlertDialogHeader: ({ children }: { children: ReactNode }) => (
-    <div>{children}</div>
-  ),
-  AlertDialogTitle: ({ children }: { children: ReactNode }) => (
-    <h2>{children}</h2>
+    </a>
   ),
 }))
 
 describe('dashboard components', () => {
   it('renders header actions and delegates click handlers', () => {
     const onCreateWorkout = vi.fn()
-    const onExportData = vi.fn()
-    const onFileChange = vi.fn()
-    const onImportClick = vi.fn()
-    const onOpenAppUpdate = vi.fn()
-    const onOpenResetDialog = vi.fn()
 
-    render(
-      <DashboardHeaderActions
-        fileInputRef={{ current: null }}
-        onCreateWorkout={onCreateWorkout}
-        onExportData={onExportData}
-        onFileChange={onFileChange}
-        onImportClick={onImportClick}
-        onOpenAppUpdate={onOpenAppUpdate}
-        onOpenResetDialog={onOpenResetDialog}
-      />,
-    )
+    render(<DashboardHeaderActions onCreateWorkout={onCreateWorkout} />)
 
     fireEvent.click(screen.getByRole('button', { name: /new workout/i }))
-    fireEvent.click(screen.getByRole('button', { name: /app update/i }))
-    fireEvent.click(screen.getByRole('button', { name: /export/i }))
-    fireEvent.click(screen.getByRole('button', { name: /import/i }))
-    fireEvent.click(screen.getByRole('button', { name: /reset/i }))
 
     expect(onCreateWorkout).toHaveBeenCalled()
-    expect(onOpenAppUpdate).toHaveBeenCalled()
-    expect(onExportData).toHaveBeenCalled()
-    expect(onImportClick).toHaveBeenCalled()
-    expect(onOpenResetDialog).toHaveBeenCalled()
-    expect(onFileChange).not.toHaveBeenCalled()
+    expect(screen.getByRole('link', { name: /settings/i })).toHaveAttribute(
+      'href',
+      '/settings',
+    )
   })
 
   it('renders next workout and upcoming workouts sections', () => {
@@ -153,44 +99,17 @@ describe('dashboard components', () => {
     expect(onCreateWorkout).not.toHaveBeenCalled()
   })
 
-  it('renders quick stats and dialog states', () => {
-    const onCloseImportDialog = vi.fn()
-    const onConfirmImport = vi.fn()
-    const onConfirmReset = vi.fn()
-    const setOpenResetDialog = vi.fn()
-
+  it('renders quick stats', () => {
     render(
-      <>
-        <QuickStatsSection
-          exercisesCount={12}
-          upcomingWorkoutsCount={3}
-          completedWorkoutsCount={5}
-          totalSets={42}
-        />
-        <DashboardDialogs
-          importError={null}
-          onCloseImportDialog={onCloseImportDialog}
-          onConfirmImport={onConfirmImport}
-          onConfirmReset={onConfirmReset}
-          openImportDialog
-          openResetDialog
-          setOpenResetDialog={setOpenResetDialog}
-        />
-      </>,
+      <QuickStatsSection
+        exercisesCount={12}
+        upcomingWorkoutsCount={3}
+        completedWorkoutsCount={5}
+        totalSets={42}
+      />,
     )
 
     expect(screen.getByText('42')).toBeInTheDocument()
-    expect(screen.getByText('Reset All Data?')).toBeInTheDocument()
-    expect(screen.getByText('Import Data?')).toBeInTheDocument()
-
-    fireEvent.click(screen.getByRole('button', { name: /reset data/i }))
-    fireEvent.click(screen.getByRole('button', { name: /import data/i }))
-    fireEvent.click(screen.getAllByRole('button', { name: /cancel/i }).at(-1)!)
-
-    expect(onConfirmReset).toHaveBeenCalled()
-    expect(onConfirmImport).toHaveBeenCalled()
-    expect(setOpenResetDialog).not.toHaveBeenCalled()
-    expect(onCloseImportDialog).toHaveBeenCalled()
   })
 
   it('renders empty states and error dialog branches', () => {
@@ -211,15 +130,6 @@ describe('dashboard components', () => {
           onShowAll={vi.fn()}
           onStartWorkout={vi.fn()}
         />
-        <DashboardDialogs
-          importError="Bad backup"
-          onCloseImportDialog={onCloseImportDialog}
-          onConfirmImport={vi.fn()}
-          onConfirmReset={vi.fn()}
-          openImportDialog
-          openResetDialog={false}
-          setOpenResetDialog={vi.fn()}
-        />
       </>,
     )
 
@@ -227,11 +137,6 @@ describe('dashboard components', () => {
 
     expect(onCreateWorkout).toHaveBeenCalled()
     expect(screen.queryByText('Coming Workouts')).not.toBeInTheDocument()
-    expect(screen.getByText('Import Failed')).toBeInTheDocument()
-    expect(
-      screen.queryByRole('button', { name: /import data/i }),
-    ).not.toBeInTheDocument()
-    fireEvent.click(screen.getAllByRole('button', { name: /cancel/i }).at(-1)!)
-    expect(onCloseImportDialog).toHaveBeenCalled()
+    expect(onCloseImportDialog).not.toHaveBeenCalled()
   })
 })

@@ -8,7 +8,7 @@ import {
   seedAppStorage,
 } from './helpers/storage'
 
-test('dashboard reset data clears workouts and restores seeded exercises', async ({
+test('settings reset data clears workouts and restores seeded exercises', async ({
   page,
 }) => {
   await seedAppStorage(page, {
@@ -48,8 +48,8 @@ test('dashboard reset data clears workouts and restores seeded exercises', async
     )
   }, STORAGE_KEYS.WORKOUT_CREATE_DRAFT)
 
-  await page.goto('')
-  await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible()
+  await page.goto('/settings')
+  await expect(page.getByRole('heading', { name: 'Settings' })).toBeVisible()
   await expect
     .poll(async () => {
       return page.evaluate((draftKey) => {
@@ -58,16 +58,14 @@ test('dashboard reset data clears workouts and restores seeded exercises', async
     })
     .not.toBeNull()
 
-  await page.getByRole('button').first().click()
-  await page.getByRole('menuitem', { name: 'Reset Data' }).click()
+  await page.getByRole('button', { name: 'Reset Data' }).click()
 
   await expect(
     page.getByRole('heading', { name: 'Reset All Data?' }),
   ).toBeVisible()
   await page.getByRole('button', { name: 'Reset Data' }).click()
 
-  await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible()
-  await expect(page.getByText('No upcoming workouts.')).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Settings' })).toBeVisible()
 
   await expect
     .poll(async () => {

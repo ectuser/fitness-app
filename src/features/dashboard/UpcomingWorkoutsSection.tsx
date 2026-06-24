@@ -47,7 +47,7 @@ export function UpcomingWorkoutsSection({
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <h3 className="font-semibold mb-1">{workout.name}</h3>
-                  <div className="flex items-center gap-2 text-sm text-slate-600 mb-2">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
                     <Calendar className="w-3 h-3" />
                     <span>{formatWorkoutDate(workout.date)}</span>
                   </div>
@@ -69,7 +69,7 @@ export function UpcomingWorkoutsSection({
                       )}
                     </div>
                   )}
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-muted-foreground">
                     {workout.exercises.length} exercise
                     {workout.exercises.length !== 1 ? 's' : ''}
                   </p>

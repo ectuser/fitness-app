@@ -11,6 +11,8 @@ import type { ReactNode } from 'react'
 import type { QueryClient } from '@tanstack/react-query'
 import { MainLayout } from '@/components/layout/MainLayout'
 import { PwaUpdateStatusProvider } from '@/features/app-update/pwa-update-status'
+import { useSettings } from '@/features/settings/use-settings'
+import { useThemeMode } from '@/features/settings/use-theme-mode'
 import { STORAGE_KEYS, getFromStorage, saveToStorage } from '@/lib/storage'
 import { useLocation, useNavigate } from '@/lib/router-compat'
 
@@ -136,6 +138,9 @@ function LastVisitedRouteHandler() {
 
 function RootApp() {
   const [hasMounted, setHasMounted] = useState(false)
+  const { settings } = useSettings()
+
+  useThemeMode(settings.themeMode)
 
   useEffect(() => {
     setHasMounted(true)

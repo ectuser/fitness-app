@@ -16,6 +16,7 @@ export type MuscleGroup =
   | 'None'
 
 export type WeightUnit = 'kg' | 'lb'
+export type ThemeMode = 'light' | 'dark' | 'system'
 
 export interface Exercise {
   id: string
@@ -59,6 +60,7 @@ export interface Workout {
 
 export interface Settings {
   defaultWeightUnit: WeightUnit
+  themeMode: ThemeMode
 }
 
 // Derived types for UI display

@@ -3,13 +3,15 @@ import { STORAGE_KEYS, getFromStorage, saveToStorage } from '@/lib/storage'
 
 export const DEFAULT_SETTINGS: Settings = {
   defaultWeightUnit: 'kg',
+  themeMode: 'system',
 }
 
 export function readSettingsSnapshot(): Settings {
-  const settings = getFromStorage<Settings>(
+  const storedSettings = getFromStorage<Partial<Settings>>(
     STORAGE_KEYS.SETTINGS,
     DEFAULT_SETTINGS,
   )
+  const settings = { ...DEFAULT_SETTINGS, ...storedSettings }
 
   saveToStorage(STORAGE_KEYS.SETTINGS, settings)
 
