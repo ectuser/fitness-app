@@ -1,1 +1,0 @@
-import{R as e}from"./index-B2G9Xk3F.js";var t=e;export{t as component};
