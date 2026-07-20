@@ -9,8 +9,8 @@ import {
   reopenWorkoutRecord,
   saveWorkoutProgressRecord,
 } from './workout-commands'
-import { WorkoutSchema } from '@/lib/fitness-schemas'
 import type { Workout, WorkoutExercise } from '@/types'
+import { WorkoutSchema } from '@/lib/fitness-schemas'
 import { STORAGE_KEYS, getFromStorage, saveToStorage } from '@/lib/storage'
 
 export type CreateWorkoutInput = Omit<Workout, 'id' | 'createdAt' | 'updatedAt'>

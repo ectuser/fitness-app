@@ -142,4 +142,18 @@ export const ImportPayloadSchema = z
     })
   })
 
+export const ImportPayloadEnvelopeSchema = z
+  .object({
+    exercises: z.array(
+      z
+        .object({
+          muscleGroups: z.array(z.string()),
+        })
+        .passthrough(),
+    ),
+    workouts: z.array(z.unknown()),
+    settings: z.unknown().optional(),
+  })
+  .passthrough()
+
 export type ImportPayloadData = z.infer<typeof ImportPayloadSchema>

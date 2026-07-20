@@ -4,7 +4,10 @@ import {
   readSettingsSnapshot,
 } from '../settings/settings-source'
 import type { Exercise, Settings, Workout } from '@/types'
-import { ImportPayloadSchema } from '@/lib/fitness-schemas'
+import {
+  ImportPayloadEnvelopeSchema,
+  ImportPayloadSchema,
+} from '@/lib/fitness-schemas'
 import { migrateExercises } from '@/lib/migrations'
 import { STORAGE_KEYS, removeFromStorage, saveToStorage } from '@/lib/storage'
 
@@ -42,7 +45,18 @@ export function parseImportPayload(content: string): ImportPayload {
     )
   }
 
-  const importPayload = ImportPayloadSchema.safeParse(parsedValue.data)
+  const importPayloadEnvelope = ImportPayloadEnvelopeSchema.safeParse(
+    parsedValue.data,
+  )
+
+  if (!importPayloadEnvelope.success) {
+    throw new Error('Invalid backup file format.')
+  }
+
+  const importPayload = ImportPayloadSchema.safeParse({
+    ...importPayloadEnvelope.data,
+    exercises: migrateExercises(importPayloadEnvelope.data.exercises),
+  })
 
   if (!importPayload.success) {
     throw new Error('Invalid backup file format.')
