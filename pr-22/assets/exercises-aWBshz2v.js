@@ -1,0 +1,1 @@
+import{k as e}from"./index-BUW-35kn.js";var t=e;export{t as component};
