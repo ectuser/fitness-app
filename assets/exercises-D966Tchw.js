@@ -1,0 +1,1 @@
+import{k as e}from"./index-CSmui1U9.js";var t=e;export{t as component};
