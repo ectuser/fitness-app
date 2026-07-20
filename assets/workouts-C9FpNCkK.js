@@ -1,0 +1,1 @@
+import{k as e}from"./index-DPltfllZ.js";var t=e;export{t as component};
