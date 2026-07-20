@@ -37,7 +37,6 @@ export function PageHeader({
                 size="icon"
                 onClick={handleBack}
                 className="mr-2"
-                aria-label="Go back"
               >
                 <ArrowLeft className="w-5 h-5" />
               </Button>
