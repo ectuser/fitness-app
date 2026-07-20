@@ -43,7 +43,7 @@ export function SettingsDataDialogs({
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
               onClick={onConfirmReset}
-              className="bg-red-600 hover:bg-red-700"
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
               Reset Data
             </AlertDialogAction>
@@ -62,7 +62,9 @@ export function SettingsDataDialogs({
             </AlertDialogTitle>
             <AlertDialogDescription>
               {importError ? (
-                <span className="text-red-600">{importError}</span>
+                <span className="text-destructive-muted-foreground">
+                  {importError}
+                </span>
               ) : (
                 'This will replace all your current data with the imported data. Your existing workouts, exercises, and settings will be overwritten.'
               )}

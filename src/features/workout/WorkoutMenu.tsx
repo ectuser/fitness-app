@@ -75,7 +75,7 @@ export function WorkoutMenu({
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={() => setShowDeleteDialog(true)}
-            className="text-red-600"
+            className="text-destructive"
           >
             <Trash2 className="w-4 h-4 mr-2" />
             Delete

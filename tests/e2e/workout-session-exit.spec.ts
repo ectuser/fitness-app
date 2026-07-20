@@ -51,11 +51,7 @@ test('workout session autosaves changes across continue and exit flows', async (
   await benchCard.getByPlaceholder('Weight').nth(1).fill('55')
   await benchCard.getByPlaceholder('Reps').nth(1).fill('8')
 
-  await benchCard
-    .locator(
-      "xpath=.//span[normalize-space()='Set 1']/ancestor::div[contains(@class,'bg-slate-50')][1]//button",
-    )
-    .click()
+  await benchCard.getByRole('button', { name: 'Remove set 1' }).click()
 
   await expect(benchCard.getByPlaceholder('Weight')).toHaveCount(1)
   await expect(benchCard.getByPlaceholder('Weight').first()).toHaveValue('55')

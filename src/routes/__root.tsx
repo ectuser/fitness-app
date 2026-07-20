@@ -58,6 +58,14 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         content: 'width=device-width, initial-scale=1',
       },
       {
+        name: 'color-scheme',
+        content: 'light dark',
+      },
+      {
+        name: 'theme-color',
+        content: '#ffffff',
+      },
+      {
         title: 'Fitness Tracker',
       },
     ],
@@ -158,7 +166,7 @@ function RootApp() {
         {hasMounted ? (
           <Outlet />
         ) : (
-          <div className="container mx-auto px-4 py-12 text-center text-slate-500">
+          <div className="container mx-auto px-4 py-12 text-center text-muted-foreground">
             Loading...
           </div>
         )}

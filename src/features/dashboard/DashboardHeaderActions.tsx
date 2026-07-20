@@ -19,7 +19,7 @@ export function DashboardHeaderActions({
           {hasAvailableUpdate && (
             <span
               aria-hidden
-              className="absolute right-1 top-1 h-2 w-2 rounded-full bg-sky-500"
+              className="absolute right-1 top-1 h-2 w-2 rounded-full bg-info"
             />
           )}
         </Link>

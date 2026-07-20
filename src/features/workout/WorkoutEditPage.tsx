@@ -334,10 +334,12 @@ export function WorkoutEditPage() {
                 value={name}
                 onChange={(event) => handleNameChange(event.target.value)}
                 placeholder="e.g., Upper Body Day"
-                className={errors.name ? 'border-red-500' : ''}
+                className={errors.name ? 'border-destructive' : ''}
               />
               {errors.name && (
-                <p className="text-sm text-red-600 mt-1">{errors.name}</p>
+                <p className="mt-1 text-sm text-destructive-muted-foreground">
+                  {errors.name}
+                </p>
               )}
             </div>
 
@@ -363,8 +365,10 @@ export function WorkoutEditPage() {
           </div>
 
           {errors.exercises && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-sm text-red-600">{errors.exercises}</p>
+            <div className="mb-4 rounded-lg border border-destructive bg-destructive-muted p-3">
+              <p className="text-sm text-destructive-muted-foreground">
+                {errors.exercises}
+              </p>
             </div>
           )}
 
@@ -379,7 +383,9 @@ export function WorkoutEditPage() {
             onReplaceExercise={handleReplaceExercise}
             emptyState={
               <Card className="p-12 text-center">
-                <p className="text-slate-500 mb-4">No exercises added yet</p>
+                <p className="mb-4 text-muted-foreground">
+                  No exercises added yet
+                </p>
                 <Button variant="outline" onClick={openAddExerciseSelector}>
                   <Plus className="w-4 h-4 mr-2" />
                   Add Your First Exercise

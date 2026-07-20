@@ -58,7 +58,7 @@ export function ExerciseForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {error && (
-        <div className="bg-red-50 text-red-600 p-3 rounded-md text-sm">
+        <div className="rounded-md bg-destructive-muted p-3 text-sm text-destructive-muted-foreground">
           {error}
         </div>
       )}
@@ -86,8 +86,8 @@ export function ExerciseForm({
                 onClick={() => toggleMuscle(muscle)}
                 className={`p-3 rounded-lg border-2 text-sm font-medium transition-colors ${
                   isSelected
-                    ? 'border-slate-900 bg-slate-900 text-white'
-                    : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300'
+                    ? 'border-primary bg-primary text-primary-foreground'
+                    : 'border-input bg-card text-card-foreground hover:border-ring'
                 }`}
               >
                 {muscle}
@@ -107,7 +107,7 @@ export function ExerciseForm({
                 <button
                   type="button"
                   onClick={() => toggleMuscle(muscle)}
-                  className="ml-2 hover:text-red-600"
+                  className="ml-2 hover:text-destructive"
                 >
                   <X className="w-3 h-3" />
                 </button>
@@ -125,7 +125,7 @@ export function ExerciseForm({
           onChange={(e) => setComments(e.target.value)}
           placeholder="Add notes about form, tips, or variations..."
           rows={4}
-          className="w-full px-3 py-2 border border-slate-200 rounded-md text-base focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent"
+          className="w-full rounded-md border border-input bg-background px-3 py-2 text-base focus:border-transparent focus:outline-none focus:ring-2 focus:ring-ring"
         />
       </div>
 
