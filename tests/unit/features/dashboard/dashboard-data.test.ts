@@ -55,7 +55,45 @@ describe('dashboard helpers', () => {
     )
     expect(() =>
       parseImportPayload(JSON.stringify({ data: { exercises } })),
-    ).toThrow('Invalid backup file format. Missing required data.')
+    ).toThrow('Invalid backup file format.')
+
+    expect(() =>
+      parseImportPayload(
+        JSON.stringify({
+          data: {
+            exercises,
+            workouts: [
+              {
+                ...upcomingWorkout,
+                status: 'completed',
+                completedAt: undefined,
+              },
+            ],
+          },
+        }),
+      ),
+    ).toThrow('Invalid backup file format.')
+
+    expect(() =>
+      parseImportPayload(
+        JSON.stringify({
+          data: {
+            exercises,
+            workouts: [
+              {
+                ...upcomingWorkout,
+                exercises: [
+                  {
+                    ...upcomingWorkout.exercises[0],
+                    exerciseId: 'missing-exercise',
+                  },
+                ],
+              },
+            ],
+          },
+        }),
+      ),
+    ).toThrow('Invalid backup file format.')
   })
 
   it('imports dashboard backup data while preserving backup format compatibility', () => {

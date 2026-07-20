@@ -25,7 +25,7 @@ test('settings reset data clears workouts and restores seeded exercises', async 
         id: 'workout-reset-1',
         name: 'Reset Workout',
         date: '2026-03-05',
-        isCompleted: false,
+        status: 'planned',
         exercises: [
           buildWorkoutExercise('exercise-reset-1', 0, [
             buildSet('set-reset-1', 10, 10),

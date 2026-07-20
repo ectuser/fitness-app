@@ -20,13 +20,13 @@ export function sortWorkoutsByDateDesc<T extends Pick<Workout, 'date'>>(
 
 export function getUpcomingWorkouts(workouts: Array<Workout>): Array<Workout> {
   return sortWorkoutsByDateAsc(
-    workouts.filter((workout) => !workout.isCompleted),
+    workouts.filter((workout) => workout.status !== 'completed'),
   )
 }
 
 export function getCompletedWorkouts(workouts: Array<Workout>): Array<Workout> {
   return sortWorkoutsByDateDesc(
-    workouts.filter((workout) => workout.isCompleted),
+    workouts.filter((workout) => workout.status === 'completed'),
   )
 }
 
@@ -124,7 +124,7 @@ export function formatWorkoutDate(
 export function duplicateWorkoutTemplate(
   workout: Pick<Workout, 'name' | 'date' | 'exercises'>,
   options: DuplicateWorkoutOptions = {},
-) {
+): Omit<Workout, 'id' | 'createdAt' | 'updatedAt'> {
   const {
     createSetId = () => crypto.randomUUID(),
     date = new Date().toISOString().split('T')[0],
@@ -141,7 +141,7 @@ export function duplicateWorkoutTemplate(
         id: createSetId(),
       })),
     })),
-    isCompleted: false,
+    status: 'planned',
     completedAt: undefined,
   }
 }

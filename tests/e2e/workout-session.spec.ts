@@ -30,7 +30,7 @@ test('workout session add exercise finish and update stats', async ({
         id: 'workout-session-1',
         name: 'Session Day',
         date: '2026-03-04',
-        isCompleted: false,
+        status: 'planned',
         exercises: [
           buildWorkoutExercise('exercise-session-bench', 0, [
             buildSet('set-session-bench-1', 0, 0),

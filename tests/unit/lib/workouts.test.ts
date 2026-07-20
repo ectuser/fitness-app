@@ -85,7 +85,7 @@ describe('workouts helpers', () => {
     expect(duplicate).toMatchObject({
       name: 'Push Day (Copy)',
       date: '2026-04-30',
-      isCompleted: false,
+      status: 'planned',
       completedAt: undefined,
     })
     expect(duplicate.exercises[0].sets.map((set) => set.id)).toEqual([

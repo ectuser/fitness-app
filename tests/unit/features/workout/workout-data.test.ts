@@ -4,9 +4,10 @@ import { clone, completedBenchWorkout, upcomingWorkout } from '../../fixtures'
 import {
   createWorkout,
   duplicateWorkout,
+  finishWorkout,
   listWorkouts,
-  toggleWorkoutComplete,
-  updateWorkout,
+  reopenWorkout,
+  updateWorkoutDetails,
 } from '@/features/workout/workout-source'
 import {
   workoutQueries,
@@ -41,7 +42,28 @@ describe('workout data feature', () => {
     await expect(queryFn()).resolves.toEqual([completedBenchWorkout])
   })
 
-  it('creates, updates, duplicates, and toggles workouts asynchronously with changed resources', async () => {
+  it('migrates legacy completion flags into explicit workout statuses', async () => {
+    localStorage.setItem(
+      STORAGE_KEYS.WORKOUTS,
+      JSON.stringify([
+        {
+          ...completedBenchWorkout,
+          status: undefined,
+          isCompleted: true,
+        },
+      ]),
+    )
+
+    await expect(listWorkouts()).resolves.toMatchObject([
+      {
+        id: completedBenchWorkout.id,
+        status: 'completed',
+        completedAt: completedBenchWorkout.completedAt,
+      },
+    ])
+  })
+
+  it('creates, updates, duplicates, finishes, and reopens workouts asynchronously', async () => {
     localStorage.setItem(
       STORAGE_KEYS.WORKOUTS,
       JSON.stringify([upcomingWorkout]),
@@ -56,7 +78,7 @@ describe('workout data feature', () => {
       name: 'Finished Workout',
       date: '2026-04-26',
       exercises: [],
-      isCompleted: true,
+      status: 'completed',
       completedAt: '2026-04-26T09:30:00.000Z',
     })
 
@@ -65,9 +87,9 @@ describe('workout data feature', () => {
       name: 'Finished Workout',
     })
 
-    const updatedWorkout = await updateWorkout({
+    const updatedWorkout = await updateWorkoutDetails({
       id: upcomingWorkout.id,
-      updates: { name: 'Updated Leg Day' },
+      updates: { name: 'Updated Leg Day', date: upcomingWorkout.date },
     })
 
     expect(updatedWorkout).toMatchObject({
@@ -84,17 +106,24 @@ describe('workout data feature', () => {
       id: '99999999-9999-9999-9999-999999999999',
       name: 'Updated Leg Day (Copy)',
       date: '2026-04-27',
-      isCompleted: false,
+      status: 'planned',
     })
 
-    const toggledWorkout = await toggleWorkoutComplete({
+    const finishedWorkout = await finishWorkout({
       id: upcomingWorkout.id,
     })
 
-    expect(toggledWorkout).toMatchObject({
+    expect(finishedWorkout).toMatchObject({
       id: upcomingWorkout.id,
-      isCompleted: true,
+      status: 'completed',
       completedAt: '2026-04-26T09:00:00.000Z',
+    })
+
+    const reopenedWorkout = await reopenWorkout({ id: upcomingWorkout.id })
+    expect(reopenedWorkout).toMatchObject({
+      id: upcomingWorkout.id,
+      status: 'in_progress',
+      completedAt: undefined,
     })
   })
 
@@ -108,7 +137,7 @@ describe('workout data feature', () => {
 
     await workoutMutations.update(queryClient).mutationFn({
       id: upcomingWorkout.id,
-      updates: { name: 'Updated Leg Day' },
+      updates: { name: 'Updated Leg Day', date: upcomingWorkout.date },
     })
     await workoutMutations.update(queryClient).onSuccess()
 

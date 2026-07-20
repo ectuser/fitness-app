@@ -1,5 +1,6 @@
 import type { Exercise, Workout } from '@/types'
 import { migrateExercises } from '@/lib/migrations'
+import { ExerciseListSchema, ExerciseSchema } from '@/lib/fitness-schemas'
 import { initializeSeedExercises } from '@/lib/seed-data'
 import { STORAGE_KEYS, getFromStorage, saveToStorage } from '@/lib/storage'
 
@@ -7,7 +8,7 @@ export type CreateExerciseInput = Omit<Exercise, 'id' | 'createdAt'>
 
 export interface UpdateExerciseInput {
   id: string
-  updates: Partial<Exercise>
+  updates: Partial<Pick<Exercise, 'name' | 'muscleGroups' | 'comments'>>
 }
 
 export interface DeleteExerciseInput {
@@ -23,10 +24,14 @@ export function readExerciseCatalogSnapshot(): Array<Exercise> {
     STORAGE_KEYS.EXERCISES,
     [],
   )
-  const exercises =
+  const migratedExercises =
     storedExercises.length === 0
       ? createDefaultExerciseCatalog()
       : migrateExercises(storedExercises)
+  const parsedExercises = ExerciseListSchema.safeParse(migratedExercises)
+  const exercises = parsedExercises.success
+    ? parsedExercises.data
+    : createDefaultExerciseCatalog()
 
   saveToStorage(STORAGE_KEYS.EXERCISES, exercises)
 
@@ -48,7 +53,7 @@ export function createExerciseRecord(
 export function updateExerciseRecords(
   exercises: Array<Exercise>,
   id: string,
-  updates: Partial<Exercise>,
+  updates: UpdateExerciseInput['updates'],
 ): Array<Exercise> {
   return exercises.map((exercise) =>
     exercise.id === id ? { ...exercise, ...updates } : exercise,
@@ -81,11 +86,12 @@ export async function createExercise(
   exercise: CreateExerciseInput,
 ): Promise<Exercise> {
   const nextExercise = createExerciseRecord(exercise)
-  const nextExercises = [...readExerciseCatalogSnapshot(), nextExercise]
+  const validatedExercise = ExerciseSchema.parse(nextExercise)
+  const nextExercises = [...readExerciseCatalogSnapshot(), validatedExercise]
 
   saveToStorage(STORAGE_KEYS.EXERCISES, nextExercises)
 
-  return nextExercise
+  return validatedExercise
 }
 
 export async function updateExercise({
@@ -100,9 +106,15 @@ export async function updateExercise({
     throw new Error('Exercise not found')
   }
 
-  saveToStorage(STORAGE_KEYS.EXERCISES, nextExercises)
+  const validatedExercise = ExerciseSchema.parse(updatedExercise)
+  saveToStorage(
+    STORAGE_KEYS.EXERCISES,
+    nextExercises.map((exercise) =>
+      exercise.id === id ? validatedExercise : exercise,
+    ),
+  )
 
-  return updatedExercise
+  return validatedExercise
 }
 
 export async function deleteExercise({

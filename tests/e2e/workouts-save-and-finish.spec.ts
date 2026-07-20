@@ -39,12 +39,12 @@ test('save and finish creates completed workout from create page', async ({
         )
         if (!workout) return null
         return {
-          isCompleted: Boolean(workout.isCompleted),
+          status: workout.status,
           hasCompletedAt: Boolean(workout.completedAt),
         }
       })
     })
-    .toEqual({ isCompleted: true, hasCompletedAt: true })
+    .toEqual({ status: 'completed', hasCompletedAt: true })
 })
 
 test('start creates a workout and opens its session', async ({ page }) => {
@@ -72,10 +72,10 @@ test('start creates a workout and opens its session', async ({ page }) => {
         const workout = workouts.find(
           (w: { name: string }) => w.name === 'Start From Create',
         )
-        return workout?.isCompleted
+        return workout?.status
       })
     })
-    .toBe(false)
+    .toBe('in_progress')
 })
 
 test('save and finish updates existing workout from edit page', async ({
@@ -95,7 +95,7 @@ test('save and finish updates existing workout from edit page', async ({
         id: 'save-finish-workout',
         name: 'Finish From Edit',
         date: '2026-03-06',
-        isCompleted: false,
+        status: 'planned',
         exercises: [
           buildWorkoutExercise('save-finish-bench', 0, [
             buildSet('save-finish-set-1', 60, 10),
@@ -133,14 +133,14 @@ test('save and finish updates existing workout from edit page', async ({
         if (!workout) return null
         return {
           name: workout.name,
-          isCompleted: Boolean(workout.isCompleted),
+          status: workout.status,
           hasCompletedAt: Boolean(workout.completedAt),
         }
       })
     })
     .toEqual({
       name: 'Finish From Edit Updated',
-      isCompleted: true,
+      status: 'completed',
       hasCompletedAt: true,
     })
 })

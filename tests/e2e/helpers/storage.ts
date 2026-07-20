@@ -10,6 +10,7 @@ export const STORAGE_KEYS = {
 
 type WeightUnit = 'kg' | 'lb'
 type ThemeMode = 'light' | 'dark' | 'system'
+type WorkoutStatus = 'planned' | 'in_progress' | 'completed'
 
 export interface ExerciseFixture {
   id: string
@@ -39,7 +40,7 @@ export interface WorkoutFixture {
   name: string
   date: string
   exercises: Array<WorkoutExerciseFixture>
-  isCompleted: boolean
+  status: WorkoutStatus
   completedAt?: string
   createdAt: string
   updatedAt: string
@@ -114,14 +115,14 @@ export function buildExercise(
 
 export function buildWorkout(
   overrides: Partial<WorkoutFixture> &
-    Pick<WorkoutFixture, 'id' | 'name' | 'date' | 'exercises' | 'isCompleted'>,
+    Pick<WorkoutFixture, 'id' | 'name' | 'date' | 'exercises' | 'status'>,
 ): WorkoutFixture {
   return {
     id: overrides.id,
     name: overrides.name,
     date: overrides.date,
     exercises: overrides.exercises,
-    isCompleted: overrides.isCompleted,
+    status: overrides.status,
     completedAt: overrides.completedAt,
     createdAt: overrides.createdAt ?? '2026-01-01T10:00:00.000Z',
     updatedAt: overrides.updatedAt ?? '2026-01-01T10:00:00.000Z',

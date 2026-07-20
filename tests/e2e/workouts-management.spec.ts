@@ -83,7 +83,7 @@ test('workout edit and save changes', async ({ page }) => {
         id: 'workout-edit-1',
         name: 'Upper Mix',
         date: '2026-03-02',
-        isCompleted: false,
+        status: 'planned',
         exercises: [
           buildWorkoutExercise('exercise-bench', 0, [
             buildSet('set-bench-1', 80, 8),
@@ -130,7 +130,7 @@ test('workout menu duplicate delete and complete/incomplete transitions', async 
         id: 'workout-menu-1',
         name: 'Menu Day',
         date: '2026-03-03',
-        isCompleted: false,
+        status: 'planned',
         exercises: [
           buildWorkoutExercise('exercise-menu-bench', 0, [
             buildSet('set-menu-1', 70, 10),

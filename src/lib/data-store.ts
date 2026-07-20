@@ -8,9 +8,13 @@ export {
   deleteWorkoutRecord,
   duplicateWorkoutRecord,
   getDerivedWorkoutData,
-  toggleWorkoutCompleteRecord,
   updateWorkoutRecords,
 } from '@/features/workout/workout-source'
+export {
+  finishWorkoutRecord,
+  reopenWorkoutRecord,
+  saveWorkoutProgressRecord,
+} from '@/features/workout/workout-commands'
 
 export interface FitnessDataState {
   exercises: Array<Exercise>

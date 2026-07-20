@@ -60,7 +60,7 @@ export function WorkoutMenu({
             Duplicate
           </DropdownMenuItem>
           <DropdownMenuItem onClick={onToggleComplete}>
-            {workout.isCompleted ? (
+            {workout.status === 'completed' ? (
               <>
                 <X className="w-4 h-4 mr-2" />
                 Mark Incomplete

@@ -25,7 +25,8 @@ test('workout exercise details shows stats and allows editing comment', async ({
         id: 'workout-details-completed',
         name: 'Completed Day',
         date: '2026-03-01',
-        isCompleted: true,
+        status: 'completed',
+        completedAt: '2026-03-01T12:00:00.000Z',
         exercises: [
           buildWorkoutExercise('exercise-details-bench', 0, [
             buildSet('set-details-completed-1', 95, 6),
@@ -36,7 +37,7 @@ test('workout exercise details shows stats and allows editing comment', async ({
         id: 'workout-details-active',
         name: 'Current Day',
         date: '2026-03-04',
-        isCompleted: false,
+        status: 'planned',
         exercises: [
           buildWorkoutExercise('exercise-details-bench', 0, [
             buildSet('set-details-active-1', 70, 10),
@@ -96,7 +97,7 @@ test('workout exercise details comment stays editable without exercise stats', a
         id: 'workout-details-no-stats',
         name: 'No Stats Day',
         date: '2026-03-04',
-        isCompleted: false,
+        status: 'planned',
         exercises: [
           buildWorkoutExercise('exercise-details-no-stats', 0, [
             buildSet('set-details-no-stats-1', 0, 0),

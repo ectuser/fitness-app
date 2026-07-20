@@ -11,8 +11,13 @@ import { PageHeader } from '@/components/layout/PageHeader'
 export function WorkoutsPage() {
   const navigate = useNavigate()
   const { exercises } = useExercises()
-  const { workouts, deleteWorkout, duplicateWorkout, toggleWorkoutComplete } =
-    useWorkouts()
+  const {
+    workouts,
+    deleteWorkout,
+    duplicateWorkout,
+    finishWorkout,
+    reopenWorkout,
+  } = useWorkouts()
 
   const upcomingWorkouts = getUpcomingWorkouts(workouts)
 
@@ -35,7 +40,12 @@ export function WorkoutsPage() {
   }
 
   const handleToggleComplete = (workoutId: string) => {
-    toggleWorkoutComplete(workoutId)
+    const workout = workouts.find((entry) => entry.id === workoutId)
+    if (workout?.status === 'completed') {
+      void reopenWorkout(workoutId)
+    } else {
+      void finishWorkout(workoutId)
+    }
   }
 
   return (

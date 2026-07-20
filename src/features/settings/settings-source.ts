@@ -1,4 +1,5 @@
 import type { Settings } from '@/types'
+import { SettingsSchema } from '@/lib/fitness-schemas'
 import { STORAGE_KEYS, getFromStorage, saveToStorage } from '@/lib/storage'
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -11,7 +12,10 @@ export function readSettingsSnapshot(): Settings {
     STORAGE_KEYS.SETTINGS,
     DEFAULT_SETTINGS,
   )
-  const settings = { ...DEFAULT_SETTINGS, ...storedSettings }
+  const settings = SettingsSchema.parse({
+    ...DEFAULT_SETTINGS,
+    ...storedSettings,
+  })
 
   saveToStorage(STORAGE_KEYS.SETTINGS, settings)
 
@@ -26,7 +30,7 @@ export async function updateSettings(
   updates: Partial<Settings>,
 ): Promise<Settings> {
   const currentSettings = await readSettings()
-  const nextSettings = { ...currentSettings, ...updates }
+  const nextSettings = SettingsSchema.parse({ ...currentSettings, ...updates })
 
   saveToStorage(STORAGE_KEYS.SETTINGS, nextSettings)
 

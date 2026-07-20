@@ -4,14 +4,39 @@ import {
   getNextWorkout,
   getUpcomingWorkouts,
 } from './workout-helpers'
-import type { Workout } from '@/types'
+import {
+  finishWorkoutRecord,
+  reopenWorkoutRecord,
+  saveWorkoutProgressRecord,
+} from './workout-commands'
+import { WorkoutSchema } from '@/lib/fitness-schemas'
+import type { Workout, WorkoutExercise } from '@/types'
 import { STORAGE_KEYS, getFromStorage, saveToStorage } from '@/lib/storage'
 
 export type CreateWorkoutInput = Omit<Workout, 'id' | 'createdAt' | 'updatedAt'>
 
-export interface UpdateWorkoutInput {
+export interface UpdateWorkoutDetailsInput {
   id: string
-  updates: Partial<Workout>
+  updates: Pick<Workout, 'name' | 'date'>
+}
+
+export interface SaveWorkoutProgressInput {
+  id: string
+  exercises: Array<WorkoutExercise>
+}
+
+export interface ReplaceWorkoutExercisesInput {
+  id: string
+  exercises: Array<WorkoutExercise>
+}
+
+export interface FinishWorkoutInput {
+  id: string
+  exercises?: Array<WorkoutExercise>
+}
+
+export interface ReopenWorkoutInput {
+  id: string
 }
 
 export interface DeleteWorkoutInput {
@@ -23,16 +48,41 @@ export interface DuplicateWorkoutInput {
   options?: { date?: string; nameSuffix?: string }
 }
 
-export interface ToggleWorkoutCompleteInput {
-  id: string
-}
-
 export function readWorkoutLibrarySnapshot(): Array<Workout> {
-  const workouts = getFromStorage<Array<Workout>>(STORAGE_KEYS.WORKOUTS, [])
+  const storedWorkouts = getFromStorage<unknown>(STORAGE_KEYS.WORKOUTS, [])
+  const workouts = Array.isArray(storedWorkouts)
+    ? storedWorkouts.flatMap((storedWorkout) => {
+        const migratedWorkout = migrateStoredWorkout(storedWorkout)
+        const parsedWorkout = WorkoutSchema.safeParse(migratedWorkout)
+
+        return parsedWorkout.success ? [parsedWorkout.data] : []
+      })
+    : []
 
   saveToStorage(STORAGE_KEYS.WORKOUTS, workouts)
 
   return workouts
+}
+
+function migrateStoredWorkout(storedWorkout: unknown): unknown {
+  if (
+    !storedWorkout ||
+    typeof storedWorkout !== 'object' ||
+    !('isCompleted' in storedWorkout) ||
+    typeof storedWorkout.isCompleted !== 'boolean'
+  ) {
+    return storedWorkout
+  }
+
+  const { isCompleted, ...workout } = storedWorkout
+
+  return {
+    ...workout,
+    status: isCompleted ? 'completed' : 'planned',
+    completedAt: isCompleted
+      ? (workout.completedAt ?? workout.updatedAt ?? workout.createdAt)
+      : undefined,
+  }
 }
 
 export function createWorkoutRecord(
@@ -51,7 +101,7 @@ export function createWorkoutRecord(
 export function updateWorkoutRecords(
   workouts: Array<Workout>,
   id: string,
-  updates: Partial<Workout>,
+  updates: Pick<Workout, 'name' | 'date'>,
   now = new Date().toISOString(),
 ): Array<Workout> {
   return workouts.map((workout) =>
@@ -84,27 +134,6 @@ export function duplicateWorkoutRecord(
   )
 }
 
-export function toggleWorkoutCompleteRecord(
-  workouts: Array<Workout>,
-  id: string,
-  now = new Date().toISOString(),
-): Array<Workout> {
-  return workouts.map((workout) => {
-    if (workout.id !== id) {
-      return workout
-    }
-
-    const isCompleted = !workout.isCompleted
-
-    return {
-      ...workout,
-      isCompleted,
-      completedAt: isCompleted ? now : undefined,
-      updatedAt: now,
-    }
-  })
-}
-
 export function getDerivedWorkoutData(workouts: Array<Workout>) {
   return {
     upcomingWorkouts: getUpcomingWorkouts(workouts),
@@ -122,18 +151,19 @@ export async function createWorkout(
 ): Promise<Workout> {
   const nextWorkout = createWorkoutRecord(workout)
 
+  const validatedWorkout = WorkoutSchema.parse(nextWorkout)
   saveToStorage(STORAGE_KEYS.WORKOUTS, [
     ...readWorkoutLibrarySnapshot(),
-    nextWorkout,
+    validatedWorkout,
   ])
 
-  return nextWorkout
+  return validatedWorkout
 }
 
-export async function updateWorkout({
+export async function updateWorkoutDetails({
   id,
   updates,
-}: UpdateWorkoutInput): Promise<Workout> {
+}: UpdateWorkoutDetailsInput): Promise<Workout> {
   const nextWorkouts = updateWorkoutRecords(
     readWorkoutLibrarySnapshot(),
     id,
@@ -145,9 +175,75 @@ export async function updateWorkout({
     throw new Error('Workout not found')
   }
 
-  saveToStorage(STORAGE_KEYS.WORKOUTS, nextWorkouts)
+  const validatedWorkout = WorkoutSchema.parse(updatedWorkout)
+  saveToStorage(
+    STORAGE_KEYS.WORKOUTS,
+    nextWorkouts.map((workout) =>
+      workout.id === id ? validatedWorkout : workout,
+    ),
+  )
 
-  return updatedWorkout
+  return validatedWorkout
+}
+
+function updateWorkoutRecord(
+  id: string,
+  transform: (workout: Workout) => Workout,
+): Workout {
+  const nextWorkouts = readWorkoutLibrarySnapshot().map((workout) =>
+    workout.id === id ? transform(workout) : workout,
+  )
+  const updatedWorkout = nextWorkouts.find((workout) => workout.id === id)
+
+  if (!updatedWorkout) {
+    throw new Error('Workout not found')
+  }
+
+  const validatedWorkout = WorkoutSchema.parse(updatedWorkout)
+  saveToStorage(
+    STORAGE_KEYS.WORKOUTS,
+    nextWorkouts.map((workout) =>
+      workout.id === id ? validatedWorkout : workout,
+    ),
+  )
+  return validatedWorkout
+}
+
+export async function saveWorkoutProgress({
+  id,
+  exercises,
+}: SaveWorkoutProgressInput): Promise<Workout> {
+  return updateWorkoutRecord(id, (workout) =>
+    saveWorkoutProgressRecord(workout, exercises),
+  )
+}
+
+export async function replaceWorkoutExercises({
+  id,
+  exercises,
+}: ReplaceWorkoutExercisesInput): Promise<Workout> {
+  return updateWorkoutRecord(id, (workout) => ({
+    ...workout,
+    exercises,
+    updatedAt: new Date().toISOString(),
+  }))
+}
+
+export async function finishWorkout({
+  id,
+  exercises,
+}: FinishWorkoutInput): Promise<Workout> {
+  return updateWorkoutRecord(id, (workout) =>
+    finishWorkoutRecord(
+      exercises ? saveWorkoutProgressRecord(workout, exercises) : workout,
+    ),
+  )
+}
+
+export async function reopenWorkout({
+  id,
+}: ReopenWorkoutInput): Promise<Workout> {
+  return updateWorkoutRecord(id, (workout) => reopenWorkoutRecord(workout))
 }
 
 export async function deleteWorkout({ id }: DeleteWorkoutInput): Promise<void> {
@@ -168,25 +264,8 @@ export async function duplicateWorkout({
     return null
   }
 
-  saveToStorage(STORAGE_KEYS.WORKOUTS, [...workouts, duplicatedWorkout])
+  const validatedWorkout = WorkoutSchema.parse(duplicatedWorkout)
+  saveToStorage(STORAGE_KEYS.WORKOUTS, [...workouts, validatedWorkout])
 
-  return duplicatedWorkout
-}
-
-export async function toggleWorkoutComplete({
-  id,
-}: ToggleWorkoutCompleteInput): Promise<Workout> {
-  const nextWorkouts = toggleWorkoutCompleteRecord(
-    readWorkoutLibrarySnapshot(),
-    id,
-  )
-  const toggledWorkout = nextWorkouts.find((workout) => workout.id === id)
-
-  if (!toggledWorkout) {
-    throw new Error('Workout not found')
-  }
-
-  saveToStorage(STORAGE_KEYS.WORKOUTS, nextWorkouts)
-
-  return toggledWorkout
+  return validatedWorkout
 }

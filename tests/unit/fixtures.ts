@@ -52,7 +52,7 @@ export function createWorkout(overrides: Partial<Workout> = {}): Workout {
     name: overrides.name ?? 'Workout',
     date: overrides.date ?? '2026-04-20',
     exercises: overrides.exercises ?? [createWorkoutExercise('exercise-bench')],
-    isCompleted: overrides.isCompleted ?? false,
+    status: overrides.status ?? 'planned',
     completedAt: overrides.completedAt,
     createdAt: overrides.createdAt ?? '2026-04-20T00:00:00.000Z',
     updatedAt: overrides.updatedAt ?? '2026-04-20T00:00:00.000Z',
@@ -63,7 +63,7 @@ export const completedBenchWorkout = createWorkout({
   id: 'workout-completed-1',
   name: 'Push Day',
   date: '2026-04-20',
-  isCompleted: true,
+  status: 'completed',
   completedAt: '2026-04-20T10:00:00.000Z',
   exercises: [
     createWorkoutExercise('exercise-bench', {
@@ -90,7 +90,7 @@ export const completedRowWorkout = createWorkout({
   id: 'workout-completed-2',
   name: 'Pull Day',
   date: '2026-04-22',
-  isCompleted: true,
+  status: 'completed',
   completedAt: '2026-04-22T10:00:00.000Z',
   exercises: [
     createWorkoutExercise('exercise-row', {

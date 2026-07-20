@@ -4,6 +4,7 @@ import {
   readSettingsSnapshot,
 } from '../settings/settings-source'
 import type { Exercise, Settings, Workout } from '@/types'
+import { ImportPayloadSchema } from '@/lib/fitness-schemas'
 import { migrateExercises } from '@/lib/migrations'
 import { STORAGE_KEYS, removeFromStorage, saveToStorage } from '@/lib/storage'
 
@@ -41,25 +42,28 @@ export function parseImportPayload(content: string): ImportPayload {
     )
   }
 
-  if (
-    !parsedValue.data ||
-    !Array.isArray(parsedValue.data.exercises) ||
-    !Array.isArray(parsedValue.data.workouts)
-  ) {
-    throw new Error('Invalid backup file format. Missing required data.')
+  const importPayload = ImportPayloadSchema.safeParse(parsedValue.data)
+
+  if (!importPayload.success) {
+    throw new Error('Invalid backup file format.')
   }
 
-  return parsedValue.data
+  return importPayload.data
 }
 
 export function importDashboardData(data: ImportPayload): void {
-  saveToStorage(STORAGE_KEYS.EXERCISES, migrateExercises(data.exercises))
-  saveToStorage(STORAGE_KEYS.WORKOUTS, data.workouts)
+  const validatedData = ImportPayloadSchema.parse(data)
+
+  saveToStorage(
+    STORAGE_KEYS.EXERCISES,
+    migrateExercises(validatedData.exercises),
+  )
+  saveToStorage(STORAGE_KEYS.WORKOUTS, validatedData.workouts)
 
   saveToStorage(
     STORAGE_KEYS.SETTINGS,
-    data.settings
-      ? { ...DEFAULT_SETTINGS, ...data.settings }
+    validatedData.settings
+      ? { ...DEFAULT_SETTINGS, ...validatedData.settings }
       : readSettingsSnapshot(),
   )
 }
