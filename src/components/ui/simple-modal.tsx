@@ -27,13 +27,13 @@ export function SimpleModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4">
+    <div className="fixed inset-0 z-[60] flex items-center justify-center overflow-y-auto bg-black/70 px-4 py-4">
       <div
         role={role}
         aria-modal="true"
         aria-labelledby={titleId}
         aria-describedby={description ? descriptionId : undefined}
-        className="relative w-full max-w-2xl rounded-lg border bg-card p-6 text-card-foreground shadow-lg"
+        className="relative max-h-[calc(100dvh-2rem)] w-full max-w-2xl overflow-y-auto rounded-lg border bg-card p-6 text-card-foreground shadow-lg"
       >
         <button
           type="button"

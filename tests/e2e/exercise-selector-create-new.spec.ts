@@ -1,6 +1,33 @@
 import { expect, test } from '@playwright/test'
 import { clearAppStorage } from './helpers/storage'
 
+test('can save a new exercise from the inline form on a short mobile viewport', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 393, height: 740 })
+  await clearAppStorage(page)
+  await page.goto('/workouts/new')
+
+  await page.getByRole('button', { name: 'Add Exercise' }).click()
+  await page.getByPlaceholder('Search exercises...').fill('Zottman Curl')
+  await page.getByRole('button', { name: 'Create New Exercise' }).click()
+
+  const createExerciseDialog = page.getByRole('dialog', {
+    name: 'Create New Exercise',
+  })
+  await createExerciseDialog
+    .getByPlaceholder('e.g., Barbell Rows')
+    .fill('Zottman Curl')
+  await createExerciseDialog.getByRole('button', { name: 'Biceps' }).click()
+  await createExerciseDialog
+    .getByRole('button', { name: 'Save Exercise' })
+    .click()
+
+  await expect(
+    page.getByRole('heading', { level: 3, name: 'Zottman Curl' }),
+  ).toBeVisible()
+})
+
 test('exercise selector can create a new exercise inline and add it to the workout', async ({
   page,
 }) => {
