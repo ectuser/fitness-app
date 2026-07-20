@@ -278,7 +278,7 @@ export function WorkoutEditPage() {
   const createActionDetails = {
     create: { label: 'Create', icon: Save, finishWorkout: false },
     finish: { label: 'Create and Finish', icon: Save, finishWorkout: true },
-    start: { label: 'Start', icon: Play, finishWorkout: false },
+    start: { label: 'Create and Start', icon: Play, finishWorkout: false },
   } as const
   const selectedCreateAction = createActionDetails[createAction]
 
@@ -424,7 +424,7 @@ export function WorkoutEditPage() {
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => handleCreateAction('start')}>
                     <Play className="w-4 h-4" />
-                    Start
+                    Create and Start
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

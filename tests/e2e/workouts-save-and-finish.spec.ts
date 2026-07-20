@@ -56,7 +56,7 @@ test('start creates a workout and opens its session', async ({ page }) => {
   await page.getByRole('heading', { name: 'Bench Press' }).click()
 
   await page.getByRole('button', { name: 'More actions' }).click()
-  await page.getByRole('menuitem', { name: 'Start' }).click()
+  await page.getByRole('menuitem', { name: 'Create and Start' }).click()
 
   await expect(page).toHaveURL(/\/workouts\/[^/]+\/session$/)
   await expect(
