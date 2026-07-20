@@ -22,38 +22,30 @@ test('workout create with selector search and sets', async ({ page }) => {
   )
   await expect(page.getByLabel('Workout Name')).toHaveValue(expectedDefaultName)
 
-  const createWorkoutButton = page.getByRole('button', {
-    name: 'Create Workout',
-  })
-  const saveAndFinishWorkoutButton = page.getByRole('button', {
-    name: 'Save and Finish Workout',
-  })
+  const createWorkoutButton = page.getByRole('button', { name: 'Create' })
+  const moreActionsButton = page.getByRole('button', { name: 'More actions' })
   const cancelButton = page.getByRole('button', { name: 'Cancel' })
 
   await expect(createWorkoutButton).toHaveClass(/border-input/)
-  await expect(saveAndFinishWorkoutButton).toHaveClass(/border-input/)
+  await expect(moreActionsButton).toHaveClass(/border-input/)
   await expect(cancelButton).not.toHaveClass(/border-input/)
 
   const desktopCancelPosition = await cancelButton.boundingBox()
   const desktopCreatePosition = await createWorkoutButton.boundingBox()
-  const desktopSaveAndFinishPosition =
-    await saveAndFinishWorkoutButton.boundingBox()
+  const desktopMoreActionsPosition = await moreActionsButton.boundingBox()
 
   expect(desktopCancelPosition?.x).toBeLessThan(desktopCreatePosition?.x ?? 0)
   expect(desktopCreatePosition?.x).toBeLessThan(
-    desktopSaveAndFinishPosition?.x ?? 0,
+    desktopMoreActionsPosition?.x ?? 0,
   )
 
   await page.setViewportSize({ width: 390, height: 844 })
   const mobileCreatePosition = await createWorkoutButton.boundingBox()
-  const mobileSaveAndFinishPosition =
-    await saveAndFinishWorkoutButton.boundingBox()
+  const mobileMoreActionsPosition = await moreActionsButton.boundingBox()
   const mobileCancelPosition = await cancelButton.boundingBox()
 
-  expect(mobileCreatePosition?.y).toBeLessThan(mobileCancelPosition?.y ?? 0)
-  expect(mobileSaveAndFinishPosition?.y).toBeLessThan(
-    mobileCancelPosition?.y ?? 0,
-  )
+  expect(mobileCreatePosition?.y).toBe(mobileCancelPosition?.y)
+  expect(mobileMoreActionsPosition?.y).toBe(mobileCancelPosition?.y)
 
   await page.getByLabel('Workout Name').fill('Push Day')
   await page.getByRole('button', { name: 'Add Exercise' }).click()
@@ -64,7 +56,7 @@ test('workout create with selector search and sets', async ({ page }) => {
 
   await page.getByPlaceholder('Weight').first().fill('80')
   await page.getByPlaceholder('Reps').first().fill('8')
-  await page.getByRole('button', { name: 'Create Workout' }).click()
+  await page.getByRole('button', { name: 'Create' }).click()
 
   await expect(page.getByRole('heading', { name: 'Workouts' })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'Push Day' })).toBeVisible()

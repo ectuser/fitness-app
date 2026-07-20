@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Plus, Save } from 'lucide-react'
+import { MoreVertical, Play, Plus, Save } from 'lucide-react'
 import { ExerciseSelector } from '../exercise/ExerciseSelector'
 import { useExercises } from '../exercise/use-exercises'
 import { useSettings } from '../settings/use-settings'
@@ -17,8 +17,27 @@ import { Card } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { useLocation, useNavigate, useParams } from '@/lib/router-compat'
+
+const WORKOUT_CREATE_ACTION_STORAGE_KEY = 'fitness-app-workout-create-action'
+
+type CreateAction = 'create' | 'finish' | 'start'
+
+function getStoredCreateAction(): CreateAction {
+  if (typeof localStorage === 'undefined') {
+    return 'create'
+  }
+
+  const action = localStorage.getItem(WORKOUT_CREATE_ACTION_STORAGE_KEY)
+  return action === 'finish' || action === 'start' ? action : 'create'
+}
 
 export function WorkoutEditPage() {
   const { id } = useParams<{ id: string }>()
@@ -31,6 +50,9 @@ export function WorkoutEditPage() {
   const [loadedWorkoutId, setLoadedWorkoutId] = useState<string | null>(null)
   const [hasHydratedCreateDraft, setHasHydratedCreateDraft] = useState(false)
   const [isCreateDraftDirty, setIsCreateDraftDirty] = useState(false)
+  const [createAction, setCreateAction] = useState<CreateAction>(
+    getStoredCreateAction,
+  )
   const { clearDraft, persistDraft, restoreDraft } = useWorkoutCreateDraft()
   const shouldSkipStoredWorkoutInitializationRef = useRef(false)
   const hasRestoredDraftRef = useRef(false)
@@ -203,7 +225,7 @@ export function WorkoutEditPage() {
     return Object.keys(nextErrors).length === 0
   }
 
-  const saveWorkout = (finishWorkout: boolean) => {
+  const saveWorkout = async (finishWorkout: boolean, startWorkout = false) => {
     if (!validateForm()) {
       return
     }
@@ -233,8 +255,13 @@ export function WorkoutEditPage() {
         updateWorkout(id, workoutData)
       }
     } else {
-      addWorkout(workoutData)
+      const createdWorkout = await addWorkout(workoutData)
       clearDraft()
+
+      if (startWorkout) {
+        navigate(`/workouts/${createdWorkout.id}/session`)
+        return
+      }
     }
 
     navigate(finishWorkout ? '/workouts/completed' : '/workouts')
@@ -246,6 +273,20 @@ export function WorkoutEditPage() {
     }
 
     navigate('/workouts')
+  }
+
+  const createActionDetails = {
+    create: { label: 'Create', icon: Save, finishWorkout: false },
+    finish: { label: 'Create and Finish', icon: Save, finishWorkout: true },
+    start: { label: 'Start', icon: Play, finishWorkout: false },
+  } as const
+  const selectedCreateAction = createActionDetails[createAction]
+
+  const handleCreateAction = (action: CreateAction) => {
+    setCreateAction(action)
+    localStorage.setItem(WORKOUT_CREATE_ACTION_STORAGE_KEY, action)
+    const details = createActionDetails[action]
+    void saveWorkout(details.finishWorkout, action === 'start')
   }
 
   const handleEditExerciseFromWorkout = (exercise: Exercise) => {
@@ -332,48 +373,63 @@ export function WorkoutEditPage() {
         </div>
 
         <div className="pb-6">
-          <div className="flex flex-col gap-3 sm:hidden">
-            <Button
-              variant="outline"
-              onClick={() => saveWorkout(false)}
-              className="w-full"
-            >
-              <Save className="w-4 h-4 mr-2" />
-              {isEditing ? 'Save Changes' : 'Create Workout'}
-            </Button>
-            <Button
-              variant="outline"
-              onClick={() => saveWorkout(true)}
-              className="w-full"
-            >
-              <Save className="w-4 h-4 mr-2" />
-              Save and Finish Workout
-            </Button>
-            <Button variant="ghost" onClick={handleCancel} className="w-full">
-              Cancel
-            </Button>
-          </div>
-          <div className="hidden gap-3 sm:flex">
-            <Button variant="ghost" onClick={handleCancel} className="flex-1">
-              Cancel
-            </Button>
-            <Button
-              variant="outline"
-              onClick={() => saveWorkout(false)}
-              className="flex-1"
-            >
-              <Save className="w-4 h-4 mr-2" />
-              {isEditing ? 'Save Changes' : 'Create Workout'}
-            </Button>
-            <Button
-              variant="outline"
-              onClick={() => saveWorkout(true)}
-              className="flex-1"
-            >
-              <Save className="w-4 h-4 mr-2" />
-              Save and Finish Workout
-            </Button>
-          </div>
+          {isEditing ? (
+            <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
+              <Button variant="ghost" onClick={handleCancel}>
+                Cancel
+              </Button>
+              <Button variant="outline" onClick={() => void saveWorkout(false)}>
+                <Save className="w-4 h-4 mr-2" />
+                Save Changes
+              </Button>
+              <Button variant="outline" onClick={() => void saveWorkout(true)}>
+                <Save className="w-4 h-4 mr-2" />
+                Save and Finish Workout
+              </Button>
+            </div>
+          ) : (
+            <div className="flex gap-3 justify-end">
+              <Button variant="ghost" onClick={handleCancel}>
+                Cancel
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => handleCreateAction(createAction)}
+              >
+                <selectedCreateAction.icon className="w-4 h-4 mr-2" />
+                {selectedCreateAction.label}
+              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    aria-label="More actions"
+                  >
+                    <MoreVertical className="w-4 h-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem
+                    onClick={() => handleCreateAction('create')}
+                  >
+                    <Save className="w-4 h-4" />
+                    Create
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => handleCreateAction('finish')}
+                  >
+                    <Save className="w-4 h-4" />
+                    Create and Finish
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => handleCreateAction('start')}>
+                    <Play className="w-4 h-4" />
+                    Start
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          )}
         </div>
       </div>
 

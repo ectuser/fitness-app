@@ -37,7 +37,7 @@ test('exercise selector can create a new exercise inline and add it to the worko
   ).toBeVisible()
   await page.getByPlaceholder('Weight').first().fill('14')
   await page.getByPlaceholder('Reps').first().fill('10')
-  await page.getByRole('button', { name: 'Create Workout' }).click()
+  await page.getByRole('button', { name: 'Create' }).click()
 
   await expect(page.getByRole('heading', { name: 'Workouts' })).toBeVisible()
   await expect(

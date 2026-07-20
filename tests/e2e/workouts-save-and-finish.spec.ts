@@ -18,7 +18,8 @@ test('save and finish creates completed workout from create page', async ({
   await page.getByRole('button', { name: 'Add Exercise' }).click()
   await page.getByRole('heading', { name: 'Bench Press' }).click()
 
-  await page.getByRole('button', { name: 'Save and Finish Workout' }).click()
+  await page.getByRole('button', { name: 'More actions' }).click()
+  await page.getByRole('menuitem', { name: 'Create and Finish' }).click()
 
   await expect(
     page.getByRole('heading', { name: 'Completed Workouts' }),
@@ -44,6 +45,37 @@ test('save and finish creates completed workout from create page', async ({
       })
     })
     .toEqual({ isCompleted: true, hasCompletedAt: true })
+})
+
+test('start creates a workout and opens its session', async ({ page }) => {
+  await clearAppStorage(page)
+  await page.goto('workouts/new')
+
+  await page.getByLabel('Workout Name').fill('Start From Create')
+  await page.getByRole('button', { name: 'Add Exercise' }).click()
+  await page.getByRole('heading', { name: 'Bench Press' }).click()
+
+  await page.getByRole('button', { name: 'More actions' }).click()
+  await page.getByRole('menuitem', { name: 'Start' }).click()
+
+  await expect(page).toHaveURL(/\/workouts\/[^/]+\/session$/)
+  await expect(
+    page.getByRole('heading', { name: 'Start From Create' }),
+  ).toBeVisible()
+
+  await expect
+    .poll(async () => {
+      return page.evaluate(() => {
+        const workouts = JSON.parse(
+          localStorage.getItem('fitness-app-workouts') || '[]',
+        )
+        const workout = workouts.find(
+          (w: { name: string }) => w.name === 'Start From Create',
+        )
+        return workout?.isCompleted
+      })
+    })
+    .toBe(false)
 })
 
 test('save and finish updates existing workout from edit page', async ({

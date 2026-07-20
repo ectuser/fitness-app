@@ -46,7 +46,7 @@ test('workout form validates required fields before saving', async ({
   ).toBeVisible()
 
   await page.getByLabel('Workout Name').fill('   ')
-  await page.getByRole('button', { name: 'Create Workout' }).click()
+  await page.getByRole('button', { name: 'Create' }).click()
 
   await expect(page.getByText('Workout name is required')).toBeVisible()
   await expect(page.getByText('Add at least one exercise')).toBeVisible()
