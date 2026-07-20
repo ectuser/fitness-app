@@ -41,30 +41,6 @@ pnpm lint
 pnpm test:e2e
 ```
 
-## Project Structure
-
-```text
-src/
-├── components/          # UI, layout, workout, and exercise components
-├── context/             # DataContext local app state
-├── hooks/               # Custom React hooks
-├── lib/                 # Storage, migrations, seed data, router compatibility
-├── pages/               # Migrated page components
-├── routes/              # TanStack Router file routes
-└── types/               # Shared TypeScript types
-```
-
-## Data Persistence
-
-All app data is stored in browser localStorage:
-
-- Exercises
-- Workouts
-- Last visited route
-- Schema migration state
-
-Clearing browser data will remove local workouts and custom exercises.
-
 ## Deployment
 
 `pnpm build` emits TanStack Start output under `dist/client` and `dist/server`. Deploy it to a target that supports the TanStack Start server output, or add a static adapter before deploying to static-only hosting.

@@ -1,4 +1,5 @@
 import { ArrowLeft } from 'lucide-react'
+import { useCanGoBack } from '@tanstack/react-router'
 import { useNavigate } from '@/lib/router-compat'
 import { Button } from '@/components/ui/button'
 
@@ -14,6 +15,16 @@ export function PageHeader({
   action,
 }: PageHeaderProps) {
   const navigate = useNavigate()
+  const canGoBack = useCanGoBack()
+
+  const handleBack = () => {
+    if (canGoBack) {
+      navigate(-1)
+      return
+    }
+
+    navigate('/', { replace: true })
+  }
 
   return (
     <div className="bg-card border-b border-border">
@@ -24,7 +35,7 @@ export function PageHeader({
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => navigate(-1)}
+                onClick={handleBack}
                 className="mr-2"
               >
                 <ArrowLeft className="w-5 h-5" />
