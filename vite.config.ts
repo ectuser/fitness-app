@@ -39,23 +39,23 @@ const config = defineConfig({
     ),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'logo192.png', 'logo512.png'],
+      includeAssets: [
+        'pwa-icon.svg',
+        'apple-touch-icon.png',
+        'pwa-192x192.png',
+        'pwa-512x512.png',
+      ],
       manifest: {
         short_name: 'Fitness',
         name: 'Fitness Tracker',
         icons: [
           {
-            src: 'favicon.ico',
-            sizes: '64x64 32x32 24x24 16x16',
-            type: 'image/x-icon',
-          },
-          {
-            src: 'logo192.png',
-            type: 'image/png',
+            src: 'pwa-192x192.png',
             sizes: '192x192',
+            type: 'image/png',
           },
           {
-            src: 'logo512.png',
+            src: 'pwa-512x512.png',
             type: 'image/png',
             sizes: '512x512',
           },
