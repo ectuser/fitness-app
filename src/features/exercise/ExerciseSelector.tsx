@@ -144,7 +144,7 @@ export function ExerciseSelector({
         title="Create New Exercise"
         description="Create a custom exercise and add it to your workout."
       >
-        <div className="max-h-[90vh] overflow-y-auto">
+        <div>
           <ExerciseForm
             onSave={handleExerciseSave}
             onCancel={() => setShowCreateForm(false)}

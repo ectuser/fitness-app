@@ -8,6 +8,20 @@ import {
   seedAppStorage,
 } from './helpers/storage'
 
+test('muscle filter options stay interactive above the exercise selector modal', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 393, height: 740 })
+  await clearAppStorage(page)
+  await page.goto('workouts/new')
+
+  await page.getByRole('button', { name: 'Add Exercise' }).click()
+  await page.getByRole('combobox').first().click()
+  await page.getByRole('option', { name: 'Chest' }).click()
+
+  await expect(page.getByText('Filtering by Chest')).toBeVisible()
+})
+
 test('exercise selector supports muscle filter with clear active indication and reset', async ({
   page,
 }) => {
