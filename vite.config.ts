@@ -62,8 +62,8 @@ const config = defineConfig({
         ],
         start_url: '.',
         display: 'standalone',
-        theme_color: '#18181b',
-        background_color: '#18181b',
+        theme_color: '#ffffff',
+        background_color: '#ffffff',
       },
       workbox: {
         clientsClaim: true,
