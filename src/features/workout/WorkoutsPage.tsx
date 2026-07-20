@@ -83,8 +83,8 @@ export function WorkoutsPage() {
           />
         ) : (
           <Card className="p-12 text-center">
-            <p className="text-slate-500 mb-4">No upcoming workouts.</p>
-            <p className="text-sm text-slate-500 mb-4">
+            <p className="mb-4 text-muted-foreground">No upcoming workouts.</p>
+            <p className="mb-4 text-sm text-muted-foreground">
               Create your first workout to get started!
             </p>
             <Button onClick={() => navigate('/workouts/new')}>

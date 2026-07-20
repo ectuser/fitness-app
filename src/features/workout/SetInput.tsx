@@ -50,8 +50,8 @@ export function SetInput({
   }, [isEditingWeight, set.id, set.weight])
 
   return (
-    <div className="flex items-center gap-2 p-3 bg-slate-50 rounded-lg">
-      <span className="text-sm font-medium text-slate-600 w-12">
+    <div className="flex items-center gap-2 rounded-lg bg-muted p-3">
+      <span className="w-12 text-sm font-medium text-muted-foreground">
         Set {setNumber}
       </span>
 
@@ -73,9 +73,9 @@ export function SetInput({
           />
         </div>
 
-        <span className="text-sm text-slate-600">{set.weightUnit}</span>
+        <span className="text-sm text-muted-foreground">{set.weightUnit}</span>
 
-        <span className="text-slate-400 mx-1">×</span>
+        <span className="mx-1 text-muted-foreground">×</span>
 
         <div className="flex-1">
           <Input
@@ -92,7 +92,7 @@ export function SetInput({
           />
         </div>
 
-        <span className="text-sm text-slate-600">reps</span>
+        <span className="text-sm text-muted-foreground">reps</span>
       </div>
 
       <Button
@@ -100,6 +100,7 @@ export function SetInput({
         size="icon"
         onClick={onRemove}
         className="flex-shrink-0"
+        aria-label={`Remove set ${setNumber}`}
       >
         <X className="w-4 h-4" />
       </Button>

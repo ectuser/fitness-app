@@ -37,7 +37,7 @@ export function ExerciseDetailPage() {
       <div>
         <PageHeader title="Exercise Not Found" showBack />
         <div className="container mx-auto px-4 py-12 text-center">
-          <p className="text-slate-600 mb-4">
+          <p className="mb-4 text-muted-foreground">
             This exercise could not be found.
           </p>
           <Button onClick={() => navigate('/exercises')}>
@@ -87,7 +87,7 @@ export function ExerciseDetailPage() {
                       This will permanently delete &quot;{exercise.name}&quot;.
                       This action cannot be undone.
                       {history.length > 0 && (
-                        <p className="mt-2 text-red-600 font-medium">
+                        <p className="mt-2 font-medium text-destructive">
                           Warning: This exercise has been used in{' '}
                           {history.length} workout(s).
                         </p>
@@ -118,7 +118,7 @@ export function ExerciseDetailPage() {
 
           <div className="space-y-4">
             <div>
-              <h3 className="text-sm font-semibold text-slate-600 mb-2">
+              <h3 className="mb-2 text-sm font-semibold text-muted-foreground">
                 Muscle Groups
               </h3>
               <div className="flex flex-wrap gap-2">
@@ -132,10 +132,10 @@ export function ExerciseDetailPage() {
 
             {exercise.comments && (
               <div>
-                <h3 className="text-sm font-semibold text-slate-600 mb-2">
+                <h3 className="mb-2 text-sm font-semibold text-muted-foreground">
                   Comments
                 </h3>
-                <p className="text-slate-700">{exercise.comments}</p>
+                <p className="text-foreground">{exercise.comments}</p>
               </div>
             )}
           </div>
@@ -150,18 +150,18 @@ export function ExerciseDetailPage() {
                 <div className="text-2xl font-bold">
                   {stats.maxWeight} {stats.maxWeightUnit}
                 </div>
-                <div className="text-sm text-slate-600">Max Weight</div>
-                <div className="text-xs text-slate-500 mt-1">
+                <div className="text-sm text-muted-foreground">Max Weight</div>
+                <div className="mt-1 text-xs text-muted-foreground">
                   @ {stats.maxWeightReps} reps
                 </div>
               </Card>
               <Card className="p-4">
                 <div className="text-2xl font-bold">{stats.totalSets}</div>
-                <div className="text-sm text-slate-600">Total Sets</div>
+                <div className="text-sm text-muted-foreground">Total Sets</div>
               </Card>
             </div>
           ) : (
-            <Card className="p-6 text-center text-slate-500">
+            <Card className="p-6 text-center text-muted-foreground">
               No statistics available yet. Complete a workout with this exercise
               to see stats!
             </Card>
@@ -178,7 +178,9 @@ export function ExerciseDetailPage() {
                   <div className="flex justify-between items-start mb-3">
                     <div>
                       <h3 className="font-semibold">{workout.workoutName}</h3>
-                      <p className="text-sm text-slate-600">{workout.date}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {workout.date}
+                      </p>
                     </div>
                     <Badge variant="secondary">
                       {workout.setData.length} sets
@@ -188,7 +190,7 @@ export function ExerciseDetailPage() {
                     {workout.setData.map((set, idx) => (
                       <div
                         key={set.id}
-                        className="text-sm flex justify-between text-slate-700"
+                        className="flex justify-between text-sm text-foreground"
                       >
                         <span>Set {idx + 1}</span>
                         <span>
@@ -201,7 +203,7 @@ export function ExerciseDetailPage() {
               ))}
             </div>
           ) : (
-            <Card className="p-6 text-center text-slate-500">
+            <Card className="p-6 text-center text-muted-foreground">
               No workout history yet. This exercise hasn&apos;t been used in any
               completed workouts.
             </Card>

@@ -82,7 +82,7 @@ export function WorkoutSessionPage() {
       <div>
         <PageHeader title="Workout Not Found" showBack />
         <div className="container mx-auto px-4 py-12 text-center">
-          <p className="text-slate-600 mb-4">
+          <p className="mb-4 text-muted-foreground">
             This workout could not be found.
           </p>
           <Button onClick={() => navigate('/workouts')}>
@@ -99,7 +99,7 @@ export function WorkoutSessionPage() {
   )
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-muted">
       <PageHeader
         title={workout.name}
         showBack
@@ -116,11 +116,11 @@ export function WorkoutSessionPage() {
       />
 
       <div className="container mx-auto px-4 py-6 space-y-6 pb-32">
-        <div className="bg-white rounded-lg p-4 shadow-sm">
+        <div className="rounded-lg bg-card p-4 text-card-foreground shadow-sm">
           <div className="flex items-center justify-between">
             <div>
               <h3 className="font-semibold text-lg">Workout in Progress</h3>
-              <p className="text-sm text-slate-600">
+              <p className="text-sm text-muted-foreground">
                 {workoutExercises.length} exercise
                 {workoutExercises.length !== 1 ? 's' : ''} • {totalSets} set
                 {totalSets !== 1 ? 's' : ''}
@@ -147,8 +147,8 @@ export function WorkoutSessionPage() {
           onRemoveExercise={handleRemoveExercise}
           onReplaceExercise={handleReplaceExercise}
           emptyState={
-            <div className="bg-white rounded-lg p-12 text-center">
-              <p className="text-slate-500 mb-4">
+            <div className="rounded-lg bg-card p-12 text-center text-card-foreground">
+              <p className="mb-4 text-muted-foreground">
                 No exercises in this workout
               </p>
               <Button variant="outline" onClick={openAddExerciseSelector}>
@@ -160,7 +160,7 @@ export function WorkoutSessionPage() {
         />
       </div>
 
-      <div className="fixed bottom-16 md:bottom-0 left-0 right-0 bg-white border-t border-slate-200 p-4 shadow-lg z-40">
+      <div className="fixed bottom-16 left-0 right-0 z-40 border-t bg-card p-4 shadow-lg md:bottom-0">
         <div className="container mx-auto flex gap-3">
           <Button
             onClick={() => {

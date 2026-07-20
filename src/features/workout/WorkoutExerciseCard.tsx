@@ -133,7 +133,7 @@ export function WorkoutExerciseCard({
           {isMenuOpen && (
             <div
               role="menu"
-              className="absolute right-0 top-10 z-20 min-w-44 rounded-md border bg-white p-1 shadow-md"
+              className="absolute right-0 top-10 z-20 min-w-44 rounded-md border bg-popover p-1 text-popover-foreground shadow-md"
             >
               {onReplace && (
                 <button
@@ -143,7 +143,7 @@ export function WorkoutExerciseCard({
                     setIsMenuOpen(false)
                     onReplace()
                   }}
-                  className="flex w-full items-center rounded-sm px-2 py-2 text-sm hover:bg-slate-100"
+                  className="flex w-full items-center rounded-sm px-2 py-2 text-sm hover:bg-accent"
                 >
                   <Repeat className="w-4 h-4 mr-2" />
                   Switch Exercise
@@ -160,7 +160,7 @@ export function WorkoutExerciseCard({
                   }
                   navigate(`/exercises/${exercise.id}/edit`)
                 }}
-                className="flex w-full items-center rounded-sm px-2 py-2 text-sm hover:bg-slate-100"
+                className="flex w-full items-center rounded-sm px-2 py-2 text-sm hover:bg-accent"
               >
                 <Pencil className="w-4 h-4 mr-2" />
                 Edit Exercise
@@ -172,7 +172,7 @@ export function WorkoutExerciseCard({
                   setIsMenuOpen(false)
                   onRemove()
                 }}
-                className="flex w-full items-center rounded-sm px-2 py-2 text-sm text-red-600 hover:bg-slate-100"
+                className="flex w-full items-center rounded-sm px-2 py-2 text-sm text-destructive hover:bg-accent"
               >
                 <Trash2 className="w-4 h-4 mr-2" />
                 Delete Exercise
@@ -204,8 +204,8 @@ export function WorkoutExerciseCard({
               <div className="space-y-2">
                 {stats.maxWeight > 0 && (
                   <div className="flex items-center gap-2 text-sm">
-                    <TrendingUp className="w-4 h-4 text-slate-500" />
-                    <span className="text-slate-600">Max:</span>
+                    <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-muted-foreground">Max:</span>
                     <span className="font-semibold">
                       {stats.maxWeight} {stats.maxWeightUnit} ×{' '}
                       {stats.maxWeightReps}
@@ -214,8 +214,8 @@ export function WorkoutExerciseCard({
                 )}
                 {stats.lastWeight !== undefined && stats.lastWeight > 0 && (
                   <div className="flex items-center gap-2 text-sm">
-                    <Clock className="w-4 h-4 text-slate-500" />
-                    <span className="text-slate-600">Last:</span>
+                    <Clock className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-muted-foreground">Last:</span>
                     <span className="font-semibold">
                       {stats.lastWeight} {stats.lastWeightUnit} ×{' '}
                       {stats.lastWeightReps}
@@ -227,7 +227,7 @@ export function WorkoutExerciseCard({
             <div className="space-y-1">
               <label
                 htmlFor={commentId}
-                className="text-xs font-medium text-slate-600"
+                className="text-xs font-medium text-muted-foreground"
               >
                 Comment
               </label>
@@ -242,7 +242,7 @@ export function WorkoutExerciseCard({
                 }
                 placeholder="Add a note for this exercise..."
                 rows={3}
-                className="w-full px-3 py-2 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent"
+                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:border-transparent focus:outline-none focus:ring-2 focus:ring-ring"
               />
             </div>
           </AccordionContent>

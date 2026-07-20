@@ -1,5 +1,8 @@
 import { defineConfig, devices } from '@playwright/test'
 
+const playwrightPort = process.env.PLAYWRIGHT_PORT ?? '4173'
+const playwrightBaseUrl = `http://127.0.0.1:${playwrightPort}/`
+
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
@@ -23,7 +26,7 @@ export default defineConfig({
   reporter: [['list'], ['html', { open: 'never' }]],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
-    baseURL: 'http://127.0.0.1:4173/',
+    baseURL: playwrightBaseUrl,
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
     video: process.env.CI ? 'off' : 'retain-on-failure',
@@ -41,8 +44,8 @@ export default defineConfig({
   ],
 
   webServer: {
-    command: 'pnpm dev --host 127.0.0.1 --port 4173 --strictPort',
-    url: 'http://127.0.0.1:4173/',
+    command: `pnpm dev --host 127.0.0.1 --port ${playwrightPort} --strictPort`,
+    url: playwrightBaseUrl,
     reuseExistingServer: !process.env.CI,
   },
 })

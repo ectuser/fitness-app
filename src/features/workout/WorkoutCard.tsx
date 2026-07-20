@@ -44,7 +44,7 @@ export function WorkoutCard({
               </Badge>
             )}
           </div>
-          <div className="flex items-center gap-1 text-sm text-slate-600">
+          <div className="flex items-center gap-1 text-sm text-muted-foreground">
             <Calendar className="w-4 h-4" />
             <span>
               {formatWorkoutDate(workout.date, { includeYesterday: true })}
@@ -70,7 +70,7 @@ export function WorkoutCard({
           ))}
         </div>
 
-        <div className="text-sm text-slate-600">
+        <div className="text-sm text-muted-foreground">
           {workout.exercises.length} exercise
           {workout.exercises.length !== 1 ? 's' : ''} • {totalSets} set
           {totalSets !== 1 ? 's' : ''}

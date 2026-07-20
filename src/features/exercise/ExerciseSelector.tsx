@@ -39,8 +39,8 @@ function ExerciseCard({ exercise, isSelected, onClick }: ExerciseCardProps) {
 
   return (
     <Card
-      className={`p-4 cursor-pointer hover:bg-slate-50 transition-colors ${
-        isSelected ? 'bg-slate-100 border-slate-400' : ''
+      className={`cursor-pointer p-4 transition-colors hover:bg-accent ${
+        isSelected ? 'border-ring bg-secondary' : ''
       }`}
       onClick={onClick}
     >
@@ -48,7 +48,7 @@ function ExerciseCard({ exercise, isSelected, onClick }: ExerciseCardProps) {
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-2">
             <h3 className="font-semibold">{exercise.name}</h3>
-            {isSelected && <Check className="w-4 h-4 text-green-600" />}
+            {isSelected && <Check className="h-4 w-4 text-success" />}
           </div>
           <div className="flex flex-wrap gap-1 mb-2">
             {exercise.muscleGroups.map((muscle) => (
@@ -58,7 +58,7 @@ function ExerciseCard({ exercise, isSelected, onClick }: ExerciseCardProps) {
             ))}
           </div>
           {stats && (
-            <div className="flex flex-wrap gap-3 text-xs text-slate-600 mb-2">
+            <div className="mb-2 flex flex-wrap gap-3 text-xs text-muted-foreground">
               {stats.maxWeight > 0 && (
                 <div className="flex items-center gap-1">
                   <TrendingUp className="w-3 h-3" />
@@ -80,7 +80,7 @@ function ExerciseCard({ exercise, isSelected, onClick }: ExerciseCardProps) {
             </div>
           )}
           {exercise.comments && (
-            <p className="text-sm text-slate-600 line-clamp-2">
+            <p className="line-clamp-2 text-sm text-muted-foreground">
               {exercise.comments}
             </p>
           )}
@@ -166,7 +166,7 @@ export function ExerciseSelector({
           {/* Search and Create */}
           <div className="flex gap-2">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 placeholder="Search exercises..."
                 value={searchQuery}
@@ -197,9 +197,7 @@ export function ExerciseSelector({
             >
               <SelectTrigger
                 className={`w-full sm:w-[260px] ${
-                  selectedFilterGroup
-                    ? 'border-slate-900 ring-1 ring-slate-200'
-                    : ''
+                  selectedFilterGroup ? 'border-primary ring-1 ring-ring' : ''
                 }`}
               >
                 <SelectValue placeholder="Filter by muscle group" />
@@ -225,7 +223,7 @@ export function ExerciseSelector({
           </div>
 
           {selectedFilterGroup && (
-            <div className="rounded-md border border-slate-300 bg-slate-50 px-3 py-2 text-sm">
+            <div className="rounded-md border bg-muted px-3 py-2 text-sm">
               Filtering by{' '}
               <span className="font-semibold">{selectedFilterGroup}</span>.
               Reset to see all exercises.
@@ -247,7 +245,7 @@ export function ExerciseSelector({
                 )
               })
             ) : (
-              <div className="text-center py-12 text-slate-500">
+              <div className="py-12 text-center text-muted-foreground">
                 <p className="mb-4">
                   {selectedFilterGroup
                     ? `No exercises found for ${selectedFilterGroup}`

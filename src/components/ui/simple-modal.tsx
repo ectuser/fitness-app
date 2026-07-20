@@ -33,7 +33,7 @@ export function SimpleModal({
         aria-modal="true"
         aria-labelledby={titleId}
         aria-describedby={description ? descriptionId : undefined}
-        className="relative w-full max-w-2xl rounded-lg border bg-white p-6 shadow-lg"
+        className="relative w-full max-w-2xl rounded-lg border bg-card p-6 text-card-foreground shadow-lg"
       >
         <button
           type="button"
@@ -51,7 +51,7 @@ export function SimpleModal({
             {title}
           </h2>
           {description ? (
-            <div id={descriptionId} className="text-sm text-slate-600">
+            <div id={descriptionId} className="text-sm text-muted-foreground">
               {description}
             </div>
           ) : null}

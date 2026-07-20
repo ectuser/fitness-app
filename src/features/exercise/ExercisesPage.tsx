@@ -27,7 +27,7 @@ export function ExercisesPage() {
             <button
               key={exercise.id}
               type="button"
-              className="w-full bg-white rounded-lg p-4 text-left shadow-sm border border-slate-200 cursor-pointer hover:border-slate-300"
+              className="w-full cursor-pointer rounded-lg border bg-card p-4 text-left text-card-foreground shadow-sm hover:border-ring"
               onClick={() => navigate(`/exercises/${exercise.id}`)}
             >
               <span className="block font-semibold mb-2">{exercise.name}</span>

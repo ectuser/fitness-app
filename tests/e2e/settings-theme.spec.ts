@@ -30,6 +30,10 @@ test('user can choose light, dark, and system themes', async ({ page }) => {
   await page.getByRole('option', { name: 'Dark' }).click()
 
   await expect(page.locator('html')).toHaveClass(/dark/)
+  await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute(
+    'content',
+    '#18181b',
+  )
   await expect
     .poll(() =>
       page.evaluate((settingsKey) => {
@@ -42,6 +46,10 @@ test('user can choose light, dark, and system themes', async ({ page }) => {
   await page.getByRole('option', { name: 'Light' }).click()
 
   await expect(page.locator('html')).not.toHaveClass(/dark/)
+  await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute(
+    'content',
+    '#ffffff',
+  )
 
   await page.emulateMedia({ colorScheme: 'dark' })
   await page.getByRole('combobox', { name: 'Theme' }).click()

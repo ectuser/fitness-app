@@ -66,8 +66,10 @@ export function WorkoutsCompletedPage() {
           />
         ) : (
           <Card className="p-12 text-center">
-            <p className="text-slate-500 mb-2">No completed workouts yet.</p>
-            <p className="text-sm text-slate-500">
+            <p className="mb-2 text-muted-foreground">
+              No completed workouts yet.
+            </p>
+            <p className="text-sm text-muted-foreground">
               Complete a workout to see it here!
             </p>
           </Card>

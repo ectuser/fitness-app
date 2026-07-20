@@ -85,14 +85,14 @@ export function AppUpdatePage() {
 
 function StatusIcon({ state }: { state: PwaUpdateState }) {
   if (state === 'available-update' || state === 'applying') {
-    return <RefreshCw className="h-5 w-5 text-sky-600" />
+    return <RefreshCw className="h-5 w-5 text-info" />
   }
 
   if (state === 'unavailable') {
     return <WifiOff className="h-5 w-5 text-muted-foreground" />
   }
 
-  return <CheckCircle2 className="h-5 w-5 text-emerald-600" />
+  return <CheckCircle2 className="h-5 w-5 text-success" />
 }
 
 function getStatusTitle(state: PwaUpdateState) {
