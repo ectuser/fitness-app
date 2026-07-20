@@ -8,7 +8,7 @@ import {
   ImportPayloadEnvelopeSchema,
   ImportPayloadSchema,
 } from '@/lib/fitness-schemas'
-import { migrateExercises } from '@/lib/migrations'
+import { migrateExerciseMuscleGroups } from '@/lib/migrations'
 import { STORAGE_KEYS, removeFromStorage, saveToStorage } from '@/lib/storage'
 
 export interface ImportPayload {
@@ -55,7 +55,13 @@ export function parseImportPayload(content: string): ImportPayload {
 
   const importPayload = ImportPayloadSchema.safeParse({
     ...importPayloadEnvelope.data,
-    exercises: migrateExercises(importPayloadEnvelope.data.exercises),
+    exercises: importPayloadEnvelope.data.exercises.map((exercise) => ({
+      ...exercise,
+      muscleGroups: migrateExerciseMuscleGroups(exercise.muscleGroups),
+    })),
+    workouts: importPayloadEnvelope.data.workouts.map(
+      migrateLegacyImportWorkout,
+    ),
   })
 
   if (!importPayload.success) {
@@ -65,13 +71,36 @@ export function parseImportPayload(content: string): ImportPayload {
   return importPayload.data
 }
 
+function migrateLegacyImportWorkout(workout: unknown): unknown {
+  if (!workout || typeof workout !== 'object') {
+    return workout
+  }
+
+  const record = workout as Record<string, unknown>
+
+  if (typeof record.isCompleted !== 'boolean') {
+    return workout
+  }
+
+  const { isCompleted, ...legacyWorkout } = record
+  const completedAt =
+    typeof legacyWorkout.completedAt === 'string'
+      ? legacyWorkout.completedAt
+      : typeof legacyWorkout.updatedAt === 'string'
+        ? legacyWorkout.updatedAt
+        : legacyWorkout.createdAt
+
+  return {
+    ...legacyWorkout,
+    status: isCompleted ? 'completed' : 'planned',
+    completedAt: isCompleted ? completedAt : undefined,
+  }
+}
+
 export function importDashboardData(data: ImportPayload): void {
   const validatedData = ImportPayloadSchema.parse(data)
 
-  saveToStorage(
-    STORAGE_KEYS.EXERCISES,
-    migrateExercises(validatedData.exercises),
-  )
+  saveToStorage(STORAGE_KEYS.EXERCISES, validatedData.exercises)
   saveToStorage(STORAGE_KEYS.WORKOUTS, validatedData.workouts)
 
   saveToStorage(

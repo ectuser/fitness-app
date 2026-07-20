@@ -94,6 +94,31 @@ describe('dashboard helpers', () => {
         }),
       ),
     ).toThrow('Invalid backup file format.')
+
+    expect(
+      parseImportPayload(
+        JSON.stringify({
+          data: {
+            exercises,
+            workouts: [
+              {
+                ...upcomingWorkout,
+                status: undefined,
+                isCompleted: true,
+              },
+            ],
+          },
+        }),
+      ),
+    ).toMatchObject({
+      workouts: [
+        {
+          id: upcomingWorkout.id,
+          status: 'completed',
+          completedAt: upcomingWorkout.updatedAt,
+        },
+      ],
+    })
   })
 
   it('imports dashboard backup data while preserving backup format compatibility', () => {

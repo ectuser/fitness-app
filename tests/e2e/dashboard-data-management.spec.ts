@@ -164,7 +164,7 @@ test('settings import replaces local data and migrates imported exercises', asyn
               ],
             },
           ],
-          status: 'planned',
+          isCompleted: true,
           createdAt: '2026-03-09T10:00:00.000Z',
           updatedAt: '2026-03-09T10:00:00.000Z',
         },
@@ -234,6 +234,12 @@ test('settings import replaces local data and migrates imported exercises', asyn
           workoutNames: workouts.map(
             (workout: { name: string }) => workout.name,
           ),
+          workoutStatuses: workouts.map(
+            (workout: { status: string; completedAt?: string }) => ({
+              status: workout.status,
+              hasCompletedAt: Boolean(workout.completedAt),
+            }),
+          ),
           defaultWeightUnit: settings.defaultWeightUnit,
         }
       })
@@ -245,6 +251,7 @@ test('settings import replaces local data and migrates imported exercises', asyn
         'Imported Full Body': ['None'],
       },
       workoutNames: ['Imported Workout'],
+      workoutStatuses: [{ status: 'completed', hasCompletedAt: true }],
       defaultWeightUnit: 'lb',
     })
 })

@@ -74,7 +74,8 @@ function migrateStoredWorkout(storedWorkout: unknown): unknown {
     return storedWorkout
   }
 
-  const { isCompleted, ...workout } = storedWorkout
+  const record = storedWorkout as Record<string, unknown>
+  const { isCompleted, ...workout } = record
 
   return {
     ...workout,
