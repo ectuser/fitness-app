@@ -1,0 +1,1 @@
+import{k as e}from"./index-CUZI2Mg8.js";var t=e;export{t as component};
