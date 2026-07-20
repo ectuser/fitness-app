@@ -1,1 +1,0 @@
-import{k as e}from"./index-C_x7zPOR.js";var t=e;export{t as component};
