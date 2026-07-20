@@ -5,6 +5,7 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
 
 permissions:
   contents: read
@@ -31,6 +32,7 @@ jobs:
         run: pnpm test --coverage
       - name: Collect vulnerability findings
         id: audit
+        if: github.event_name != 'pull_request' || !github.event.pull_request.draft
         shell: bash
         run: |
           set +e
@@ -38,7 +40,7 @@ jobs:
           echo "exit_code=$?" >> "$GITHUB_OUTPUT"
           exit 0
       - name: Report CI results on pull request
-        if: always() && github.event_name == 'pull_request'
+        if: always() && github.event_name == 'pull_request' && !github.event.pull_request.draft
         env:
           GH_TOKEN: ${{ github.token }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
@@ -66,10 +68,15 @@ jobs:
           ' audit.json)
           audit_findings=$(jq -r '
             (.vulnerabilities // {}) | to_entries |
-            if length == 0 then "No vulnerabilities found."
+            if length == 0 then "| None | — | No vulnerabilities found | — |"
             else
-              map("- **\(.value.severity | ascii_upcase)** `\(.key)`: " +
-                ([.value.via[]? | select(type == "object") | .title] | first // "Vulnerability reported")) |
+              map(
+                .value as $v |
+                ([$v.via[]? | select(type == "object")] | first) as $advisory |
+                ($advisory.title // "Vulnerability reported" | gsub("\\|"; "\\\\|")) as $title |
+                ($advisory.url // "—") as $url |
+                "| `\(.key)` | \($v.severity | ascii_upcase) | \($title) | \($url) |"
+              ) |
               join("\n")
             end
           ' audit.json)
@@ -86,8 +93,10 @@ jobs:
             echo
             echo '### Vulnerabilities'
             echo
-            echo "$audit_summary"
+            echo "Summary: $audit_summary"
             echo
+            echo '| Package | Severity | Advisory | Reference |'
+            echo '| --- | --- | --- | --- |'
             echo "$audit_findings"
             echo
             echo '### Deployment'
@@ -117,12 +126,13 @@ jobs:
         env:
           AUDIT_EXIT_CODE: ${{ steps.audit.outputs.exit_code }}
           COVERAGE_OUTCOME: ${{ steps.coverage.outcome }}
+          IS_DRAFT_PR: ${{ github.event_name == 'pull_request' && github.event.pull_request.draft }}
         run: |
           if [[ "$COVERAGE_OUTCOME" != 'success' ]]; then
             echo 'Test coverage failed.'
             exit 1
           fi
-          if [[ "$AUDIT_EXIT_CODE" != '0' ]]; then
+          if [[ "$IS_DRAFT_PR" != 'true' && "$AUDIT_EXIT_CODE" != '0' ]]; then
             echo 'Critical vulnerabilities found.'
             exit 1
           fi
