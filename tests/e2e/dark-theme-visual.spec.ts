@@ -19,7 +19,7 @@ const activeWorkout = buildWorkout({
   id: 'active-workout',
   name: 'Upper Body',
   date: '2026-07-20',
-  isCompleted: false,
+  status: 'planned',
   exercises: [
     buildWorkoutExercise('bench-press', 0, [buildSet('set-1', 80, 8)]),
   ],
