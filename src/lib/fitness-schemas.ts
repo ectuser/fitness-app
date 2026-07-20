@@ -98,7 +98,7 @@ export const ImportPayloadSchema = z
   .object({
     exercises: z.array(ExerciseSchema),
     workouts: z.array(WorkoutSchema),
-    settings: SettingsSchema.optional(),
+    settings: SettingsSchema.partial().optional(),
   })
   .strict()
   .superRefine((payload, context) => {

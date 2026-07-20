@@ -14,7 +14,7 @@ import { STORAGE_KEYS, removeFromStorage, saveToStorage } from '@/lib/storage'
 export interface ImportPayload {
   exercises: Array<Exercise>
   workouts: Array<Workout>
-  settings?: Settings
+  settings?: Partial<Settings>
 }
 
 export interface ExportPayload {
