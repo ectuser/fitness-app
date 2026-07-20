@@ -9,11 +9,11 @@ import { useNavigate } from '@/lib/router-compat'
 export function WorkoutsCompletedPage() {
   const navigate = useNavigate()
   const { exercises } = useExercises()
-  const { workouts, deleteWorkout, duplicateWorkout, toggleWorkoutComplete } =
+  const { workouts, deleteWorkout, duplicateWorkout, reopenWorkout } =
     useWorkouts()
 
   const completedWorkouts = workouts
-    .filter((w) => w.isCompleted)
+    .filter((w) => w.status === 'completed')
     .sort((a, b) => {
       const dateA = new Date(a.completedAt || a.date)
       const dateB = new Date(b.completedAt || b.date)
@@ -39,7 +39,7 @@ export function WorkoutsCompletedPage() {
   }
 
   const handleToggleComplete = (workoutId: string) => {
-    toggleWorkoutComplete(workoutId)
+    void reopenWorkout(workoutId)
   }
 
   return (

@@ -60,7 +60,7 @@ test('switch exercise opens selector with preselected muscle filter', async ({
         id: 'switch-filter-workout',
         name: 'Switch Filter Workout',
         date: '2026-03-07',
-        isCompleted: false,
+        status: 'planned',
         exercises: [
           buildWorkoutExercise('switch-filter-bench', 0, [
             buildSet('switch-filter-set-1', 70, 8),

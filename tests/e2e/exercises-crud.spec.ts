@@ -99,7 +99,7 @@ test('exercise delete used in workouts shows guard error', async ({ page }) => {
         id: 'workout-guard',
         name: 'Guard Workout',
         date: '2026-03-01',
-        isCompleted: false,
+        status: 'planned',
         exercises: [
           buildWorkoutExercise('exercise-custom-guard', 0, [
             buildSet('set-guard-1', 20, 10),

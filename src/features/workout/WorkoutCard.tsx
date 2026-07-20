@@ -38,7 +38,7 @@ export function WorkoutCard({
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-1">
             <h3 className="font-semibold text-lg">{workout.name}</h3>
-            {workout.isCompleted && (
+            {workout.status === 'completed' && (
               <Badge variant="secondary" className="text-xs">
                 Completed
               </Badge>
@@ -76,7 +76,7 @@ export function WorkoutCard({
           {totalSets !== 1 ? 's' : ''}
         </div>
 
-        {!workout.isCompleted && (
+        {workout.status !== 'completed' && (
           <Button onClick={onStart} className="w-full">
             <Play className="w-4 h-4 mr-2" />
             Start Workout

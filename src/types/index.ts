@@ -17,6 +17,7 @@ export type MuscleGroup =
 
 export type WeightUnit = 'kg' | 'lb'
 export type ThemeMode = 'light' | 'dark' | 'system'
+export type WorkoutStatus = 'planned' | 'in_progress' | 'completed'
 
 export interface Exercise {
   id: string
@@ -46,16 +47,14 @@ export interface Workout {
   name: string
   date: string // YYYY-MM-DD format
   exercises: Array<WorkoutExercise>
-  isCompleted: boolean
+  status: WorkoutStatus
   completedAt?: string
   createdAt: string
   updatedAt: string
 }
 
-// Note: Workouts can be in three states:
-// 1. Planned - created but not started (isCompleted: false)
-// 2. In Progress - being actively performed (isCompleted: false, but in session)
-// 3. Completed - finished and logged (isCompleted: true, has completedAt)
+// Workouts have three explicit lifecycle states:
+// planned, in_progress, and completed.
 // Only completed workouts contribute to exercise statistics.
 
 export interface Settings {

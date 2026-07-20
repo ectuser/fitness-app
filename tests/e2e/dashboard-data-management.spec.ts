@@ -25,7 +25,7 @@ test('settings export downloads the current app data', async ({ page }) => {
         id: 'export-workout-1',
         name: 'Export Workout',
         date: '2026-03-08',
-        isCompleted: true,
+        status: 'completed',
         completedAt: '2026-03-08T09:00:00.000Z',
         exercises: [
           buildWorkoutExercise('export-exercise-1', 0, [
@@ -116,7 +116,7 @@ test('settings import replaces local data and migrates imported exercises', asyn
       id: 'old-import-workout',
       name: 'Old Workout',
       date: '2026-03-01',
-      isCompleted: false,
+      status: 'planned',
       exercises: [
         buildWorkoutExercise('old-import-exercise', 0, [
           buildSet('old-import-set', 50, 10),
@@ -164,7 +164,7 @@ test('settings import replaces local data and migrates imported exercises', asyn
               ],
             },
           ],
-          isCompleted: false,
+          status: 'planned',
           createdAt: '2026-03-09T10:00:00.000Z',
           updatedAt: '2026-03-09T10:00:00.000Z',
         },

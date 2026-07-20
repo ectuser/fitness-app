@@ -32,7 +32,7 @@ test('dashboard shows next workout, coming workouts, show all, and start workout
         id: 'dashboard-workout-1',
         name: 'Earliest Workout',
         date: '2026-05-05',
-        isCompleted: false,
+        status: 'planned',
         exercises: [
           buildWorkoutExercise('dashboard-overview-bench', 0, [
             buildSet('dashboard-set-1', 70, 8),
@@ -43,7 +43,7 @@ test('dashboard shows next workout, coming workouts, show all, and start workout
         id: 'dashboard-workout-2',
         name: 'Second Workout',
         date: '2026-05-06',
-        isCompleted: false,
+        status: 'planned',
         exercises: [
           buildWorkoutExercise('dashboard-overview-row', 0, [
             buildSet('dashboard-set-2', 60, 10),
@@ -54,7 +54,7 @@ test('dashboard shows next workout, coming workouts, show all, and start workout
         id: 'dashboard-workout-3',
         name: 'Third Workout',
         date: '2026-05-07',
-        isCompleted: false,
+        status: 'planned',
         exercises: [
           buildWorkoutExercise('dashboard-overview-bench', 0, [
             buildSet('dashboard-set-3', 72.5, 8),
@@ -65,7 +65,7 @@ test('dashboard shows next workout, coming workouts, show all, and start workout
         id: 'dashboard-workout-4',
         name: 'Fourth Workout',
         date: '2026-05-08',
-        isCompleted: false,
+        status: 'planned',
         exercises: [
           buildWorkoutExercise('dashboard-overview-row', 0, [
             buildSet('dashboard-set-4', 62.5, 10),
@@ -76,7 +76,7 @@ test('dashboard shows next workout, coming workouts, show all, and start workout
         id: 'dashboard-workout-5',
         name: 'Fifth Workout',
         date: '2026-05-09',
-        isCompleted: false,
+        status: 'planned',
         exercises: [
           buildWorkoutExercise('dashboard-overview-bench', 0, [
             buildSet('dashboard-set-5', 75, 8),

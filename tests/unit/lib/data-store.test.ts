@@ -11,9 +11,9 @@ import {
   createWorkoutRecord,
   deleteWorkoutRecord,
   duplicateWorkoutRecord,
+  finishWorkoutRecord,
   getDerivedWorkoutData,
   loadFitnessData,
-  toggleWorkoutCompleteRecord,
   updateWorkoutRecords,
 } from '@/lib/data-store'
 import { STORAGE_KEYS } from '@/lib/storage'
@@ -48,13 +48,13 @@ describe('data store helpers', () => {
     expect(loadFitnessData().settings).toEqual(DEFAULT_SETTINGS)
   })
 
-  it('creates, updates, deletes, duplicates, and toggles workout records', () => {
+  it('creates, updates, deletes, duplicates, and finishes workout records', () => {
     const workout = createWorkoutRecord(
       {
         name: 'New Workout',
         date: '2026-04-25',
         exercises: [createWorkoutExercise('exercise-bench')],
-        isCompleted: false,
+        status: 'planned',
       },
       () => '55555555-5555-5555-5555-555555555555',
       '2026-04-25T11:00:00.000Z',
@@ -64,7 +64,7 @@ describe('data store helpers', () => {
       updateWorkoutRecords(
         [workout],
         '55555555-5555-5555-5555-555555555555',
-        { name: 'Updated' },
+        { name: 'Updated', date: workout.date },
         '2026-04-25T12:00:00.000Z',
       )[0],
     ).toMatchObject({
@@ -88,19 +88,15 @@ describe('data store helpers', () => {
     expect(duplicated).toMatchObject({
       id: '66666666-6666-6666-6666-666666666666',
       date: '2026-04-30',
-      isCompleted: false,
+      status: 'planned',
       completedAt: undefined,
     })
     expect(duplicateWorkoutRecord([], 'missing')).toBeNull()
 
     expect(
-      toggleWorkoutCompleteRecord(
-        [clone(upcomingWorkout)],
-        upcomingWorkout.id,
-        '2026-04-25T13:00:00.000Z',
-      )[0],
+      finishWorkoutRecord(clone(upcomingWorkout), '2026-04-25T13:00:00.000Z'),
     ).toMatchObject({
-      isCompleted: true,
+      status: 'completed',
       completedAt: '2026-04-25T13:00:00.000Z',
       updatedAt: '2026-04-25T13:00:00.000Z',
     })

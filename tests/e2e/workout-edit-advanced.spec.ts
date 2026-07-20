@@ -42,7 +42,7 @@ test('workout edit supports reordering exercises, deleting exercises, and persis
         id: 'workout-edit-advanced',
         name: 'Advanced Edit Workout',
         date: '2026-03-11',
-        isCompleted: false,
+        status: 'planned',
         exercises: [
           buildWorkoutExercise('edit-advanced-bench', 0, [
             buildSet('bench-set-1', 80, 8),
@@ -153,7 +153,7 @@ test('workout edit can switch an exercise and keep last completed workout defaul
         id: 'switch-target-history',
         name: 'Completed Push-up Day',
         date: '2026-03-09',
-        isCompleted: true,
+        status: 'completed',
         completedAt: '2026-03-09T12:00:00.000Z',
         exercises: [
           buildWorkoutExercise(
@@ -168,7 +168,7 @@ test('workout edit can switch an exercise and keep last completed workout defaul
         id: 'switch-edit-workout',
         name: 'Switch Exercise Workout',
         date: '2026-03-12',
-        isCompleted: false,
+        status: 'planned',
         exercises: [
           buildWorkoutExercise('switch-source-bench', 0, [
             buildSet('switch-edit-set-1', 75, 8),
@@ -253,7 +253,7 @@ test('workout edit menu returns to workout form after exercise save and preserve
         id: 'edit-entrypoint-workout',
         name: 'Entry Workout',
         date: '2026-03-13',
-        isCompleted: false,
+        status: 'planned',
         exercises: [
           buildWorkoutExercise('edit-entrypoint-custom', 0, [
             buildSet('edit-entrypoint-set-1', 12, 12),
@@ -395,7 +395,7 @@ test('workout edit menu returns to workout form after exercise cancel and preser
         id: 'cancel-edit-entrypoint-workout',
         name: 'Cancel Entry Workout',
         date: '2026-03-14',
-        isCompleted: false,
+        status: 'planned',
         exercises: [
           buildWorkoutExercise('cancel-edit-entrypoint-custom', 0, [
             buildSet('cancel-edit-entrypoint-set-1', 10, 12),

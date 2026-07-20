@@ -30,7 +30,7 @@ test('workout session autosaves changes across continue and exit flows', async (
         id: 'session-exit-workout',
         name: 'Session Exit Workout',
         date: '2026-03-14',
-        isCompleted: false,
+        status: 'planned',
         exercises: [
           buildWorkoutExercise('session-exit-bench', 0, [
             buildSet('session-exit-set-1', 50, 8),
@@ -175,7 +175,7 @@ test('workout session can delete an exercise from the active workout', async ({
         id: 'session-delete-workout',
         name: 'Session Delete Workout',
         date: '2026-03-15',
-        isCompleted: false,
+        status: 'planned',
         exercises: [
           buildWorkoutExercise('session-delete-bench', 0, [
             buildSet('session-delete-set-1', 60, 8),

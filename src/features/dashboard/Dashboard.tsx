@@ -15,7 +15,9 @@ export function Dashboard() {
   const { exercises } = useExercises()
   const hasAvailableUpdate = updateStatus.state === 'available-update'
   const { nextWorkout, upcomingWorkouts, workouts } = useWorkouts()
-  const completedWorkouts = workouts.filter((workout) => workout.isCompleted)
+  const completedWorkouts = workouts.filter(
+    (workout) => workout.status === 'completed',
+  )
 
   return (
     <div>

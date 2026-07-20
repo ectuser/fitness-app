@@ -16,7 +16,7 @@ export function WorkoutSessionPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const { exercises } = useExercises()
-  const { workouts, updateWorkout } = useWorkouts()
+  const { workouts, finishWorkout, saveWorkoutProgress } = useWorkouts()
   const { settings } = useSettings()
 
   const [workout, setWorkout] = useState<Workout | null>(null)
@@ -56,8 +56,11 @@ export function WorkoutSessionPage() {
       setWorkoutExercises(foundWorkout.exercises)
       lastSavedExercisesRef.current = JSON.stringify(foundWorkout.exercises)
       setLoadedWorkoutId(id)
+      if (foundWorkout.status === 'planned') {
+        void saveWorkoutProgress(id, foundWorkout.exercises)
+      }
     }
-  }, [id, loadedWorkoutId, setWorkoutExercises, workouts])
+  }, [id, loadedWorkoutId, saveWorkoutProgress, setWorkoutExercises, workouts])
 
   useEffect(() => {
     if (!id || loadedWorkoutId !== id) {
@@ -71,10 +74,8 @@ export function WorkoutSessionPage() {
     }
 
     lastSavedExercisesRef.current = serializedExercises
-    updateWorkout(id, {
-      exercises: workoutExercises,
-    })
-  }, [id, loadedWorkoutId, updateWorkout, workoutExercises])
+    void saveWorkoutProgress(id, workoutExercises)
+  }, [id, loadedWorkoutId, saveWorkoutProgress, workoutExercises])
 
   if (!workout) {
     return (
@@ -196,12 +197,9 @@ export function WorkoutSessionPage() {
             variant="outline"
             onClick={() => {
               if (id) {
-                updateWorkout(id, {
-                  exercises: workoutExercises,
-                  isCompleted: true,
-                  completedAt: new Date().toISOString(),
-                })
-                navigate('/workouts')
+                void finishWorkout(id, workoutExercises).then(() =>
+                  navigate('/workouts'),
+                )
               }
             }}
             className="w-full"
@@ -224,12 +222,9 @@ export function WorkoutSessionPage() {
             variant="outline"
             onClick={() => {
               if (id) {
-                updateWorkout(id, {
-                  exercises: workoutExercises,
-                  isCompleted: true,
-                  completedAt: new Date().toISOString(),
-                })
-                navigate('/workouts')
+                void finishWorkout(id, workoutExercises).then(() =>
+                  navigate('/workouts'),
+                )
               }
             }}
           >

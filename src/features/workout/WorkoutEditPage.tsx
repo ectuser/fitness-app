@@ -44,7 +44,13 @@ export function WorkoutEditPage() {
   const navigate = useNavigate()
   const location = useLocation()
   const { exercises } = useExercises()
-  const { workouts, addWorkout, updateWorkout } = useWorkouts()
+  const {
+    workouts,
+    addWorkout,
+    finishWorkout,
+    replaceWorkoutExercises,
+    updateWorkoutDetails,
+  } = useWorkouts()
   const { settings } = useSettings()
   const isEditing = !!id
   const [loadedWorkoutId, setLoadedWorkoutId] = useState<string | null>(null)
@@ -225,7 +231,10 @@ export function WorkoutEditPage() {
     return Object.keys(nextErrors).length === 0
   }
 
-  const saveWorkout = async (finishWorkout: boolean, startWorkout = false) => {
+  const saveWorkout = async (
+    shouldFinishWorkout: boolean,
+    startWorkout = false,
+  ) => {
     if (!validateForm()) {
       return
     }
@@ -234,9 +243,9 @@ export function WorkoutEditPage() {
       isEditing && id
         ? workouts.find((workout) => workout.id === id)
         : undefined
-    const completedAt = finishWorkout
+    const completedAt = shouldFinishWorkout
       ? new Date().toISOString()
-      : existingWorkout?.isCompleted
+      : existingWorkout?.status === 'completed'
         ? existingWorkout.completedAt
         : undefined
 
@@ -244,15 +253,23 @@ export function WorkoutEditPage() {
       name: name.trim(),
       date,
       exercises: workoutExercises,
-      isCompleted: finishWorkout
-        ? true
-        : (existingWorkout?.isCompleted ?? false),
+      status: shouldFinishWorkout
+        ? 'completed'
+        : (existingWorkout?.status ?? 'planned'),
       completedAt,
     }
 
     if (isEditing && id) {
       if (existingWorkout) {
-        updateWorkout(id, workoutData)
+        await updateWorkoutDetails(id, {
+          name: workoutData.name,
+          date: workoutData.date,
+        })
+        if (shouldFinishWorkout) {
+          await finishWorkout(id, workoutData.exercises)
+        } else {
+          await replaceWorkoutExercises(id, workoutData.exercises)
+        }
       }
     } else {
       const createdWorkout = await addWorkout(workoutData)
@@ -264,7 +281,7 @@ export function WorkoutEditPage() {
       }
     }
 
-    navigate(finishWorkout ? '/workouts/completed' : '/workouts')
+    navigate(shouldFinishWorkout ? '/workouts/completed' : '/workouts')
   }
 
   const handleCancel = () => {
