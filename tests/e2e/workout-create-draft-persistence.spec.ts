@@ -57,7 +57,7 @@ test('create workout restores full draft after navigating away and returning', a
   await expect(page).toHaveURL(/\/workouts$/)
   await expect(page.getByRole('heading', { name: 'Workouts' })).toBeVisible()
 
-  await page.getByRole('button', { name: 'Create Workout' }).click()
+  await page.getByRole('button', { name: 'Create' }).click()
   await expect(page).toHaveURL(/\/workouts\/new$/)
 
   await expect(page.getByLabel('Workout Name')).toHaveValue(
@@ -90,7 +90,7 @@ test('create workout clears draft key after successful create', async ({
 
   await expect.poll(async () => draftValue(page)).not.toBeNull()
 
-  await page.getByRole('button', { name: 'Create Workout' }).click()
+  await page.getByRole('button', { name: 'Create' }).click()
   await expect(page.getByRole('heading', { name: 'Workouts' })).toBeVisible()
 
   await expect.poll(async () => draftValue(page)).toBeNull()
@@ -107,7 +107,8 @@ test('save and finish workout clears draft key after successful save', async ({
 
   await expect.poll(async () => draftValue(page)).not.toBeNull()
 
-  await page.getByRole('button', { name: 'Save and Finish Workout' }).click()
+  await page.getByRole('button', { name: 'More actions' }).click()
+  await page.getByRole('menuitem', { name: 'Create and Finish' }).click()
   await expect(
     page.getByRole('heading', { name: 'Completed Workouts' }),
   ).toBeVisible()
