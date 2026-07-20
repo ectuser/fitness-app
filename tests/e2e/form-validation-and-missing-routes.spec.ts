@@ -64,6 +64,22 @@ test('workout form validates required fields before saving', async ({
     .toBe(0)
 })
 
+test('back button on a directly opened page falls back to the dashboard', async ({
+  page,
+}) => {
+  await clearAppStorage(page)
+  await page.goto('/workouts/new')
+
+  await expect(
+    page.getByRole('heading', { name: 'Create Workout' }),
+  ).toBeVisible()
+
+  await page.locator('button:has(.lucide-arrow-left)').click()
+
+  await expect(page).toHaveURL(/\/$/)
+  await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible()
+})
+
 test('missing exercise detail route falls back to the exercises list', async ({
   page,
 }) => {
