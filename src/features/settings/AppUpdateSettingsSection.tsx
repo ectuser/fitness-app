@@ -1,4 +1,5 @@
 import { RefreshCw } from 'lucide-react'
+import { m } from '#/paraglide/messages'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Link } from '@/lib/router-compat'
@@ -13,16 +14,14 @@ export function AppUpdateSettingsSection({
   return (
     <section id="app-update">
       <Card className="p-6">
-        <h2 className="mb-2 text-lg font-semibold">App Update</h2>
+        <h2 className="mb-2 text-lg font-semibold">{m.swift_coral_bison()}</h2>
         <p className="mb-4 text-sm text-muted-foreground">
-          {hasAvailableUpdate
-            ? 'An update is available.'
-            : 'Check update status and service worker details.'}
+          {hasAvailableUpdate ? m.wild_olive_whale() : m.clever_white_tiger()}
         </p>
         <Button asChild variant="outline">
           <Link to="/app-update">
             <RefreshCw className="w-4 h-4" />
-            Open App Update
+            {m.fuzzy_mint_koala()}
           </Link>
         </Button>
       </Card>

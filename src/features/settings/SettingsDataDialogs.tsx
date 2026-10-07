@@ -1,3 +1,4 @@
+import { m } from '#/paraglide/messages'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -33,19 +34,18 @@ export function SettingsDataDialogs({
       <AlertDialog open={openResetDialog} onOpenChange={setOpenResetDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Reset All Data?</AlertDialogTitle>
+            <AlertDialogTitle>{m.young_violet_walrus()}</AlertDialogTitle>
             <AlertDialogDescription>
-              This will permanently delete all your workouts, custom exercises,
-              and settings. This action cannot be undone.
+              {m.gentle_azure_dove()}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{m.plain_lilac_puma()}</AlertDialogCancel>
             <AlertDialogAction
               onClick={onConfirmReset}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              Reset Data
+              {m.sunny_cyan_bear()}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -58,7 +58,7 @@ export function SettingsDataDialogs({
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              {importError ? 'Import Failed' : 'Import Data?'}
+              {importError ? m.swift_ivory_lion() : m.sleepy_ruby_gecko()}
             </AlertDialogTitle>
             <AlertDialogDescription>
               {importError ? (
@@ -66,17 +66,17 @@ export function SettingsDataDialogs({
                   {importError}
                 </span>
               ) : (
-                'This will replace all your current data with the imported data. Your existing workouts, exercises, and settings will be overwritten.'
+                m.sleepy_peach_mole()
               )}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel onClick={onCloseImportDialog}>
-              Cancel
+              {m.upbeat_peach_lion()}
             </AlertDialogCancel>
             {!importError && (
               <AlertDialogAction onClick={onConfirmImport}>
-                Import Data
+                {m.happy_cyan_heron()}
               </AlertDialogAction>
             )}
           </AlertDialogFooter>
