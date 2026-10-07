@@ -1,3 +1,4 @@
+import { m } from '#/paraglide/messages'
 import { BottomNav } from './BottomNav'
 import { Link, useLocation } from '@/lib/router-compat'
 import { cn } from '@/lib/utils'
@@ -11,9 +12,9 @@ export function MainLayout({ children }: MainLayoutProps) {
   const location = useLocation()
 
   const navItems = [
-    { path: '/', label: 'Home' },
-    { path: '/workouts', label: 'Workouts' },
-    { path: '/exercises', label: 'Exercises' },
+    { path: '/', label: m.gentle_pearl_crow() },
+    { path: '/workouts', label: m.lively_sage_deer() },
+    { path: '/exercises', label: m.wild_silver_otter() },
   ]
 
   return (
@@ -23,7 +24,7 @@ export function MainLayout({ children }: MainLayoutProps) {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="text-2xl font-bold">💪 Fitness Tracker</span>
+              <span className="text-2xl font-bold">{m.calm_beige_lion()}</span>
             </div>
             <div className="flex gap-6">
               {navItems.map((item) => {
@@ -51,7 +52,9 @@ export function MainLayout({ children }: MainLayoutProps) {
       {/* Mobile header */}
       <header className="md:hidden bg-card shadow-sm border-b border-border">
         <div className="container mx-auto px-4 py-4">
-          <h1 className="text-xl font-bold text-center">💪 Fitness Tracker</h1>
+          <h1 className="text-xl font-bold text-center">
+            {m.calm_beige_lion()}
+          </h1>
         </div>
       </header>
 

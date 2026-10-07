@@ -1,3 +1,103 @@
 {
-  "$schema": "https://inlang.com/schema/inlang-message-format"
+  "$schema": "https://inlang.com/schema/inlang-message-format",
+  "brave_amber_fox": "Dashboard",
+  "quiet_teal_heron": "Settings",
+  "swift_coral_lynx": "New Workout",
+  "lucky_olive_crane": "Next Workout",
+  "gentle_plum_wolf": "Start Workout",
+  "misty_ivory_finch": "No upcoming workouts.",
+  "bold_azure_mole": "Create one to get started!",
+  "warm_sage_otter": "Create Workout",
+  "shy_pewter_gull": [
+    {
+      "declarations": [
+        "input exerciseCount",
+        "input setCount",
+        "local exercisePlural = exerciseCount: plural",
+        "local setPlural = setCount: plural"
+      ],
+      "selectors": [
+        "exercisePlural",
+        "setPlural"
+      ],
+      "match": {
+        "exercisePlural=one, setPlural=one": "{exerciseCount} exercise • {setCount} set",
+        "exercisePlural=one, setPlural=other": "{exerciseCount} exercise • {setCount} sets",
+        "exercisePlural=other, setPlural=one": "{exerciseCount} exercises • {setCount} set",
+        "exercisePlural=other, setPlural=other": "{exerciseCount} exercises • {setCount} sets"
+      }
+    }
+  ],
+  "gentle_pearl_crow": "Home",
+  "lively_sage_deer": "Workouts",
+  "wild_silver_otter": "Exercises",
+  "calm_beige_lion": "💪 Fitness Tracker",
+  "quirky_azure_crane": "Quick Stats",
+  "smart_lilac_viper": "Exercises",
+  "fancy_yellow_seal": "Upcoming",
+  "young_rust_duck": "Completed",
+  "eager_navy_quail": "Total Sets",
+  "calm_beige_finch": "Coming Workouts",
+  "shiny_orange_bison": "Show All",
+  "eager_cyan_bison": "Last 30 days",
+  "silent_lime_dingo": "{weekday} {day} {month}: rest day",
+  "tidy_azure_falcon": "Mo",
+  "keen_yellow_sloth": "Tu",
+  "shiny_purple_badger": "We",
+  "tender_indigo_mole": "Th",
+  "wild_pink_bison": "Fr",
+  "shiny_navy_sloth": "Sa",
+  "gentle_silver_crane": "Su",
+  "icy_navy_mole": "Mon",
+  "upbeat_khaki_lion": "Tue",
+  "quick_violet_hare": "Wed",
+  "gentle_violet_pony": "Thu",
+  "noble_lime_puma": "Fri",
+  "crisp_indigo_cobra": "Sat",
+  "merry_khaki_dove": "Sun",
+  "warm_amber_camel": "Jan",
+  "tidy_ruby_sloth": "Feb",
+  "lively_violet_koala": "Mar",
+  "happy_rose_falcon": "Apr",
+  "eager_tan_bear": "May",
+  "kind_jade_cobra": "Jun",
+  "gentle_cyan_frog": "Jul",
+  "rapid_ivory_finch": "Aug",
+  "sunny_ruby_zebra": "Sep",
+  "shiny_teal_yak": "Oct",
+  "dizzy_olive_elk": "Nov",
+  "icy_orange_lynx": "Dec",
+  "jolly_peach_swan": [
+    {
+      "declarations": [
+        "input count",
+        "local countPlural = count: plural"
+      ],
+      "selectors": [
+        "countPlural"
+      ],
+      "match": {
+        "countPlural=one": "{count} exercise",
+        "countPlural=other": "{count} exercises"
+      }
+    }
+  ],
+  "rapid_sage_badger": [
+    {
+      "declarations": [
+        "input weekday",
+        "input day",
+        "input month",
+        "input count",
+        "local countPlural = count: plural"
+      ],
+      "selectors": [
+        "countPlural"
+      ],
+      "match": {
+        "countPlural=one": "{weekday} {day} {month}: {count} workout",
+        "countPlural=other": "{weekday} {day} {month}: {count} workouts"
+      }
+    }
+  ]
 }
