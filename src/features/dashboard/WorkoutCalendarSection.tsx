@@ -1,18 +1,17 @@
-import { buildWorkoutCalendar } from '../training-history/training-history-projections'
-import type { WorkoutCalendarCell } from '../training-history/training-history-projections'
+import type { WorkoutCalendarCell } from '@/features/training-history/training-history-projections'
 import type { Workout } from '@/types'
+import { buildWorkoutCalendar } from '@/features/training-history/training-history-projections'
 import { Card } from '@/components/ui/card'
 import { useCurrentDay } from '@/hooks/useCurrentDay'
 import { cn } from '@/lib/utils'
 
 interface WorkoutCalendarSectionProps {
-  today?: Date
   workouts: Array<Workout>
 }
 
-const WEEKDAY_LABELS = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su']
-const WEEKDAY_NAMES = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-const MONTH_NAMES = [
+const WEEKDAY_HEADER_LABELS = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su']
+const WEEKDAY_ABBREVIATIONS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+const MONTH_ABBREVIATIONS = [
   'Jan',
   'Feb',
   'Mar',
@@ -29,7 +28,7 @@ const MONTH_NAMES = [
 
 function getCellLabel(cell: WorkoutCalendarCell, index: number): string {
   const [, month] = cell.date.split('-').map(Number)
-  const date = `${WEEKDAY_NAMES[index % 7]} ${cell.dayOfMonth} ${MONTH_NAMES[month - 1]}`
+  const date = `${WEEKDAY_ABBREVIATIONS[index % 7]} ${cell.dayOfMonth} ${MONTH_ABBREVIATIONS[month - 1]}`
 
   if (cell.workoutCount === 0) {
     return `${date}: rest day`
@@ -41,11 +40,9 @@ function getCellLabel(cell: WorkoutCalendarCell, index: number): string {
 }
 
 export function WorkoutCalendarSection({
-  today: todayOverride,
   workouts,
 }: WorkoutCalendarSectionProps) {
-  const currentDay = useCurrentDay()
-  const today = todayOverride ?? currentDay
+  const today = useCurrentDay()
   const cells = buildWorkoutCalendar(workouts, today)
 
   return (
@@ -53,7 +50,7 @@ export function WorkoutCalendarSection({
       <h2 className="text-lg font-semibold mb-4">Last 30 days</h2>
       <Card className="p-4">
         <div className="grid grid-cols-7 gap-1.5">
-          {WEEKDAY_LABELS.map((label) => (
+          {WEEKDAY_HEADER_LABELS.map((label) => (
             <div
               key={label}
               aria-hidden="true"
@@ -88,7 +85,6 @@ export function WorkoutCalendarSection({
                 {cell.workoutCount >= 2 && (
                   <span
                     aria-hidden="true"
-                    data-testid="workout-count-badge"
                     className="absolute -right-1 -top-1 flex size-4 items-center justify-center rounded-full bg-foreground text-[10px] font-bold leading-none text-background"
                   >
                     {cell.workoutCount}

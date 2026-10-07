@@ -132,8 +132,16 @@ function toLocalDateKey(date: Date): string {
   return `${date.getFullYear()}-${month}-${day}`
 }
 
-function addLocalDays(date: Date, days: number): Date {
+/**
+ * Local-midnight date `days` calendar days from `date`. Built from calendar
+ * fields so DST changes (23h/25h days) are handled.
+ */
+export function addLocalDays(date: Date, days: number): Date {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate() + days)
+}
+
+export function startOfLocalDay(date: Date): Date {
+  return addLocalDays(date, 0)
 }
 
 // getDay(): 0 = Sunday. Result: 0 for Monday .. 6 for Sunday.
@@ -145,7 +153,7 @@ export function buildWorkoutCalendar(
   workouts: Array<Workout>,
   today: Date,
 ): Array<WorkoutCalendarCell> {
-  const todayStart = addLocalDays(today, 0)
+  const todayStart = startOfLocalDay(today)
   const windowStart = addLocalDays(
     todayStart,
     -(WORKOUT_CALENDAR_WINDOW_DAYS - 1),
