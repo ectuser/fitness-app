@@ -1,4 +1,5 @@
 import { CheckCircle2, Info, RefreshCw, WifiOff } from 'lucide-react'
+import { m } from '#/paraglide/messages'
 import { getCurrentDeploymentVersion } from './deployment-version'
 import { usePwaUpdateStatus } from './pwa-update-status'
 import type { PwaUpdateStatus } from './pwa-update-status'
@@ -24,10 +25,11 @@ export function AppUpdatePage() {
   return (
     <div className="container mx-auto max-w-3xl px-4 py-6 md:py-10">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold md:text-3xl">App Update</h1>
+        <h1 className="text-2xl font-bold md:text-3xl">
+          {m.lively_sage_crane()}
+        </h1>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Fitness Tracker updates the app shell separately from your workout
-          data. Your workouts and settings stay stored in this browser.
+          {m.odd_lime_finch()}
         </p>
       </div>
 
@@ -44,16 +46,12 @@ export function AppUpdatePage() {
           <div className="rounded-md border bg-muted p-4">
             <div className="flex gap-3">
               <Info className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground" />
-              <p>
-                Applying an Available Update activates the waiting app version
-                and reloads the page. Save or finish important changes before
-                updating.
-              </p>
+              <p>{m.cosy_plum_dove()}</p>
             </div>
           </div>
 
           <p className="text-xs text-muted-foreground">
-            Current version: {getCurrentDeploymentVersion()}
+            {m.sleepy_azure_raven({ version: getCurrentDeploymentVersion() })}
           </p>
 
           <div className="flex flex-col gap-3 pt-1 sm:flex-row">
@@ -65,7 +63,7 @@ export function AppUpdatePage() {
                 className="sm:w-auto"
               >
                 <RefreshCw className="h-4 w-4" />
-                {isApplying ? 'Updating...' : 'Update now'}
+                {isApplying ? m.happy_green_deer() : m.happy_indigo_trout()}
               </Button>
             )}
             <Button
@@ -74,7 +72,7 @@ export function AppUpdatePage() {
               onClick={() => window.history.back()}
               className="sm:w-auto"
             >
-              Not now
+              {m.noble_olive_panda()}
             </Button>
           </div>
         </CardContent>
@@ -98,38 +96,28 @@ function StatusIcon({ state }: { state: PwaUpdateState }) {
 function getStatusTitle(state: PwaUpdateState) {
   switch (state) {
     case 'available-update':
-      return 'Available Update'
+      return m.loyal_rose_goat()
     case 'applying':
-      return 'Applying update'
+      return m.sleepy_red_falcon()
     case 'unavailable':
-      return 'Update checks are unavailable'
+      return m.loyal_mauve_finch()
     case 'up-to-date':
-      return "You're up to date"
+      return m.merry_orange_goat()
   }
 }
 
 function StatusDescription({ state }: { state: PwaUpdateState }) {
   if (state === 'available-update') {
-    return (
-      <p>
-        A new version of Fitness Tracker is ready. Update when you are ready for
-        the app to reload.
-      </p>
-    )
+    return <p>{m.crisp_gold_owl()}</p>
   }
 
   if (state === 'applying') {
-    return <p>The update is being applied. The app will reload shortly.</p>
+    return <p>{m.tender_crimson_turtle()}</p>
   }
 
   if (state === 'unavailable') {
-    return (
-      <p>
-        This browser environment cannot check for app updates right now. This
-        can happen when service workers are blocked or unsupported.
-      </p>
-    )
+    return <p>{m.brave_ruby_ibis()}</p>
   }
 
-  return <p>The current app shell is active. No waiting update is available.</p>
+  return <p>{m.tender_cyan_camel()}</p>
 }

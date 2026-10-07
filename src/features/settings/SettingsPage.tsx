@@ -1,3 +1,4 @@
+import { m } from '#/paraglide/messages'
 import { useExercises } from '../exercise/use-exercises'
 import { usePwaUpdateStatus } from '../app-update/pwa-update-status'
 import { useWorkouts } from '../workout/use-workouts'
@@ -35,7 +36,7 @@ export function SettingsPage() {
 
   return (
     <div>
-      <PageHeader title="Settings" showBack />
+      <PageHeader title={m.bold_purple_lemur()} showBack />
 
       <div className="container mx-auto grid gap-6 px-4 py-6 lg:grid-cols-[1fr_14rem]">
         <div className="space-y-6">

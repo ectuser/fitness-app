@@ -1,14 +1,16 @@
-const settingsSections = [
-  { id: 'appearance', label: 'Appearance' },
-  { id: 'data', label: 'Data' },
-  { id: 'app-update', label: 'App Update' },
+import { m } from '#/paraglide/messages'
+
+const getSettingsSections = () => [
+  { id: 'appearance', label: m.plain_ivory_hare() },
+  { id: 'data', label: m.eager_mauve_eagle() },
+  { id: 'app-update', label: m.zesty_cyan_bison() },
 ]
 
 export function SettingsSectionNav() {
   return (
     <nav className="hidden lg:block">
       <div className="sticky top-6 space-y-1">
-        {settingsSections.map((section) => (
+        {getSettingsSections().map((section) => (
           <a
             key={section.id}
             href={`#${section.id}`}
