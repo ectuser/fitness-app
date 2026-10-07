@@ -60,14 +60,14 @@ test('dashboard calendar marks trained days, rest days and today', async ({
     page.getByRole('img', { name: 'Mon 5 Oct: 2 workouts' }),
   ).toBeVisible()
   await expect(
-    page.getByRole('img', { name: 'Mon 5 Oct: 2 workouts' }),
-  ).toHaveText('52')
+    page.getByRole('img', { name: 'Mon 5 Oct: 2 workouts' }).locator('span'),
+  ).toHaveText('2')
   await expect(
     page.getByRole('img', { name: 'Tue 6 Oct: 1 workout' }),
   ).toBeVisible()
   await expect(
-    page.getByRole('img', { name: 'Tue 6 Oct: 1 workout' }),
-  ).toHaveText('6')
+    page.getByRole('img', { name: 'Tue 6 Oct: 1 workout' }).locator('span'),
+  ).toHaveCount(0)
   await expect(
     page.getByRole('img', { name: 'Sun 4 Oct: rest day' }),
   ).toBeVisible()
@@ -115,4 +115,74 @@ test('dashboard calendar moves today and shifts the window at local midnight', a
     page.getByRole('img', { name: 'Wed 7 Oct: rest day' }),
   ).not.toHaveAttribute('aria-current', 'date')
   await expect(page.getByRole('img', { name: /Tue 8 Sep/ })).toHaveCount(0)
+})
+
+test.describe('in a non-UTC timezone', () => {
+  test.use({ timezoneId: 'America/Los_Angeles' })
+
+  test('dashboard calendar places a late-evening workout on its local day', async ({
+    page,
+  }) => {
+    await page.clock.setFixedTime(new Date('2026-10-07T19:00:00.000Z'))
+
+    await seedAppStorage(page, {
+      exercises: [
+        buildExercise({
+          id: 'calendar-bench',
+          name: 'Bench Press',
+          muscleGroups: ['Chest'],
+          isCustom: false,
+        }),
+      ],
+      // 23:30 on Mon 5 Oct in Los Angeles, which is already Tue 6 Oct in UTC.
+      workouts: [completedWorkout('late', '2026-10-06T06:30:00.000Z')],
+      settings: { defaultWeightUnit: 'kg' },
+    })
+
+    await page.goto('')
+
+    await expect(
+      page.getByRole('img', { name: 'Mon 5 Oct: 1 workout' }),
+    ).toBeVisible()
+    await expect(
+      page.getByRole('img', { name: 'Tue 6 Oct: rest day' }),
+    ).toBeVisible()
+  })
+})
+
+test.describe('on a 375px phone', () => {
+  test.use({ viewport: { width: 375, height: 667 } })
+
+  test('dashboard calendar fits without horizontal scroll', async ({
+    page,
+  }) => {
+    await page.clock.setFixedTime(new Date('2026-10-07T12:00:00.000Z'))
+
+    await seedAppStorage(page, {
+      exercises: [
+        buildExercise({
+          id: 'calendar-bench',
+          name: 'Bench Press',
+          muscleGroups: ['Chest'],
+          isCustom: false,
+        }),
+      ],
+      workouts: [
+        completedWorkout('a', '2026-10-05T10:00:00.000Z'),
+        completedWorkout('b', '2026-10-05T18:00:00.000Z'),
+      ],
+      settings: { defaultWeightUnit: 'kg' },
+    })
+
+    await page.goto('')
+
+    await expect(
+      page.getByRole('img', { name: 'Mon 5 Oct: 2 workouts' }),
+    ).toBeVisible()
+
+    const hasHorizontalScroll = await page.evaluate(
+      () => document.documentElement.scrollWidth > window.innerWidth,
+    )
+    expect(hasHorizontalScroll).toBe(false)
+  })
 })
