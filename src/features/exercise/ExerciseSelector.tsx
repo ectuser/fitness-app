@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Check, Clock, Plus, Search, TrendingUp } from 'lucide-react'
+import { m } from '#/paraglide/messages'
 import { useWorkouts } from '../workout/use-workouts'
 import { useExerciseStats } from '../training-history/use-training-history'
 import { ExerciseForm } from './ExerciseForm'
@@ -63,8 +64,11 @@ function ExerciseCard({ exercise, isSelected, onClick }: ExerciseCardProps) {
                 <div className="flex items-center gap-1">
                   <TrendingUp className="w-3 h-3" />
                   <span>
-                    Max: {stats.maxWeight} {stats.maxWeightUnit} ×{' '}
-                    {stats.maxWeightReps}
+                    {m.sleepy_tan_ibis({
+                      weight: stats.maxWeight,
+                      unit: stats.maxWeightUnit,
+                      reps: stats.maxWeightReps,
+                    })}
                   </span>
                 </div>
               )}
@@ -72,8 +76,11 @@ function ExerciseCard({ exercise, isSelected, onClick }: ExerciseCardProps) {
                 <div className="flex items-center gap-1">
                   <Clock className="w-3 h-3" />
                   <span>
-                    Last: {stats.lastWeight} {stats.lastWeightUnit} ×{' '}
-                    {stats.lastWeightReps}
+                    {m.fancy_ivory_newt({
+                      weight: stats.lastWeight,
+                      unit: stats.lastWeightUnit ?? '',
+                      reps: stats.lastWeightReps ?? '',
+                    })}
                   </span>
                 </div>
               )}
@@ -141,8 +148,8 @@ export function ExerciseSelector({
       <SimpleModal
         open={open}
         onClose={() => onOpenChange(false)}
-        title="Create New Exercise"
-        description="Create a custom exercise and add it to your workout."
+        title={m.happy_gold_hare()}
+        description={m.rapid_teal_cobra()}
       >
         <div>
           <ExerciseForm
@@ -158,8 +165,8 @@ export function ExerciseSelector({
     <SimpleModal
       open={open}
       onClose={() => onOpenChange(false)}
-      title="Add Exercise"
-      description="Select an exercise to add to your workout or create a new one."
+      title={m.jolly_crimson_eagle()}
+      description={m.quirky_indigo_toad()}
     >
       <div className="max-w-2xl max-h-[90vh] flex flex-col">
         <div className="space-y-4 flex-1 overflow-hidden flex flex-col">
@@ -168,7 +175,7 @@ export function ExerciseSelector({
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
-                placeholder="Search exercises..."
+                placeholder={m.loyal_amber_jaguar()}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-9"
@@ -180,7 +187,7 @@ export function ExerciseSelector({
               className="flex-shrink-0"
             >
               <Plus className="w-4 h-4 mr-2" />
-              Create New
+              {m.loyal_red_goose()}
             </Button>
           </div>
 
@@ -200,10 +207,10 @@ export function ExerciseSelector({
                   selectedFilterGroup ? 'border-primary ring-1 ring-ring' : ''
                 }`}
               >
-                <SelectValue placeholder="Filter by muscle group" />
+                <SelectValue placeholder={m.sunny_slate_jaguar()} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All muscle groups</SelectItem>
+                <SelectItem value="all">{m.proud_gold_heron()}</SelectItem>
                 {availableMuscleGroups.map((group) => (
                   <SelectItem key={group} value={group}>
                     {group}
@@ -217,16 +224,16 @@ export function ExerciseSelector({
                 variant="outline"
                 onClick={() => setSelectedFilterGroup(null)}
               >
-                Reset Filter
+                {m.plain_red_parrot()}
               </Button>
             )}
           </div>
 
           {selectedFilterGroup && (
             <div className="rounded-md border bg-muted px-3 py-2 text-sm">
-              Filtering by{' '}
-              <span className="font-semibold">{selectedFilterGroup}</span>.
-              Reset to see all exercises.
+              {m.mellow_sage_hare()}{' '}
+              <span className="font-semibold">{selectedFilterGroup}</span>
+              {m.silent_jade_gecko()}
             </div>
           )}
 
@@ -248,15 +255,15 @@ export function ExerciseSelector({
               <div className="py-12 text-center text-muted-foreground">
                 <p className="mb-4">
                   {selectedFilterGroup
-                    ? `No exercises found for ${selectedFilterGroup}`
-                    : 'No exercises found'}
+                    ? m.fuzzy_yellow_cat({ group: selectedFilterGroup })
+                    : m.proud_yellow_gull()}
                 </p>
                 <Button
                   variant="outline"
                   onClick={() => setShowCreateForm(true)}
                 >
                   <Plus className="w-4 h-4 mr-2" />
-                  Create New Exercise
+                  {m.plain_indigo_whale()}
                 </Button>
               </div>
             )}

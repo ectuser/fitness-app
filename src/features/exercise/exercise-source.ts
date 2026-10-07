@@ -1,3 +1,4 @@
+import { m } from '#/paraglide/messages'
 import type { Exercise, Workout } from '@/types'
 import { migrateExercises } from '@/lib/migrations'
 import { ExerciseListSchema, ExerciseSchema } from '@/lib/fitness-schemas'
@@ -72,7 +73,7 @@ export function deleteExerciseRecord(
   )
 
   if (isUsed) {
-    throw new Error('Cannot delete exercise that is used in workouts')
+    throw new Error(m.clever_teal_skunk())
   }
 
   return exercises.filter((exercise) => exercise.id !== id)
@@ -103,7 +104,7 @@ export async function updateExercise({
   const updatedExercise = nextExercises.find((exercise) => exercise.id === id)
 
   if (!updatedExercise) {
-    throw new Error('Exercise not found')
+    throw new Error(m.bold_azure_yak())
   }
 
   const validatedExercise = ExerciseSchema.parse(updatedExercise)
