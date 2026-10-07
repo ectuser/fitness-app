@@ -1,4 +1,5 @@
 import { Edit, Trash2 } from 'lucide-react'
+import { m } from '#/paraglide/messages'
 import { useWorkouts } from '../workout/use-workouts'
 import {
   useExerciseHistory,
@@ -35,13 +36,11 @@ export function ExerciseDetailPage() {
   if (!exercise) {
     return (
       <div>
-        <PageHeader title="Exercise Not Found" showBack />
+        <PageHeader title={m.plain_rose_otter()} showBack />
         <div className="container mx-auto px-4 py-12 text-center">
-          <p className="mb-4 text-muted-foreground">
-            This exercise could not be found.
-          </p>
+          <p className="mb-4 text-muted-foreground">{m.shiny_mint_walrus()}</p>
           <Button onClick={() => navigate('/exercises')}>
-            Back to Exercises
+            {m.nimble_olive_walrus()}
           </Button>
         </div>
       </div>
@@ -53,9 +52,7 @@ export function ExerciseDetailPage() {
       await deleteExercise(exercise.id)
       navigate('/exercises')
     } catch (error) {
-      alert(
-        error instanceof Error ? error.message : 'Failed to delete exercise',
-      )
+      alert(error instanceof Error ? error.message : m.giant_olive_dingo())
     }
   }
 
@@ -82,22 +79,24 @@ export function ExerciseDetailPage() {
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
-                    <AlertDialogTitle>Delete Exercise?</AlertDialogTitle>
+                    <AlertDialogTitle>
+                      {m.quick_yellow_snail()}
+                    </AlertDialogTitle>
                     <AlertDialogDescription>
-                      This will permanently delete &quot;{exercise.name}&quot;.
-                      This action cannot be undone.
+                      {m.noble_azure_fox({ name: exercise.name })}
                       {history.length > 0 && (
                         <p className="mt-2 font-medium text-destructive">
-                          Warning: This exercise has been used in{' '}
-                          {history.length} workout(s).
+                          {m.loyal_ivory_goose({ count: history.length })}
                         </p>
                       )}
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogCancel>
+                      {m.bold_ivory_parrot()}
+                    </AlertDialogCancel>
                     <AlertDialogAction onClick={handleDelete}>
-                      Delete
+                      {m.brave_cyan_dingo()}
                     </AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
@@ -119,7 +118,7 @@ export function ExerciseDetailPage() {
           <div className="space-y-4">
             <div>
               <h3 className="mb-2 text-sm font-semibold text-muted-foreground">
-                Muscle Groups
+                {m.zesty_green_elk()}
               </h3>
               <div className="flex flex-wrap gap-2">
                 {exercise.muscleGroups.map((muscle) => (
@@ -133,7 +132,7 @@ export function ExerciseDetailPage() {
             {exercise.comments && (
               <div>
                 <h3 className="mb-2 text-sm font-semibold text-muted-foreground">
-                  Comments
+                  {m.silent_orange_newt()}
                 </h3>
                 <p className="text-foreground">{exercise.comments}</p>
               </div>
@@ -143,34 +142,39 @@ export function ExerciseDetailPage() {
 
         {/* Stats */}
         <div>
-          <h2 className="text-lg font-semibold mb-4">Statistics</h2>
+          <h2 className="text-lg font-semibold mb-4">
+            {m.sunny_peach_zebra()}
+          </h2>
           {stats ? (
             <div className="grid grid-cols-2 gap-4">
               <Card className="p-4">
                 <div className="text-2xl font-bold">
                   {stats.maxWeight} {stats.maxWeightUnit}
                 </div>
-                <div className="text-sm text-muted-foreground">Max Weight</div>
+                <div className="text-sm text-muted-foreground">
+                  {m.humble_khaki_walrus()}
+                </div>
                 <div className="mt-1 text-xs text-muted-foreground">
-                  @ {stats.maxWeightReps} reps
+                  {m.crisp_peach_hare({ reps: stats.maxWeightReps })}
                 </div>
               </Card>
               <Card className="p-4">
                 <div className="text-2xl font-bold">{stats.totalSets}</div>
-                <div className="text-sm text-muted-foreground">Total Sets</div>
+                <div className="text-sm text-muted-foreground">
+                  {m.sunny_teal_pony()}
+                </div>
               </Card>
             </div>
           ) : (
             <Card className="p-6 text-center text-muted-foreground">
-              No statistics available yet. Complete a workout with this exercise
-              to see stats!
+              {m.eager_plum_hawk()}
             </Card>
           )}
         </div>
 
         {/* History */}
         <div>
-          <h2 className="text-lg font-semibold mb-4">Workout History</h2>
+          <h2 className="text-lg font-semibold mb-4">{m.merry_pink_viper()}</h2>
           {history.length > 0 ? (
             <div className="space-y-3">
               {history.map((workout) => (
@@ -183,7 +187,7 @@ export function ExerciseDetailPage() {
                       </p>
                     </div>
                     <Badge variant="secondary">
-                      {workout.setData.length} sets
+                      {m.jolly_crimson_dingo({ count: workout.setData.length })}
                     </Badge>
                   </div>
                   <div className="space-y-1">
@@ -192,9 +196,13 @@ export function ExerciseDetailPage() {
                         key={set.id}
                         className="flex justify-between text-sm text-foreground"
                       >
-                        <span>Set {idx + 1}</span>
+                        <span>{m.jolly_ivory_dingo({ number: idx + 1 })}</span>
                         <span>
-                          {set.weight} {set.weightUnit} × {set.reps} reps
+                          {m.jumpy_slate_whale({
+                            weight: set.weight,
+                            unit: set.weightUnit,
+                            reps: set.reps,
+                          })}
                         </span>
                       </div>
                     ))}
@@ -204,8 +212,7 @@ export function ExerciseDetailPage() {
             </div>
           ) : (
             <Card className="p-6 text-center text-muted-foreground">
-              No workout history yet. This exercise hasn&apos;t been used in any
-              completed workouts.
+              {m.merry_khaki_quail()}
             </Card>
           )}
         </div>

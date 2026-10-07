@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { X } from 'lucide-react'
+import { m } from '#/paraglide/messages'
 import { ALL_MUSCLE_GROUPS } from './exercise-helpers'
 import type { Exercise, MuscleGroup } from '@/types'
 import { Button } from '@/components/ui/button'
@@ -28,7 +29,7 @@ export function ExerciseForm({
   const toggleMuscle = (muscle: MuscleGroup) => {
     setSelectedMuscles((prev) =>
       prev.includes(muscle)
-        ? prev.filter((m) => m !== muscle)
+        ? prev.filter((selected) => selected !== muscle)
         : [...prev, muscle],
     )
   }
@@ -38,12 +39,12 @@ export function ExerciseForm({
     setError('')
 
     if (!name.trim()) {
-      setError('Exercise name is required')
+      setError(m.upbeat_green_wolf())
       return
     }
 
     if (selectedMuscles.length === 0) {
-      setError('Please select at least one muscle group')
+      setError(m.smart_green_heron())
       return
     }
 
@@ -64,18 +65,18 @@ export function ExerciseForm({
       )}
 
       <div className="space-y-2">
-        <Label htmlFor="name">Exercise Name</Label>
+        <Label htmlFor="name">{m.vivid_pearl_camel()}</Label>
         <Input
           id="name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="e.g., Barbell Rows"
+          placeholder={m.young_ivory_duck()}
           className="text-base"
         />
       </div>
 
       <div className="space-y-3">
-        <Label>Muscle Groups</Label>
+        <Label>{m.quirky_khaki_lion()}</Label>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
           {ALL_MUSCLE_GROUPS.map((muscle) => {
             const isSelected = selectedMuscles.includes(muscle)
@@ -118,12 +119,12 @@ export function ExerciseForm({
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="comments">Comments (Optional)</Label>
+        <Label htmlFor="comments">{m.giant_ivory_horse()}</Label>
         <textarea
           id="comments"
           value={comments}
           onChange={(e) => setComments(e.target.value)}
-          placeholder="Add notes about form, tips, or variations..."
+          placeholder={m.kind_jade_eagle()}
           rows={4}
           className="w-full rounded-md border border-input bg-background px-3 py-2 text-base focus:border-transparent focus:outline-none focus:ring-2 focus:ring-ring"
         />
@@ -131,14 +132,14 @@ export function ExerciseForm({
 
       <div
         role="group"
-        aria-label="Exercise form actions"
+        aria-label={m.odd_purple_rabbit()}
         className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end"
       >
         <Button type="button" variant="ghost" onClick={onCancel}>
-          Cancel
+          {m.gentle_sage_falcon()}
         </Button>
         <Button type="submit" variant="outline">
-          Save Exercise
+          {m.keen_lime_tiger()}
         </Button>
       </div>
     </form>
