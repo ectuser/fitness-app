@@ -16,10 +16,7 @@
         "local exercisePlural = exerciseCount: plural",
         "local setPlural = setCount: plural"
       ],
-      "selectors": [
-        "exercisePlural",
-        "setPlural"
-      ],
+      "selectors": ["exercisePlural", "setPlural"],
       "match": {
         "exercisePlural=one, setPlural=one": "{exerciseCount} exercise • {setCount} set",
         "exercisePlural=one, setPlural=other": "{exerciseCount} exercise • {setCount} sets",
@@ -69,13 +66,8 @@
   "icy_orange_lynx": "Dec",
   "jolly_peach_swan": [
     {
-      "declarations": [
-        "input count",
-        "local countPlural = count: plural"
-      ],
-      "selectors": [
-        "countPlural"
-      ],
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
       "match": {
         "countPlural=one": "{count} exercise",
         "countPlural=other": "{count} exercises"
@@ -91,9 +83,7 @@
         "input count",
         "local countPlural = count: plural"
       ],
-      "selectors": [
-        "countPlural"
-      ],
+      "selectors": ["countPlural"],
       "match": {
         "countPlural=one": "{weekday} {day} {month}: {count} workout",
         "countPlural=other": "{weekday} {day} {month}: {count} workouts"
