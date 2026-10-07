@@ -1,4 +1,5 @@
 import { Calendar, Play } from 'lucide-react'
+import { m } from '#/paraglide/messages'
 import {
   formatWorkoutDate,
   getWorkoutMuscleGroups,
@@ -28,10 +29,10 @@ export function UpcomingWorkoutsSection({
   return (
     <section>
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-semibold">Coming Workouts</h2>
+        <h2 className="text-lg font-semibold">{m.calm_beige_finch()}</h2>
         {workouts.length > 4 && (
           <Button variant="ghost" size="sm" onClick={onShowAll}>
-            Show All
+            {m.shiny_orange_bison()}
           </Button>
         )}
       </div>
@@ -70,8 +71,7 @@ export function UpcomingWorkoutsSection({
                     </div>
                   )}
                   <p className="text-xs text-muted-foreground">
-                    {workout.exercises.length} exercise
-                    {workout.exercises.length !== 1 ? 's' : ''}
+                    {m.jolly_peach_swan({ count: workout.exercises.length })}
                   </p>
                 </div>
                 <Button

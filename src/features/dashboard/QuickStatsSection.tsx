@@ -1,3 +1,4 @@
+import { m } from '#/paraglide/messages'
 import { Card } from '@/components/ui/card'
 
 interface QuickStatsSectionProps {
@@ -15,23 +16,31 @@ export function QuickStatsSection({
 }: QuickStatsSectionProps) {
   return (
     <section>
-      <h2 className="text-lg font-semibold mb-4">Quick Stats</h2>
+      <h2 className="text-lg font-semibold mb-4">{m.quirky_azure_crane()}</h2>
       <div className="grid grid-cols-2 gap-4">
         <Card className="p-4">
           <div className="text-2xl font-bold">{exercisesCount}</div>
-          <div className="text-sm text-muted-foreground">Exercises</div>
+          <div className="text-sm text-muted-foreground">
+            {m.smart_lilac_viper()}
+          </div>
         </Card>
         <Card className="p-4">
           <div className="text-2xl font-bold">{upcomingWorkoutsCount}</div>
-          <div className="text-sm text-muted-foreground">Upcoming</div>
+          <div className="text-sm text-muted-foreground">
+            {m.fancy_yellow_seal()}
+          </div>
         </Card>
         <Card className="p-4">
           <div className="text-2xl font-bold">{completedWorkoutsCount}</div>
-          <div className="text-sm text-muted-foreground">Completed</div>
+          <div className="text-sm text-muted-foreground">
+            {m.young_rust_duck()}
+          </div>
         </Card>
         <Card className="p-4">
           <div className="text-2xl font-bold">{totalSets}</div>
-          <div className="text-sm text-muted-foreground">Total Sets</div>
+          <div className="text-sm text-muted-foreground">
+            {m.eager_navy_quail()}
+          </div>
         </Card>
       </div>
     </section>

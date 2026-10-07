@@ -1,4 +1,5 @@
 import { Dumbbell, Home, ListTodo } from 'lucide-react'
+import { m } from '#/paraglide/messages'
 import { Link, useLocation } from '@/lib/router-compat'
 import { cn } from '@/lib/utils'
 
@@ -6,9 +7,9 @@ export function BottomNav() {
   const location = useLocation()
 
   const navItems = [
-    { path: '/', label: 'Home', icon: Home },
-    { path: '/workouts', label: 'Workouts', icon: ListTodo },
-    { path: '/exercises', label: 'Exercises', icon: Dumbbell },
+    { path: '/', label: m.gentle_pearl_crow(), icon: Home },
+    { path: '/workouts', label: m.lively_sage_deer(), icon: ListTodo },
+    { path: '/exercises', label: m.wild_silver_otter(), icon: Dumbbell },
   ]
 
   return (

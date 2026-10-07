@@ -1,4 +1,5 @@
 import { Calendar, Play, Plus } from 'lucide-react'
+import { m } from '#/paraglide/messages'
 import {
   formatWorkoutDate,
   getWorkoutMuscleGroups,
@@ -24,7 +25,7 @@ export function NextWorkoutSection({
 }: NextWorkoutSectionProps) {
   return (
     <section>
-      <h2 className="text-lg font-semibold mb-4">Next Workout</h2>
+      <h2 className="text-lg font-semibold mb-4">{m.lucky_olive_crane()}</h2>
       {nextWorkout ? (
         <Card className="p-6">
           <div className="mb-4">
@@ -41,10 +42,10 @@ export function NextWorkoutSection({
               ))}
             </div>
             <p className="text-sm text-muted-foreground">
-              {nextWorkout.exercises.length} exercise
-              {nextWorkout.exercises.length !== 1 ? 's' : ''} •{' '}
-              {getWorkoutTotalSets(nextWorkout)} set
-              {getWorkoutTotalSets(nextWorkout) !== 1 ? 's' : ''}
+              {m.shy_pewter_gull({
+                exerciseCount: nextWorkout.exercises.length,
+                setCount: getWorkoutTotalSets(nextWorkout),
+              })}
             </p>
           </div>
           <Button
@@ -52,18 +53,18 @@ export function NextWorkoutSection({
             className="w-full"
           >
             <Play className="w-4 h-4 mr-2" />
-            Start Workout
+            {m.gentle_plum_wolf()}
           </Button>
         </Card>
       ) : (
         <Card className="p-12 text-center">
-          <p className="text-muted-foreground mb-4">No upcoming workouts.</p>
+          <p className="text-muted-foreground mb-4">{m.misty_ivory_finch()}</p>
           <p className="text-sm text-muted-foreground mb-4">
-            Create one to get started!
+            {m.bold_azure_mole()}
           </p>
           <Button onClick={onCreateWorkout}>
             <Plus className="w-4 h-4 mr-2" />
-            Create Workout
+            {m.warm_sage_otter()}
           </Button>
         </Card>
       )}
