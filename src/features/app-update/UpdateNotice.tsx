@@ -1,5 +1,6 @@
 import { RefreshCw, X } from 'lucide-react'
 import { useState } from 'react'
+import { m } from '#/paraglide/messages'
 import { usePwaUpdateStatus } from './pwa-update-status'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
@@ -25,7 +26,7 @@ export function UpdateNotice() {
         <button
           type="button"
           onClick={() => navigate('/app-update')}
-          aria-label="Available Update: review update details"
+          aria-label={m.sunny_rose_lynx()}
           className="flex min-w-0 flex-1 items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
         >
           <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-info-muted text-info-muted-foreground">
@@ -33,10 +34,10 @@ export function UpdateNotice() {
           </span>
           <span className="min-w-0">
             <span className="block text-sm font-semibold text-foreground">
-              Available Update
+              {m.gentle_mauve_beaver()}
             </span>
             <span className="block text-xs leading-5 text-muted-foreground">
-              Review details before reloading the app.
+              {m.sunny_orange_parrot()}
             </span>
           </span>
         </button>
@@ -44,7 +45,7 @@ export function UpdateNotice() {
           type="button"
           variant="ghost"
           size="icon"
-          aria-label="Dismiss update notice"
+          aria-label={m.jolly_rose_raven()}
           onClick={() => setIsDismissed(true)}
           className="m-2 shrink-0 text-muted-foreground hover:text-foreground"
         >

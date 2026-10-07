@@ -1,3 +1,4 @@
+import { m } from '#/paraglide/messages'
 import { useExercises } from '../exercise/use-exercises'
 import { getWorkoutTotalSets } from '../workout/workout-helpers'
 import { useWorkouts } from '../workout/use-workouts'
@@ -23,7 +24,7 @@ export function Dashboard() {
   return (
     <div>
       <PageHeader
-        title="Dashboard"
+        title={m.brave_amber_fox()}
         action={
           <DashboardHeaderActions
             hasAvailableUpdate={hasAvailableUpdate}

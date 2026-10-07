@@ -1,3 +1,4 @@
+import { m } from '#/paraglide/messages'
 import type { WorkoutCalendarCell } from '@/features/training-history/training-history-projections'
 import type { Workout } from '@/types'
 import { buildWorkoutCalendar } from '@/features/training-history/training-history-projections'
@@ -9,34 +10,52 @@ interface WorkoutCalendarSectionProps {
   workouts: Array<Workout>
 }
 
-const WEEKDAY_HEADER_LABELS = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su']
-const WEEKDAY_ABBREVIATIONS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-const MONTH_ABBREVIATIONS = [
-  'Jan',
-  'Feb',
-  'Mar',
-  'Apr',
-  'May',
-  'Jun',
-  'Jul',
-  'Aug',
-  'Sep',
-  'Oct',
-  'Nov',
-  'Dec',
+const getWeekdayHeaderLabels = () => [
+  m.tidy_azure_falcon(),
+  m.keen_yellow_sloth(),
+  m.shiny_purple_badger(),
+  m.tender_indigo_mole(),
+  m.wild_pink_bison(),
+  m.shiny_navy_sloth(),
+  m.gentle_silver_crane(),
+]
+const getWeekdayAbbreviations = () => [
+  m.icy_navy_mole(),
+  m.upbeat_khaki_lion(),
+  m.quick_violet_hare(),
+  m.gentle_violet_pony(),
+  m.noble_lime_puma(),
+  m.crisp_indigo_cobra(),
+  m.merry_khaki_dove(),
+]
+const getMonthAbbreviations = () => [
+  m.warm_amber_camel(),
+  m.tidy_ruby_sloth(),
+  m.lively_violet_koala(),
+  m.happy_rose_falcon(),
+  m.eager_tan_bear(),
+  m.kind_jade_cobra(),
+  m.gentle_cyan_frog(),
+  m.rapid_ivory_finch(),
+  m.sunny_ruby_zebra(),
+  m.shiny_teal_yak(),
+  m.dizzy_olive_elk(),
+  m.icy_orange_lynx(),
 ]
 
 function getCellLabel(cell: WorkoutCalendarCell, index: number): string {
   const [, month] = cell.date.split('-').map(Number)
-  const date = `${WEEKDAY_ABBREVIATIONS[index % 7]} ${cell.dayOfMonth} ${MONTH_ABBREVIATIONS[month - 1]}`
-
-  if (cell.workoutCount === 0) {
-    return `${date}: rest day`
+  const labelParts = {
+    weekday: getWeekdayAbbreviations()[index % 7],
+    day: cell.dayOfMonth,
+    month: getMonthAbbreviations()[month - 1],
   }
 
-  return `${date}: ${cell.workoutCount} ${
-    cell.workoutCount === 1 ? 'workout' : 'workouts'
-  }`
+  if (cell.workoutCount === 0) {
+    return m.silent_lime_dingo(labelParts)
+  }
+
+  return m.rapid_sage_badger({ ...labelParts, count: cell.workoutCount })
 }
 
 export function WorkoutCalendarSection({
@@ -47,10 +66,10 @@ export function WorkoutCalendarSection({
 
   return (
     <section>
-      <h2 className="text-lg font-semibold mb-4">Last 30 days</h2>
+      <h2 className="text-lg font-semibold mb-4">{m.eager_cyan_bison()}</h2>
       <Card className="p-4">
         <div className="grid grid-cols-7 gap-1.5">
-          {WEEKDAY_HEADER_LABELS.map((label) => (
+          {getWeekdayHeaderLabels().map((label) => (
             <div
               key={label}
               aria-hidden="true"

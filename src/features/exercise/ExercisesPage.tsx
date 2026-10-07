@@ -1,4 +1,5 @@
 import { Plus } from 'lucide-react'
+import { m } from '#/paraglide/messages'
 import { useExercises } from './use-exercises'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { Button } from '@/components/ui/button'
@@ -12,11 +13,11 @@ export function ExercisesPage() {
   return (
     <div>
       <PageHeader
-        title="Exercises"
+        title={m.mellow_ruby_wombat()}
         action={
           <Button onClick={() => navigate('/exercises/new')} size="sm">
             <Plus className="w-4 h-4 mr-2" />
-            New
+            {m.loyal_white_bison()}
           </Button>
         }
       />

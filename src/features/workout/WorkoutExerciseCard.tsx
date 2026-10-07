@@ -10,6 +10,7 @@ import {
   Trash2,
   TrendingUp,
 } from 'lucide-react'
+import { m } from '#/paraglide/messages'
 import { useSettings } from '../settings/use-settings'
 import { useExerciseStats } from '../training-history/use-training-history'
 import { SetInput } from './SetInput'
@@ -146,7 +147,7 @@ export function WorkoutExerciseCard({
                   className="flex w-full items-center rounded-sm px-2 py-2 text-sm hover:bg-accent"
                 >
                   <Repeat className="w-4 h-4 mr-2" />
-                  Switch Exercise
+                  {m.brave_sage_turtle()}
                 </button>
               )}
               <button
@@ -163,7 +164,7 @@ export function WorkoutExerciseCard({
                 className="flex w-full items-center rounded-sm px-2 py-2 text-sm hover:bg-accent"
               >
                 <Pencil className="w-4 h-4 mr-2" />
-                Edit Exercise
+                {m.odd_gold_ibis()}
               </button>
               <button
                 type="button"
@@ -175,7 +176,7 @@ export function WorkoutExerciseCard({
                 className="flex w-full items-center rounded-sm px-2 py-2 text-sm text-destructive hover:bg-accent"
               >
                 <Trash2 className="w-4 h-4 mr-2" />
-                Delete Exercise
+                {m.calm_rust_sloth()}
               </button>
             </div>
           )}
@@ -197,7 +198,7 @@ export function WorkoutExerciseCard({
       <Accordion type="single" collapsible className="mb-3">
         <AccordionItem value="details" className="border-none">
           <AccordionTrigger className="py-2 text-sm font-medium">
-            Details
+            {m.humble_olive_koala()}
           </AccordionTrigger>
           <AccordionContent className="space-y-3 pt-2">
             {stats && (
@@ -205,20 +206,30 @@ export function WorkoutExerciseCard({
                 {stats.maxWeight > 0 && (
                   <div className="flex items-center gap-2 text-sm">
                     <TrendingUp className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-muted-foreground">Max:</span>
+                    <span className="text-muted-foreground">
+                      {m.mellow_silver_trout()}
+                    </span>
                     <span className="font-semibold">
-                      {stats.maxWeight} {stats.maxWeightUnit} ×{' '}
-                      {stats.maxWeightReps}
+                      {m.quick_peach_ibis({
+                        weight: stats.maxWeight,
+                        unit: stats.maxWeightUnit,
+                        reps: stats.maxWeightReps,
+                      })}
                     </span>
                   </div>
                 )}
                 {stats.lastWeight !== undefined && stats.lastWeight > 0 && (
                   <div className="flex items-center gap-2 text-sm">
                     <Clock className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-muted-foreground">Last:</span>
+                    <span className="text-muted-foreground">
+                      {m.gentle_crimson_owl()}
+                    </span>
                     <span className="font-semibold">
-                      {stats.lastWeight} {stats.lastWeightUnit} ×{' '}
-                      {stats.lastWeightReps}
+                      {m.quick_peach_ibis({
+                        weight: stats.lastWeight,
+                        unit: stats.lastWeightUnit ?? '',
+                        reps: stats.lastWeightReps ?? '',
+                      })}
                     </span>
                   </div>
                 )}
@@ -229,7 +240,7 @@ export function WorkoutExerciseCard({
                 htmlFor={commentId}
                 className="text-xs font-medium text-muted-foreground"
               >
-                Comment
+                {m.icy_navy_ibis()}
               </label>
               <textarea
                 id={commentId}
@@ -240,7 +251,7 @@ export function WorkoutExerciseCard({
                     comment: event.target.value,
                   })
                 }
-                placeholder="Add a note for this exercise..."
+                placeholder={m.clever_orange_puma()}
                 rows={3}
                 className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:border-transparent focus:outline-none focus:ring-2 focus:ring-ring"
               />
@@ -251,7 +262,7 @@ export function WorkoutExerciseCard({
 
       <Button variant="outline" size="sm" onClick={addSet} className="w-full">
         <Plus className="w-4 h-4 mr-2" />
-        Add Set
+        {m.shiny_beige_deer()}
       </Button>
     </Card>
   )

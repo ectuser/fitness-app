@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
+import { m } from '#/paraglide/messages'
 import { exerciseQueryKeys } from '../exercise/exercise-queries'
 import {
   buildExportPayload,
@@ -76,9 +77,7 @@ export function useSettingsDataManagement({
         } catch (error) {
           pendingImportRef.current = null
           setImportError(
-            error instanceof Error
-              ? error.message
-              : 'Failed to import data. Please try again.',
+            error instanceof Error ? error.message : m.zesty_crimson_puma(),
           )
         }
 

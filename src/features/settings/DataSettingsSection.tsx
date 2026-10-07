@@ -1,4 +1,5 @@
 import { Download, RotateCcw, Upload } from 'lucide-react'
+import { m } from '#/paraglide/messages'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 
@@ -20,15 +21,15 @@ export function DataSettingsSection({
   return (
     <section id="data">
       <Card className="p-6">
-        <h2 className="mb-4 text-lg font-semibold">Data</h2>
+        <h2 className="mb-4 text-lg font-semibold">{m.upbeat_beige_cobra()}</h2>
         <div className="grid gap-3 sm:grid-cols-2">
           <Button variant="outline" onClick={onExportData}>
             <Download className="w-4 h-4" />
-            Export Data
+            {m.silent_peach_goose()}
           </Button>
           <Button variant="outline" onClick={onImportClick}>
             <Upload className="w-4 h-4" />
-            Import Data
+            {m.fancy_plum_stork()}
           </Button>
           <Button
             variant="destructive"
@@ -36,7 +37,7 @@ export function DataSettingsSection({
             className="sm:col-span-2"
           >
             <RotateCcw className="w-4 h-4" />
-            Reset Data
+            {m.brave_crimson_crane()}
           </Button>
         </div>
         <input

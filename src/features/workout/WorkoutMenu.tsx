@@ -1,5 +1,6 @@
 import { Check, Copy, Edit, MoreVertical, Trash2, X } from 'lucide-react'
 import { useState } from 'react'
+import { m } from '#/paraglide/messages'
 import type { Workout } from '@/types'
 import { Button } from '@/components/ui/button'
 import {
@@ -53,22 +54,22 @@ export function WorkoutMenu({
         <DropdownMenuContent align="end">
           <DropdownMenuItem onClick={onEdit}>
             <Edit className="w-4 h-4 mr-2" />
-            Edit
+            {m.gentle_olive_lion()}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={onDuplicate}>
             <Copy className="w-4 h-4 mr-2" />
-            Duplicate
+            {m.odd_olive_elk()}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={onToggleComplete}>
             {workout.status === 'completed' ? (
               <>
                 <X className="w-4 h-4 mr-2" />
-                Mark Incomplete
+                {m.icy_tan_dove()}
               </>
             ) : (
               <>
                 <Check className="w-4 h-4 mr-2" />
-                Mark Complete
+                {m.kind_gold_sloth()}
               </>
             )}
           </DropdownMenuItem>
@@ -78,7 +79,7 @@ export function WorkoutMenu({
             className="text-destructive"
           >
             <Trash2 className="w-4 h-4 mr-2" />
-            Delete
+            {m.proud_pearl_moose()}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -86,15 +87,16 @@ export function WorkoutMenu({
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Workout?</AlertDialogTitle>
+            <AlertDialogTitle>{m.crisp_mint_dingo()}</AlertDialogTitle>
             <AlertDialogDescription>
-              This will permanently delete &quot;{workout.name}&quot;. This
-              action cannot be undone.
+              {m.gentle_indigo_newt({ name: workout.name })}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
+            <AlertDialogCancel>{m.shiny_peach_hare()}</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete}>
+              {m.keen_rose_koala()}
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

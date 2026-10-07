@@ -1,3 +1,4 @@
+import { m } from '#/paraglide/messages'
 import { ExerciseForm } from './ExerciseForm'
 import { useExercises } from './use-exercises'
 import type { Exercise } from '@/types'
@@ -43,7 +44,7 @@ export function ExerciseFormPage() {
   return (
     <div>
       <PageHeader
-        title={isEditing ? 'Edit Exercise' : 'Create Exercise'}
+        title={isEditing ? m.shiny_pink_mole() : m.dizzy_ivory_rabbit()}
         showBack
       />
       <div className="container mx-auto px-4 py-6">

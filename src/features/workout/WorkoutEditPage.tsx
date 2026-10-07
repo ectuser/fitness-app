@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { MoreVertical, Play, Plus, Save } from 'lucide-react'
+import { m } from '#/paraglide/messages'
 import { ExerciseSelector } from '../exercise/ExerciseSelector'
 import { useExercises } from '../exercise/use-exercises'
 import { useSettings } from '../settings/use-settings'
@@ -293,9 +294,9 @@ export function WorkoutEditPage() {
   }
 
   const createActionDetails = {
-    create: { label: 'Create', icon: Save, finishWorkout: false },
-    finish: { label: 'Create and Finish', icon: Save, finishWorkout: true },
-    start: { label: 'Create and Start', icon: Play, finishWorkout: false },
+    create: { label: m.shiny_indigo_viper(), icon: Save, finishWorkout: false },
+    finish: { label: m.jolly_pearl_lynx(), icon: Save, finishWorkout: true },
+    start: { label: m.jumpy_lime_swan(), icon: Play, finishWorkout: false },
   } as const
   const selectedCreateAction = createActionDetails[createAction]
 
@@ -320,7 +321,7 @@ export function WorkoutEditPage() {
   return (
     <div>
       <PageHeader
-        title={isEditing ? 'Edit Workout' : 'Create Workout'}
+        title={isEditing ? m.tidy_amber_crow() : m.upbeat_azure_finch()}
         showBack
       />
 
@@ -328,12 +329,12 @@ export function WorkoutEditPage() {
         <Card className="p-6">
           <div className="space-y-4">
             <div>
-              <Label htmlFor="name">Workout Name</Label>
+              <Label htmlFor="name">{m.lively_rose_yak()}</Label>
               <Input
                 id="name"
                 value={name}
                 onChange={(event) => handleNameChange(event.target.value)}
-                placeholder="e.g., Upper Body Day"
+                placeholder={m.bold_tan_jaguar()}
                 className={errors.name ? 'border-destructive' : ''}
               />
               {errors.name && (
@@ -344,7 +345,7 @@ export function WorkoutEditPage() {
             </div>
 
             <div>
-              <Label htmlFor="date">Date</Label>
+              <Label htmlFor="date">{m.icy_navy_swan()}</Label>
               <Input
                 id="date"
                 type="date"
@@ -357,10 +358,10 @@ export function WorkoutEditPage() {
 
         <div>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold">Exercises</h2>
+            <h2 className="text-lg font-semibold">{m.gentle_peach_lemur()}</h2>
             <Button onClick={openAddExerciseSelector}>
               <Plus className="w-4 h-4 mr-2" />
-              Add Exercise
+              {m.bold_mint_puma()}
             </Button>
           </div>
 
@@ -384,11 +385,11 @@ export function WorkoutEditPage() {
             emptyState={
               <Card className="p-12 text-center">
                 <p className="mb-4 text-muted-foreground">
-                  No exercises added yet
+                  {m.brave_mint_swan()}
                 </p>
                 <Button variant="outline" onClick={openAddExerciseSelector}>
                   <Plus className="w-4 h-4 mr-2" />
-                  Add Your First Exercise
+                  {m.tender_pearl_sloth()}
                 </Button>
               </Card>
             }
@@ -399,21 +400,21 @@ export function WorkoutEditPage() {
           {isEditing ? (
             <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
               <Button variant="ghost" onClick={handleCancel}>
-                Cancel
+                {m.shiny_pearl_lion()}
               </Button>
               <Button variant="outline" onClick={() => void saveWorkout(false)}>
                 <Save className="w-4 h-4 mr-2" />
-                Save Changes
+                {m.sleepy_ivory_ferret()}
               </Button>
               <Button variant="outline" onClick={() => void saveWorkout(true)}>
                 <Save className="w-4 h-4 mr-2" />
-                Save and Finish Workout
+                {m.vivid_violet_crane()}
               </Button>
             </div>
           ) : (
             <div className="flex gap-3 justify-end">
               <Button variant="ghost" onClick={handleCancel}>
-                Cancel
+                {m.shiny_pearl_lion()}
               </Button>
               <Button
                 variant="outline"
@@ -427,7 +428,7 @@ export function WorkoutEditPage() {
                   <Button
                     variant="outline"
                     size="icon"
-                    aria-label="More actions"
+                    aria-label={m.nimble_slate_crow()}
                   >
                     <MoreVertical className="w-4 h-4" />
                   </Button>
@@ -437,17 +438,17 @@ export function WorkoutEditPage() {
                     onClick={() => handleCreateAction('create')}
                   >
                     <Save className="w-4 h-4" />
-                    Create
+                    {m.shiny_indigo_viper()}
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => handleCreateAction('finish')}
                   >
                     <Save className="w-4 h-4" />
-                    Create and Finish
+                    {m.jolly_pearl_lynx()}
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => handleCreateAction('start')}>
                     <Play className="w-4 h-4" />
-                    Create and Start
+                    {m.jumpy_lime_swan()}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

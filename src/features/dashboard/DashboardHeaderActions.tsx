@@ -1,4 +1,5 @@
 import { Plus, Settings } from 'lucide-react'
+import { m } from '#/paraglide/messages'
 import { Button } from '@/components/ui/button'
 import { Link } from '@/lib/router-compat'
 
@@ -14,7 +15,7 @@ export function DashboardHeaderActions({
   return (
     <div className="flex gap-2">
       <Button asChild variant="ghost" size="sm" className="relative">
-        <Link to="/settings" aria-label="Settings">
+        <Link to="/settings" aria-label={m.quiet_teal_heron()}>
           <Settings className="w-4 h-4" />
           {hasAvailableUpdate && (
             <span
@@ -26,7 +27,7 @@ export function DashboardHeaderActions({
       </Button>
       <Button onClick={onCreateWorkout} size="sm">
         <Plus className="w-4 h-4 mr-2" />
-        New Workout
+        {m.swift_coral_lynx()}
       </Button>
     </div>
   )
