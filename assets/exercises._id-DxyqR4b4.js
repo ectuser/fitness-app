@@ -1,0 +1,1 @@
+import{z as e}from"./index-CvuKc6-z.js";var t=e;export{t as component};
