@@ -5,6 +5,7 @@ import { DashboardHeaderActions } from './DashboardHeaderActions'
 import { NextWorkoutSection } from './NextWorkoutSection'
 import { QuickStatsSection } from './QuickStatsSection'
 import { UpcomingWorkoutsSection } from './UpcomingWorkoutsSection'
+import { WorkoutCalendarSection } from './WorkoutCalendarSection'
 import { useNavigate } from '@/lib/router-compat'
 import { usePwaUpdateStatus } from '@/features/app-update/pwa-update-status'
 import { PageHeader } from '@/components/layout/PageHeader'
@@ -48,6 +49,7 @@ export function Dashboard() {
             navigate(`/workouts/${workoutId}/session`)
           }
         />
+        <WorkoutCalendarSection workouts={workouts} />
         <QuickStatsSection
           exercisesCount={exercises.length}
           upcomingWorkoutsCount={upcomingWorkouts.length}
