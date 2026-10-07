@@ -1,0 +1,1 @@
+import{z as e}from"./index-mTfMP0GY.js";var t=e;export{t as component};
