@@ -270,5 +270,10 @@
   "jumpy_rose_mole": "Yesterday",
   "swift_rust_badger": "Workout name is required",
   "upbeat_lilac_quail": "Add at least one exercise",
-  "zesty_orange_owl": "Workout not found"
+  "zesty_orange_owl": "Workout not found",
+  "calm_tan_finch": "Failed to read backup file. Please make sure it's a valid JSON file.",
+  "gentle_indigo_gecko": "Invalid backup file format.",
+  "zesty_crimson_puma": "Failed to import data. Please try again.",
+  "calm_lilac_wombat": "Close",
+  "sunny_plum_stork": "Fitness Tracker"
 }

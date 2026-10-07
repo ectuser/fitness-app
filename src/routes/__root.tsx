@@ -5,6 +5,7 @@ import {
   createRootRouteWithContext,
 } from '@tanstack/react-router'
 import { useEffect, useRef, useState } from 'react'
+import { m } from '#/paraglide/messages'
 import { getLocale } from '#/paraglide/runtime'
 import appCss from '../styles.css?url'
 import type { ReactNode } from 'react'
@@ -66,7 +67,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         content: '#ffffff',
       },
       {
-        title: 'Fitness Tracker',
+        title: m.sunny_plum_stork(),
       },
     ],
     links: [

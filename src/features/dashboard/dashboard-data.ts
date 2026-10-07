@@ -1,3 +1,4 @@
+import { m } from '#/paraglide/messages'
 import { createDefaultExerciseCatalog } from '../exercise/exercise-source'
 import {
   DEFAULT_SETTINGS,
@@ -40,9 +41,7 @@ export function parseImportPayload(content: string): ImportPayload {
   try {
     parsedValue = JSON.parse(content) as { data?: ImportPayload }
   } catch {
-    throw new Error(
-      "Failed to read backup file. Please make sure it's a valid JSON file.",
-    )
+    throw new Error(m.calm_tan_finch())
   }
 
   const importPayloadEnvelope = ImportPayloadEnvelopeSchema.safeParse(
@@ -50,7 +49,7 @@ export function parseImportPayload(content: string): ImportPayload {
   )
 
   if (!importPayloadEnvelope.success) {
-    throw new Error('Invalid backup file format.')
+    throw new Error(m.gentle_indigo_gecko())
   }
 
   const importPayload = ImportPayloadSchema.safeParse({
@@ -65,7 +64,7 @@ export function parseImportPayload(content: string): ImportPayload {
   })
 
   if (!importPayload.success) {
-    throw new Error('Invalid backup file format.')
+    throw new Error(m.gentle_indigo_gecko())
   }
 
   return importPayload.data
