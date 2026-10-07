@@ -3,3 +3,5 @@ allowBuilds:
   unrs-resolver: true
 overrides:
   '@eslint/js': 9.39.4
+  seroval: 1.6.8
+  seroval-plugins: 1.6.8
