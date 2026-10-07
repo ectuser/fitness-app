@@ -9,8 +9,6 @@ import { tanstackStart } from '@tanstack/react-start/plugin/vite'
 import viteReact, { reactCompilerPreset } from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
-const isPagesBuild = process.env.GITHUB_PAGES === 'true'
-
 const config = defineConfig({
   resolve: {
     alias: {
@@ -25,18 +23,14 @@ const config = defineConfig({
       strategy: ['url', 'baseLocale'],
     }),
     tailwindcss(),
-    tanstackStart(
-      isPagesBuild
-        ? {
-            spa: {
-              enabled: true,
-              prerender: {
-                outputPath: '/index',
-              },
-            },
-          }
-        : undefined,
-    ),
+    tanstackStart({
+      spa: {
+        enabled: true,
+        prerender: {
+          outputPath: '/index',
+        },
+      },
+    }),
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: [
