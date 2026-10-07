@@ -1,5 +1,6 @@
 import { useId } from 'react'
 import { X } from 'lucide-react'
+import { m } from '#/paraglide/messages'
 import type { ReactNode } from 'react'
 
 interface SimpleModalProps {
@@ -39,7 +40,7 @@ export function SimpleModal({
           type="button"
           onClick={onClose}
           className="absolute right-4 top-4 rounded-sm opacity-70 transition-opacity hover:opacity-100"
-          aria-label="Close"
+          aria-label={m.calm_lilac_wombat()}
         >
           <X className="h-4 w-4" />
         </button>
