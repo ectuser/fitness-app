@@ -111,3 +111,86 @@ export function buildExerciseHistory(
 
   return sortWorkoutsByDateDesc(history)
 }
+
+export const WORKOUT_CALENDAR_WINDOW_DAYS = 30
+
+export interface WorkoutCalendarCell {
+  /** Local calendar date as YYYY-MM-DD. */
+  date: string
+  dayOfMonth: number
+  /** Completed workouts whose completion falls on this local day. */
+  workoutCount: number
+  /** False for placeholder cells outside the 30-day window. */
+  isInWindow: boolean
+  isToday: boolean
+}
+
+function toLocalDateKey(date: Date): string {
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+
+  return `${date.getFullYear()}-${month}-${day}`
+}
+
+/**
+ * Local-midnight date `days` calendar days from `date`. Built from calendar
+ * fields so DST changes (23h/25h days) are handled.
+ */
+export function addLocalDays(date: Date, days: number): Date {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate() + days)
+}
+
+export function startOfLocalDay(date: Date): Date {
+  return addLocalDays(date, 0)
+}
+
+// getDay(): 0 = Sunday. Result: 0 for Monday .. 6 for Sunday.
+function daysSinceMonday(date: Date): number {
+  return (date.getDay() + 6) % 7
+}
+
+export function buildWorkoutCalendar(
+  workouts: Array<Workout>,
+  today: Date,
+): Array<WorkoutCalendarCell> {
+  const todayStart = startOfLocalDay(today)
+  const windowStart = addLocalDays(
+    todayStart,
+    -(WORKOUT_CALENDAR_WINDOW_DAYS - 1),
+  )
+  const todayKey = toLocalDateKey(todayStart)
+  const windowStartKey = toLocalDateKey(windowStart)
+
+  const countsByDay = new Map<string, number>()
+  workouts.forEach((workout) => {
+    if (workout.status !== 'completed' || !workout.completedAt) {
+      return
+    }
+
+    const key = toLocalDateKey(new Date(workout.completedAt))
+    countsByDay.set(key, (countsByDay.get(key) ?? 0) + 1)
+  })
+
+  const gridStart = addLocalDays(windowStart, -daysSinceMonday(windowStart))
+  const gridEnd = addLocalDays(todayStart, 6 - daysSinceMonday(todayStart))
+
+  const cells: Array<WorkoutCalendarCell> = []
+  for (
+    let day = gridStart;
+    day.getTime() <= gridEnd.getTime();
+    day = addLocalDays(day, 1)
+  ) {
+    const key = toLocalDateKey(day)
+    const isInWindow = key >= windowStartKey && key <= todayKey
+
+    cells.push({
+      date: key,
+      dayOfMonth: day.getDate(),
+      workoutCount: isInWindow ? (countsByDay.get(key) ?? 0) : 0,
+      isInWindow,
+      isToday: key === todayKey,
+    })
+  }
+
+  return cells
+}
