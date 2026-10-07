@@ -1,3 +1,4 @@
+import { m } from '#/paraglide/messages'
 import { findLastWorkoutExercise } from './workout-helpers'
 import type {
   Exercise,
@@ -158,11 +159,11 @@ export function validateWorkoutForm(
   const errors: { exercises?: string; name?: string } = {}
 
   if (!name.trim()) {
-    errors.name = 'Workout name is required'
+    errors.name = m.swift_rust_badger()
   }
 
   if (workoutExercises.length === 0) {
-    errors.exercises = 'Add at least one exercise'
+    errors.exercises = m.upbeat_lilac_quail()
   }
 
   return errors

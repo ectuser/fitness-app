@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { CheckCircle2, Plus, X } from 'lucide-react'
+import { m } from '#/paraglide/messages'
 import { ExerciseSelector } from '../exercise/ExerciseSelector'
 import { useExercises } from '../exercise/use-exercises'
 import { useSettings } from '../settings/use-settings'
@@ -80,13 +81,11 @@ export function WorkoutSessionPage() {
   if (!workout) {
     return (
       <div>
-        <PageHeader title="Workout Not Found" showBack />
+        <PageHeader title={m.rapid_lime_jaguar()} showBack />
         <div className="container mx-auto px-4 py-12 text-center">
-          <p className="mb-4 text-muted-foreground">
-            This workout could not be found.
-          </p>
+          <p className="mb-4 text-muted-foreground">{m.calm_crimson_hawk()}</p>
           <Button onClick={() => navigate('/workouts')}>
-            Back to Workouts
+            {m.young_teal_bear()}
           </Button>
         </div>
       </div>
@@ -110,7 +109,7 @@ export function WorkoutSessionPage() {
             onClick={() => setShowExitDialog(true)}
           >
             <X className="w-4 h-4 mr-2" />
-            Exit
+            {m.rapid_coral_panda()}
           </Button>
         }
       />
@@ -119,11 +118,14 @@ export function WorkoutSessionPage() {
         <div className="rounded-lg bg-card p-4 text-card-foreground shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="font-semibold text-lg">Workout in Progress</h3>
+              <h3 className="font-semibold text-lg">
+                {m.gentle_mauve_parrot()}
+              </h3>
               <p className="text-sm text-muted-foreground">
-                {workoutExercises.length} exercise
-                {workoutExercises.length !== 1 ? 's' : ''} • {totalSets} set
-                {totalSets !== 1 ? 's' : ''}
+                {m.shy_pewter_gull({
+                  exerciseCount: workoutExercises.length,
+                  setCount: totalSets,
+                })}
               </p>
             </div>
           </div>
@@ -135,7 +137,7 @@ export function WorkoutSessionPage() {
           className="w-full"
         >
           <Plus className="w-4 h-4 mr-2" />
-          Add Exercise
+          {m.bold_mint_puma()}
         </Button>
 
         <WorkoutExerciseList
@@ -149,11 +151,11 @@ export function WorkoutSessionPage() {
           emptyState={
             <div className="rounded-lg bg-card p-12 text-center text-card-foreground">
               <p className="mb-4 text-muted-foreground">
-                No exercises in this workout
+                {m.wild_plum_whale()}
               </p>
               <Button variant="outline" onClick={openAddExerciseSelector}>
                 <Plus className="w-4 h-4 mr-2" />
-                Add Your First Exercise
+                {m.tender_pearl_sloth()}
               </Button>
             </div>
           }
@@ -172,7 +174,7 @@ export function WorkoutSessionPage() {
             disabled={workoutExercises.length === 0}
           >
             <CheckCircle2 className="w-5 h-5 mr-2" />
-            Finish Workout
+            {m.jumpy_olive_dove()}
           </Button>
         </div>
       </div>
@@ -189,8 +191,8 @@ export function WorkoutSessionPage() {
         open={showFinishDialog}
         onClose={() => setShowFinishDialog(false)}
         role="alertdialog"
-        title="Finish Workout?"
-        description="Mark this workout as completed? Your progress will be saved and exercise statistics will be updated."
+        title={m.tidy_tan_crane()}
+        description={m.merry_gold_bear()}
       >
         <div className="sm:hidden space-y-2">
           <Button
@@ -204,19 +206,19 @@ export function WorkoutSessionPage() {
             }}
             className="w-full"
           >
-            Finish Workout
+            {m.quirky_pink_falcon()}
           </Button>
           <Button
             variant="ghost"
             onClick={() => setShowFinishDialog(false)}
             className="w-full"
           >
-            Continue Workout
+            {m.gentle_khaki_quail()}
           </Button>
         </div>
         <div className="hidden sm:flex sm:justify-end sm:gap-2">
           <Button variant="ghost" onClick={() => setShowFinishDialog(false)}>
-            Continue Workout
+            {m.gentle_khaki_quail()}
           </Button>
           <Button
             variant="outline"
@@ -228,7 +230,7 @@ export function WorkoutSessionPage() {
               }
             }}
           >
-            Finish Workout
+            {m.quirky_pink_falcon()}
           </Button>
         </div>
       </SimpleModal>
@@ -237,8 +239,8 @@ export function WorkoutSessionPage() {
         open={showExitDialog}
         onClose={() => setShowExitDialog(false)}
         role="alertdialog"
-        title="Exit Workout?"
-        description="Your progress has been auto-saved. You can resume this workout later from the workouts page."
+        title={m.humble_slate_goat()}
+        description={m.icy_coral_lynx()}
       >
         <div className="sm:hidden space-y-2">
           <Button
@@ -246,22 +248,22 @@ export function WorkoutSessionPage() {
             onClick={() => navigate('/workouts')}
             className="w-full"
           >
-            Exit
+            {m.rapid_coral_panda()}
           </Button>
           <Button
             variant="ghost"
             onClick={() => setShowExitDialog(false)}
             className="w-full"
           >
-            Continue Workout
+            {m.gentle_khaki_quail()}
           </Button>
         </div>
         <div className="hidden sm:flex sm:justify-end sm:gap-2">
           <Button variant="ghost" onClick={() => setShowExitDialog(false)}>
-            Continue Workout
+            {m.gentle_khaki_quail()}
           </Button>
           <Button variant="outline" onClick={() => navigate('/workouts')}>
-            Exit
+            {m.rapid_coral_panda()}
           </Button>
         </div>
       </SimpleModal>

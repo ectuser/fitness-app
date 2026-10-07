@@ -1,4 +1,5 @@
 import { Calendar, Play } from 'lucide-react'
+import { m } from '#/paraglide/messages'
 import {
   formatWorkoutDate,
   getWorkoutMuscleGroups,
@@ -40,7 +41,7 @@ export function WorkoutCard({
             <h3 className="font-semibold text-lg">{workout.name}</h3>
             {workout.status === 'completed' && (
               <Badge variant="secondary" className="text-xs">
-                Completed
+                {m.tidy_sage_newt()}
               </Badge>
             )}
           </div>
@@ -71,15 +72,16 @@ export function WorkoutCard({
         </div>
 
         <div className="text-sm text-muted-foreground">
-          {workout.exercises.length} exercise
-          {workout.exercises.length !== 1 ? 's' : ''} • {totalSets} set
-          {totalSets !== 1 ? 's' : ''}
+          {m.shy_pewter_gull({
+            exerciseCount: workout.exercises.length,
+            setCount: totalSets,
+          })}
         </div>
 
         {workout.status !== 'completed' && (
           <Button onClick={onStart} className="w-full">
             <Play className="w-4 h-4 mr-2" />
-            Start Workout
+            {m.young_red_mole()}
           </Button>
         )}
       </div>
