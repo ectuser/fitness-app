@@ -1,4 +1,5 @@
 import { Plus } from 'lucide-react'
+import { m } from '#/paraglide/messages'
 import { useExercises } from '../exercise/use-exercises'
 import { useWorkouts } from './use-workouts'
 import { WorkoutList } from './WorkoutList'
@@ -51,23 +52,23 @@ export function WorkoutsPage() {
   return (
     <div>
       <PageHeader
-        title="Workouts"
+        title={m.jumpy_coral_tiger()}
         action={
           <Button onClick={() => navigate('/workouts/new')} size="sm">
             <Plus className="w-4 h-4 mr-2" />
-            New
+            {m.tidy_crimson_parrot()}
           </Button>
         }
       />
 
       <div className="container mx-auto px-4 py-6">
         <div className="flex gap-2 mb-6">
-          <Button variant="default">Upcoming</Button>
+          <Button variant="default">{m.icy_rose_moose()}</Button>
           <Button
             variant="outline"
             onClick={() => navigate('/workouts/completed')}
           >
-            Completed
+            {m.odd_pink_otter()}
           </Button>
         </div>
 
@@ -83,13 +84,13 @@ export function WorkoutsPage() {
           />
         ) : (
           <Card className="p-12 text-center">
-            <p className="mb-4 text-muted-foreground">No upcoming workouts.</p>
+            <p className="mb-4 text-muted-foreground">{m.keen_ruby_hare()}</p>
             <p className="mb-4 text-sm text-muted-foreground">
-              Create your first workout to get started!
+              {m.eager_violet_raven()}
             </p>
             <Button onClick={() => navigate('/workouts/new')}>
               <Plus className="w-4 h-4 mr-2" />
-              Create Workout
+              {m.warm_violet_koala()}
             </Button>
           </Card>
         )}

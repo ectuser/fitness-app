@@ -1,5 +1,6 @@
 import { X } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { m } from '#/paraglide/messages'
 import type { Set as SetType } from '@/types'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -52,7 +53,7 @@ export function SetInput({
   return (
     <div className="flex items-center gap-2 rounded-lg bg-muted p-3">
       <span className="w-12 text-sm font-medium text-muted-foreground">
-        Set {setNumber}
+        {m.happy_peach_panda({ number: setNumber })}
       </span>
 
       <div className="flex items-center gap-2 flex-1">
@@ -68,7 +69,7 @@ export function SetInput({
               setRawWeight(value)
               onChange({ ...set, weight: normalizeWeight(value) })
             }}
-            placeholder="Weight"
+            placeholder={m.wild_green_swan()}
             className="text-base h-11"
           />
         </div>
@@ -85,14 +86,16 @@ export function SetInput({
             onChange={(e) =>
               onChange({ ...set, reps: parseInt(e.target.value) || 0 })
             }
-            placeholder="Reps"
+            placeholder={m.lively_white_rabbit()}
             className="text-base h-11"
             min="0"
             step="1"
           />
         </div>
 
-        <span className="text-sm text-muted-foreground">reps</span>
+        <span className="text-sm text-muted-foreground">
+          {m.tidy_peach_badger()}
+        </span>
       </div>
 
       <Button
@@ -100,7 +103,7 @@ export function SetInput({
         size="icon"
         onClick={onRemove}
         className="flex-shrink-0"
-        aria-label={`Remove set ${setNumber}`}
+        aria-label={m.rapid_rose_turtle({ number: setNumber })}
       >
         <X className="w-4 h-4" />
       </Button>
