@@ -1,3 +1,4 @@
+import { m } from '#/paraglide/messages'
 import type { Exercise, Workout, WorkoutExercise } from '@/types'
 
 export interface DuplicateWorkoutOptions {
@@ -103,15 +104,15 @@ export function formatWorkoutDate(
   yesterday.setDate(yesterday.getDate() - 1)
 
   if (date.getTime() === today.getTime()) {
-    return 'Today'
+    return m.vivid_crimson_moose()
   }
 
   if (date.getTime() === tomorrow.getTime()) {
-    return 'Tomorrow'
+    return m.tender_mint_elk()
   }
 
   if (options.includeYesterday && date.getTime() === yesterday.getTime()) {
-    return 'Yesterday'
+    return m.jumpy_rose_mole()
   }
 
   return date.toLocaleDateString('en-US', {

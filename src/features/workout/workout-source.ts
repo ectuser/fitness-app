@@ -1,3 +1,4 @@
+import { m } from '#/paraglide/messages'
 import {
   duplicateWorkoutTemplate,
   getCompletedWorkouts,
@@ -173,7 +174,7 @@ export async function updateWorkoutDetails({
   const updatedWorkout = nextWorkouts.find((workout) => workout.id === id)
 
   if (!updatedWorkout) {
-    throw new Error('Workout not found')
+    throw new Error(m.zesty_orange_owl())
   }
 
   const validatedWorkout = WorkoutSchema.parse(updatedWorkout)
@@ -197,7 +198,7 @@ function updateWorkoutRecord(
   const updatedWorkout = nextWorkouts.find((workout) => workout.id === id)
 
   if (!updatedWorkout) {
-    throw new Error('Workout not found')
+    throw new Error(m.zesty_orange_owl())
   }
 
   const validatedWorkout = WorkoutSchema.parse(updatedWorkout)
