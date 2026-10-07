@@ -79,3 +79,34 @@ test('dashboard calendar marks trained days, rest days and today', async ({
   )
   expect(hasHorizontalScroll).toBe(false)
 })
+
+test('dashboard calendar moves today and shifts the window at local midnight', async ({
+  page,
+}) => {
+  await page.clock.install({ time: new Date('2026-10-07T23:59:30.000Z') })
+
+  await seedAppStorage(page, {
+    exercises: [],
+    workouts: [],
+    settings: { defaultWeightUnit: 'kg' },
+  })
+
+  await page.goto('')
+
+  await expect(
+    page.getByRole('img', { name: 'Wed 7 Oct: rest day' }),
+  ).toHaveAttribute('aria-current', 'date')
+  await expect(
+    page.getByRole('img', { name: 'Tue 8 Sep: rest day' }),
+  ).toBeVisible()
+
+  await page.clock.fastForward(60_000)
+
+  await expect(
+    page.getByRole('img', { name: 'Thu 8 Oct: rest day' }),
+  ).toHaveAttribute('aria-current', 'date')
+  await expect(
+    page.getByRole('img', { name: 'Wed 7 Oct: rest day' }),
+  ).not.toHaveAttribute('aria-current', 'date')
+  await expect(page.getByRole('img', { name: /Tue 8 Sep/ })).toHaveCount(0)
+})

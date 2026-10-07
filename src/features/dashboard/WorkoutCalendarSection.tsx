@@ -2,6 +2,7 @@ import { buildWorkoutCalendar } from '../training-history/training-history-proje
 import type { WorkoutCalendarCell } from '../training-history/training-history-projections'
 import type { Workout } from '@/types'
 import { Card } from '@/components/ui/card'
+import { useCurrentDay } from '@/hooks/useCurrentDay'
 import { cn } from '@/lib/utils'
 
 interface WorkoutCalendarSectionProps {
@@ -40,9 +41,11 @@ function getCellLabel(cell: WorkoutCalendarCell, index: number): string {
 }
 
 export function WorkoutCalendarSection({
-  today = new Date(),
+  today: todayOverride,
   workouts,
 }: WorkoutCalendarSectionProps) {
+  const currentDay = useCurrentDay()
+  const today = todayOverride ?? currentDay
   const cells = buildWorkoutCalendar(workouts, today)
 
   return (
