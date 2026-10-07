@@ -76,7 +76,7 @@ export function WorkoutCalendarSection({
                 aria-label={getCellLabel(cell, index)}
                 aria-current={cell.isToday ? 'date' : undefined}
                 className={cn(
-                  'flex aspect-square items-center justify-center rounded-md text-sm',
+                  'relative flex aspect-square items-center justify-center rounded-md text-sm',
                   isTrained
                     ? 'bg-primary text-primary-foreground font-bold'
                     : 'border border-border text-muted-foreground',
@@ -85,6 +85,15 @@ export function WorkoutCalendarSection({
                 )}
               >
                 {cell.dayOfMonth}
+                {cell.workoutCount >= 2 && (
+                  <span
+                    aria-hidden="true"
+                    data-testid="workout-count-badge"
+                    className="absolute -right-1 -top-1 flex size-4 items-center justify-center rounded-full bg-foreground text-[10px] font-bold leading-none text-background"
+                  >
+                    {cell.workoutCount}
+                  </span>
+                )}
               </div>
             )
           })}

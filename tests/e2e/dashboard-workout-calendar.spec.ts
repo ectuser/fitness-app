@@ -60,8 +60,18 @@ test('dashboard calendar marks trained days, rest days and today', async ({
     page.getByRole('img', { name: 'Mon 5 Oct: 2 workouts' }),
   ).toBeVisible()
   await expect(
+    page
+      .getByRole('img', { name: 'Mon 5 Oct: 2 workouts' })
+      .getByTestId('workout-count-badge'),
+  ).toHaveText('2')
+  await expect(
     page.getByRole('img', { name: 'Tue 6 Oct: 1 workout' }),
   ).toBeVisible()
+  await expect(
+    page
+      .getByRole('img', { name: 'Tue 6 Oct: 1 workout' })
+      .getByTestId('workout-count-badge'),
+  ).toHaveCount(0)
   await expect(
     page.getByRole('img', { name: 'Sun 4 Oct: rest day' }),
   ).toBeVisible()
