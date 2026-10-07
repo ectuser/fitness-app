@@ -35,6 +35,9 @@ async function seedDarkTheme(page: Page) {
 
 test.describe('dark theme visual regression coverage', () => {
   test.beforeEach(async ({ page }) => {
+    // The create form defaults its name and date from today, and the
+    // screenshot baselines were recorded on this day.
+    await page.clock.setFixedTime(new Date('2026-07-20T12:00:00.000Z'))
     await page.emulateMedia({ colorScheme: 'dark' })
     await seedDarkTheme(page)
   })
