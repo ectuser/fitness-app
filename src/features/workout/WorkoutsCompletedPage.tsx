@@ -1,3 +1,4 @@
+import { m } from '#/paraglide/messages'
 import { useExercises } from '../exercise/use-exercises'
 import { useWorkouts } from './use-workouts'
 import { WorkoutList } from './WorkoutList'
@@ -44,14 +45,14 @@ export function WorkoutsCompletedPage() {
 
   return (
     <div>
-      <PageHeader title="Completed Workouts" showBack />
+      <PageHeader title={m.young_orange_finch()} showBack />
 
       <div className="container mx-auto px-4 py-6">
         <div className="flex gap-2 mb-6">
           <Button variant="outline" onClick={() => navigate('/workouts')}>
-            Upcoming
+            {m.wild_ivory_snail()}
           </Button>
-          <Button variant="default">Completed</Button>
+          <Button variant="default">{m.fuzzy_lime_lion()}</Button>
         </div>
 
         {completedWorkouts.length > 0 ? (
@@ -67,10 +68,10 @@ export function WorkoutsCompletedPage() {
         ) : (
           <Card className="p-12 text-center">
             <p className="mb-2 text-muted-foreground">
-              No completed workouts yet.
+              {m.sunny_silver_zebra()}
             </p>
             <p className="text-sm text-muted-foreground">
-              Complete a workout to see it here!
+              {m.quirky_teal_badger()}
             </p>
           </Card>
         )}
