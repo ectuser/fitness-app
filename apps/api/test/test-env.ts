@@ -9,6 +9,8 @@ export function testEnv(overrides: Partial<Env> = {}): Env {
     NODE_ENV: 'test',
     PORT: 0,
     DATABASE_URL: TEST_DATABASE_URL,
+    APP_ORIGIN: 'http://localhost:3000',
+    BETTER_AUTH_SECRET: 'test-secret-test-secret-test-secret-0000',
     ...overrides,
   }
 }

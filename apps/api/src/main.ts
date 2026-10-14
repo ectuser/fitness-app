@@ -5,7 +5,9 @@ import { parseEnv } from './config/env'
 import { configureApp } from './http/configure-app'
 
 const env = parseEnv(process.env)
-const app = await NestFactory.create(AppModule.forRoot(env))
+const app = await NestFactory.create(AppModule.forRoot(env), {
+  bodyParser: false,
+})
 configureApp(app)
 app.enableShutdownHooks()
 await app.listen(env.PORT)

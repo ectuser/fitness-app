@@ -1,6 +1,7 @@
 import { Controller, Get, Inject } from '@nestjs/common'
 import { HealthResponseSchema } from '@fitness/contracts'
 import { sql } from 'drizzle-orm'
+import { Public } from '../auth/public.decorator'
 import { DB } from '../database/database.module'
 import { ApiError } from '../http/api-error'
 import type { HealthResponse } from '@fitness/contracts'
@@ -10,6 +11,7 @@ import type { Database } from '../database/database.module'
 export class HealthController {
   constructor(@Inject(DB) private readonly db: Database) {}
 
+  @Public()
   @Get()
   async check(): Promise<HealthResponse> {
     try {

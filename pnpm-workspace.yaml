@@ -12,3 +12,12 @@ overrides:
   '@eslint/js': 9.39.4
   seroval: 1.6.8
   seroval-plugins: 1.6.8
+minimumReleaseAgeExclude:
+  - '@better-auth/core@1.7.8'
+  - '@better-auth/drizzle-adapter@1.7.8'
+  - '@better-auth/kysely-adapter@1.7.8'
+  - '@better-auth/memory-adapter@1.7.8'
+  - '@better-auth/mongo-adapter@1.7.8'
+  - '@better-auth/prisma-adapter@1.7.8'
+  - '@better-auth/telemetry@1.7.8'
+  - better-auth@1.7.8
