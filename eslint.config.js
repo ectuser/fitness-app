@@ -64,7 +64,7 @@ const semanticThemePlugin = {
 export default [
   ...tanstackConfig,
   {
-    files: ['src/**/*.{ts,tsx}'],
+    files: ['apps/web/src/**/*.{ts,tsx}'],
     ...jsxA11y.flatConfigs.recommended,
     plugins: {
       'semantic-theme': semanticThemePlugin,
@@ -75,18 +75,18 @@ export default [
   },
   ...tanstackQuery.configs['flat/recommended'].map((config) => ({
     ...config,
-    files: ['src/**/*.{ts,tsx}'],
+    files: ['apps/web/src/**/*.{ts,tsx}'],
   })),
   {
-    files: ['tests/unit/**/*.{ts,tsx}'],
+    files: ['apps/web/tests/unit/**/*.{ts,tsx}'],
     ...vitest.configs.recommended,
   },
   {
-    files: ['tests/unit/**/*.{ts,tsx}'],
+    files: ['apps/web/tests/unit/**/*.{ts,tsx}'],
     ...testingLibrary.configs['flat/react'],
   },
   {
-    files: ['tests/e2e/**/*.ts'],
+    files: ['apps/web/tests/e2e/**/*.ts'],
     ...playwright.configs['flat/recommended'],
   },
   {
@@ -107,9 +107,11 @@ export default [
     ignores: [
       'eslint.config.js',
       'prettier.config.js',
-      'src/paraglide/**',
-      'playwright-report/**',
-      'test-results/**',
+      '**/src/paraglide/**',
+      '**/playwright-report/**',
+      '**/test-results/**',
+      '**/dist/**',
+      '**/coverage/**',
     ],
   },
 ]

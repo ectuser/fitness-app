@@ -1,6 +1,6 @@
 pnpm-lock.yaml
 yarn.lock
-src/paraglide/
-project.inlang/.meta.json
-project.inlang/README.md
+apps/web/src/paraglide/
+apps/web/project.inlang/.meta.json
+apps/web/project.inlang/README.md
 ci-report.md
