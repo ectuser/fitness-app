@@ -70,12 +70,12 @@ jobs:
         run: pnpm build --base "${{ steps.pages.outputs.base_path }}"
 
       - name: Add SPA fallback for deep links
-        run: cp dist/client/index.html dist/client/404.html
+        run: cp apps/web/dist/client/index.html apps/web/dist/client/404.html
 
       - name: Stage Pages artifact
         run: |
           mkdir -p "${{ steps.pages.outputs.publish_path }}"
-          cp -R dist/client/. "${{ steps.pages.outputs.publish_path }}/"
+          cp -R apps/web/dist/client/. "${{ steps.pages.outputs.publish_path }}/"
 
       - name: Stage current production site
         if: github.event_name == 'pull_request'
@@ -96,8 +96,15 @@ jobs:
             npm run build -- --base "/${REPO_NAME}/"
           fi
 
-          cp dist/client/index.html dist/client/404.html
-          cp -R dist/client/. ../pages/
+          # The base branch may still use the single-package layout.
+          if [[ -d apps/web/dist/client ]]; then
+            client_dir=apps/web/dist/client
+          else
+            client_dir=dist/client
+          fi
+
+          cp "$client_dir/index.html" "$client_dir/404.html"
+          cp -R "$client_dir/." ../pages/
 
       - name: Publish to GitHub Pages branch
         shell: bash

@@ -49,7 +49,7 @@ jobs:
           marker='<!-- fitness-app-ci-report -->'
           deployment_url="https://${GITHUB_REPOSITORY_OWNER}.github.io/${GITHUB_REPOSITORY#*/}/pr-${PR_NUMBER}/"
 
-          if [[ -f coverage/coverage-summary.json ]]; then
+          if [[ -f apps/web/coverage/coverage-summary.json ]]; then
             coverage_rows=$(jq -r '
               .total |
               ["Statements", .statements.pct],
@@ -57,7 +57,7 @@ jobs:
               ["Functions", .functions.pct],
               ["Lines", .lines.pct] |
               "| \(.[0]) | \(.[1])% |"
-            ' coverage/coverage-summary.json)
+            ' apps/web/coverage/coverage-summary.json)
           else
             coverage_rows='| Coverage | unavailable |'
           fi

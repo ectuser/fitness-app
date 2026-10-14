@@ -43,4 +43,4 @@ pnpm test:e2e
 
 ## Deployment
 
-`pnpm build` emits TanStack Start output under `dist/client` and `dist/server`. Deploy it to a target that supports the TanStack Start server output, or add a static adapter before deploying to static-only hosting.
+`pnpm build` emits TanStack Start output under `apps/web/dist/client` and `apps/web/dist/server`. Deploy it to a target that supports the TanStack Start server output, or add a static adapter before deploying to static-only hosting.
