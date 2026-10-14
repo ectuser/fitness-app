@@ -1,1 +1,0 @@
-import{B as e}from"./index-LccNEliE.js";var t=e;export{t as component};
