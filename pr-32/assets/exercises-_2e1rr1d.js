@@ -1,0 +1,1 @@
+import{B as e}from"./index-pgEKoc2l.js";var t=e;export{t as component};
