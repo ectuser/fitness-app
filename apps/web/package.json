@@ -20,6 +20,7 @@
     "paraglide": "paraglide-js compile --project ./project.inlang --outdir ./src/paraglide --strategy baseLocale --silent"
   },
   "dependencies": {
+    "@fitness/contracts": "workspace:*",
     "@radix-ui/react-accordion": "1.2.14",
     "@radix-ui/react-alert-dialog": "1.1.17",
     "@radix-ui/react-dialog": "1.1.17",
