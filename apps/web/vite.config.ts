@@ -16,6 +16,12 @@ const config = defineConfig({
     },
     dedupe: ['react', 'react-dom'],
   },
+  server: {
+    proxy: {
+      '/api': 'http://localhost:3001',
+      '/health': 'http://localhost:3001',
+    },
+  },
   plugins: [
     paraglideVitePlugin({
       project: './project.inlang',

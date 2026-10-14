@@ -67,7 +67,7 @@ jobs:
           GITHUB_PAGES: 'true'
           VITE_DEPLOYMENT_RUN_NUMBER: ${{ github.run_number }}
           VITE_DEPLOYMENT_SHORT_SHA: ${{ github.sha }}
-        run: pnpm build --base "${{ steps.pages.outputs.base_path }}"
+        run: pnpm --filter web build --base "${{ steps.pages.outputs.base_path }}"
 
       - name: Add SPA fallback for deep links
         run: cp apps/web/dist/client/index.html apps/web/dist/client/404.html
@@ -90,7 +90,7 @@ jobs:
 
           if [[ -f pnpm-lock.yaml ]]; then
             pnpm install --frozen-lockfile
-            pnpm build --base "/${REPO_NAME}/"
+            pnpm --filter web build --base "/${REPO_NAME}/"
           else
             npm ci
             npm run build -- --base "/${REPO_NAME}/"
