@@ -1,0 +1,1 @@
+import{B as e}from"./index-CMrKt5ey.js";var t=e;export{t as component};
