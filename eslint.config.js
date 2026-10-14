@@ -107,6 +107,7 @@ export default [
     ignores: [
       'eslint.config.js',
       'prettier.config.js',
+      'apps/api/rspack.config.js',
       '**/src/paraglide/**',
       '**/playwright-report/**',
       '**/test-results/**',

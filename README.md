@@ -25,15 +25,22 @@ A mobile-first workout tracker built with React, TypeScript, TanStack Start, Tan
 
 ```bash
 pnpm install
+cp .env.example .env.local
+docker compose --env-file .env.local up -d --wait
+pnpm db:migrate
 pnpm dev
 ```
 
-The local app runs at `http://localhost:3000/`.
+`pnpm dev` runs the web app at `http://localhost:3000/` and the API at `http://localhost:3001/` in parallel. Vite proxies `/api` and `/health` to the API. PostgreSQL (Docker Compose, loopback only) and migrations are started manually; `pnpm db:migrate` is a no-op until the first table exists, and `pnpm db:generate` writes new migrations to `apps/api/drizzle`. Stop the database with `docker compose --env-file .env.local down` (its volume is kept).
+
+API tests need the same PostgreSQL running; they use a separate `fitness_test` database, created automatically.
 
 ## Scripts
 
 ```bash
 pnpm dev
+pnpm db:generate
+pnpm db:migrate
 pnpm build
 pnpm preview
 pnpm typecheck

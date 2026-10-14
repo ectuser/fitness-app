@@ -7,7 +7,7 @@
   },
   "type": "module",
   "scripts": {
-    "dev": "pnpm --filter web dev",
+    "dev": "pnpm --parallel --filter web --filter api dev",
     "build": "pnpm -r --if-present run build",
     "preview": "pnpm --filter web preview",
     "test": "pnpm -r --if-present run test",
@@ -17,7 +17,9 @@
     "typecheck": "pnpm -r --if-present run typecheck",
     "format": "prettier --check .",
     "check": "prettier --write . && eslint --fix",
-    "paraglide": "pnpm --filter web paraglide"
+    "paraglide": "pnpm --filter web paraglide",
+    "db:generate": "pnpm --filter api db:generate",
+    "db:migrate": "pnpm --filter api db:migrate"
   },
   "devDependencies": {
     "@tanstack/eslint-config": "0.4.0",
